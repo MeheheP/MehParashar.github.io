@@ -5,6 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mehul Parashar's Portfolio</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        img {
+            border-radius: 10px;
+        }
+        .hero {
+            background-color: #121212;
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+        .hero img {
+            width: 300px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .hero h1 {
+            margin-bottom: 10px;
+        }
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .social a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        .project {
+            display: flex;
+            align-items: center;
+            background-color: #121212;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .project img {
+            width: 300px;
+            height: auto;
+            margin-right: 20px;
+            border-radius: 10px;
+        }
+        .project h3 {
+            margin-bottom: 10px;
+        }
+        .project p {
+            margin-bottom: 10px;
+        }
+        .project-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .project-button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -21,10 +86,11 @@
             </nav>
         </div>
     </header>
-    <section id="hero">
+    <section class="hero">
         <div class="container">
-            <h2>Welcome to My Portfolio</h2>
-           
+            <img src="images/fc24logo.png" alt="EAFC Logo">
+            <h1>Welcome to My Portfolio</h1>
+            <p>Exploring the Intricacies of Player Performance in EA Sports FC</p>
         </div>
     </section>
     <section id="about">
@@ -63,15 +129,21 @@
             <h2>Projects</h2>
             <div class="project">
                 <img src="images/eafc-eda.jpg" alt="EAFC-EDA">
-                <h3>EA Sports FC24-EDA</h3>
-                <p>Exploratory Data Analysis of players in the game and how it brings about realism in  performance of players in game as well as implemented  machine learning models to accurately predict the overall ratings of the players <a href="https://github.com/MehParashar/EAFC-EDA" target="_blank">View on GitHub</a></p>
-                <button onclick="window.location.href='eafc.html'">View EAFC Project</button>
+                <div>
+                    <h3>EA Sports FC24-EDA</h3>
+                    <p>Exploratory Data Analysis of players in the game and how it brings about realism in performance of players in game as well as implemented machine learning models to accurately predict the overall ratings of the players.</p>
+                    <a class="project-button" href="https://github.com/MehParashar/EAFC-EDA" target="_blank">View on GitHub</a>
+                    <a class="project-button" href="eafc.html">View EAFC Project</a>
+                </div>
             </div>
             <div class="project">
                 <img src="images/netflix-eda.jpg" alt="Netflix-EDA">
-                <h3>Netflix-EDA</h3>
-                <p>Exploratory Data Analysis of Netflix movies and shows. <a href="https://github.com/MehParashar/Netflix--EDA" target="_blank">View on GitHub</a></p>
-                <p><strong>Insights:</strong> Analyzed viewing patterns and trends to provide recommendations for content curation and marketing strategies.</p>
+                <div>
+                    <h3>Netflix-EDA</h3>
+                    <p>Exploratory Data Analysis of Netflix movies and shows.</p>
+                    <p><strong>Insights:</strong> Analyzed viewing patterns and trends to provide recommendations for content curation and marketing strategies.</p>
+                    <a class="project-button" href="https://github.com/MehParashar/Netflix--EDA" target="_blank">View on GitHub</a>
+                </div>
             </div>
             <!-- Add other projects similarly -->
         </div>
