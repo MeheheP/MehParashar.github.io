@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAFC Project - Mehul Parashar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>EAFC Project - Mehul Parashar</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#skills">Skills</a></li>
+                    <li><a href="index.html#projects">Projects</a></li>
+                    <li><a href="index.html#experience">Experience</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section id="eafc">
+        <div class="container">
+            <h2>Exploratory Data Analysis of EAFC Players</h2>
+            <p>In my journey to understand the intricacies of player performance in EA Sports FC (EAFC), I set out to explore how the game's player data mirrors real-world football dynamics. The goal was to provide actionable insights that can help coaches, players, and decision-makers make informed decisions both on and off the pitch.</p>
+            <h3>Data Loading and Overview</h3>
+            <p>First, I delved into the dataset containing attributes of over 17,000 players, with 41 different metrics including Pace, Shooting, Passing, Dribbling, and Defending. Understanding the structure and size of this dataset is akin to a coach reviewing a squad list before a match. It provided a comprehensive overview, ensuring that I had a robust foundation for my analysis.</p>
+            <h3>Summary Statistics and Missing Values</h3>
+            <p>Next, I examined the summary statistics and checked for missing values. The average overall rating was 66.98 with a standard deviation of 6.98, while the mean passing attribute stood at 51.52. Importantly, there were no missing values in key columns, ensuring the reliability of my subsequent analyses. This step is critical, much like a scout ensuring they have complete data on players before making assessments.</p>
+            <h3>Visualizing Distributions</h3>
+            <p>To get a sense of the player demographics, I visualized distributions of player positions, ages, overall ratings, preferred foot, and gender. I discovered a high concentration of players in right-wing and striker positions, with the majority aged between 20 and 30, peaking around 25 years. Interestingly, about 70% of players were right-footed, and there were significantly more male players. These insights help coaches understand the composition of their squad and focus on maintaining peak performance levels while preparing for player development.</p>
+            <img src="images/AgevsOR.png" alt="Age vs. Overall Rating">
+            <img src="images/Correlation.png" alt="Correlation with Overall Rating">
+            <img src="images/Fimp.png" alt="Feature Importance in Predicting Overall Ratings">
+            <img src="images/GKratings.png" alt="Distribution of Goalkeeper Ratings">
+            <img src="images/KMSClustering```html
+<html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAFC Project - Mehul Parashar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>EAFC Project - Mehul Parashar</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#skills">Skills</a></li>
+                    <li><a href="index.html#projects">Projects</a></li>
+                    <li><a href="index.html#experience">Experience</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section id="eafc">
+        <div class="container">
+            <h2>Exploratory Data Analysis of EAFC Players</h2>
+            <p>In my journey to understand the intricacies of player performance in EA Sports FC (EAFC), I set out to explore how the game's player data mirrors real-world football dynamics. The goal was to provide actionable insights that can help coaches, players, and decision-makers make informed decisions both on and off the pitch.</p>
+            <h3>Data Loading and Overview</h3>
+            <p>First, I delved into the dataset containing attributes of over 17,000 players, with 41 different metrics including Pace, Shooting, Passing, Dribbling, and Defending. Understanding the structure and size of this dataset is akin to a coach reviewing a squad list before a match. It provided a comprehensive overview, ensuring that I had a robust foundation for my analysis.</p>
+            <h3>Summary Statistics and Missing Values</h3>
+            <p>Next, I examined the summary statistics and checked for missing values. The average overall rating was 66.98 with a standard deviation of 6.98, while the mean passing attribute stood at 51.52. Importantly, there were no missing values in key columns, ensuring the reliability of my subsequent analyses. This step is critical, much like a scout ensuring they have complete data on players before making assessments.</p>
+            <h3>Visualizing Distributions</h3>
+            <p>To get a sense of the player demographics, I visualized distributions of player positions, ages, overall ratings, preferred foot, and gender. I discovered a high concentration of players in right-wing and striker positions, with the majority aged between 20 and 30, peaking around 25 years. Interestingly, about 70% of players were right-footed, and there were significantly more male players. These insights help coaches understand the composition of their squad and focus on maintaining peak performance levels while preparing for player development.</p>
+            <img src="images/AgevsOR.png" alt="Age vs. Overall Rating">
+            <img src="images/Correlation.png" alt="Correlation with Overall Rating">
+            <img src="images/Fimp.png" alt="Feature Importance in Predicting Overall Ratings">
+            <img src="images/GKratings.png" alt="Distribution of Goalkeeper Ratings">
+            <img src="images/KMSClustering.png" alt="Enhanced K-Means Clustering of Players">
+            <img src="images/Pfoot.png" alt="Distribution of Player Preferred Foot">
+            <img src="images/posbyg.png" alt="Distribution of Player Positions by Gender">
+            <img src="images/PosvsAttHM.png" alt="Positional Heatmap">
+            <img src="images/PvRating.png" alt="Distribution of Player Overall Ratings">
+            <h3>Machine Learning Models for Rating Predictions</h3>
+            <p>I employed machine learning models, including Linear Regression and Random Forest Regressor, to predict overall ratings. The Random Forest model performed exceptionally well with a Mean Squared Error (MSE) of 1.67 and an R² of 0.96. This indicates high accuracy in predicting player ratings, making it a valuable tool for scouting and predicting player development potential.</p>
+            <img src="images/PredictOR.png" alt="Predicted vs Actual Ratings">
+            <img src="images/PredictOR1.png" alt="Model Comparison">
+            <img src="images/Predit1.png" alt="Feature Importance in Predicting Overall Ratings">
+            <h3>SHAP Analysis for Feature Impact</h3>
+            <p>SHAP values provided transparency in understanding which attributes contribute most to performance. Defending, shooting, and passing were identified as high-impact features. This analysis informs individualized training plans and tactical decisions, much like detailed player evaluations in real football.</p>
+            <img src="images/SHAP1.png" alt="SHAP Analysis">
+            <img src="images/SHAP2.png" alt="SHAP Value for Pace">
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Mehul Parashar</p>
+            <div class="social">
+                <a href="https://www.linkedin.com/in/mehul-parashar/" target="_blank">LinkedIn</a>
+                <a href="https://github.com/MehParashar" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
