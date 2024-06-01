@@ -21,7 +21,7 @@
         }
         .button {
             padding: 10px 20px;
-            margin-right: 10px;
+            margin: 10px 10px 10px 0; /* Add margin for spacing */
             background-color: #28a745;
             color: white;
             border: none;
@@ -70,6 +70,78 @@
             <div id="ages" class="visualization hidden">
                 <h3>Distribution of Player Ages</h3>
                 <div id="chart-ages"></div>
+                <!-- D3.js code for Player Ages -->
+                <script>
+                    // Set dimensions and margins
+                    const marginAges = {top: 20, right: 30, bottom: 40, left: 40},
+                          widthAges = 800 - marginAges.left - marginAges.right,
+                          heightAges = 500 - marginAges.top - marginAges.bottom;
+
+                    // Append SVG element
+                    const svgAges = d3.select("#chart-ages")
+                                      .append("svg")
+                                      .attr("width", widthAges + marginAges.left + marginAges.right)
+                                      .attr("height", heightAges + marginAges.top + marginAges.bottom)
+                                      .append("g")
+                                      .attr("transform", `translate(${marginAges.left},${marginAges.top})`);
+
+                    // Load data
+                    d3.csv("all_players.csv").then(data => {
+                        // Process data
+                        const ageCounts = d3.rollup(data, v => v.length, d => d.Age);
+                        const ages = Array.from(ageCounts.keys());
+                        const counts = Array.from(ageCounts.values());
+
+                        // X axis
+                        const xAges = d3.scaleBand()
+                                        .domain(ages)
+                                        .range([0, widthAges])
+                                        .padding(0.1);
+                        svgAges.append("g")
+                               .attr("transform", `translate(0,${heightAges})`)
+                               .call(d3.axisBottom(xAges))
+                               .selectAll("text")
+                               .attr("transform", "rotate(-45)")
+                               .style("text-anchor", "end");
+
+                        // Y axis
+                        const yAges = d3.scaleLinear()
+                                        .domain([0, d3.max(counts)])
+                                        .nice()
+                                        .range([heightAges, 0]);
+                        svgAges.append("g")
+                               .call(d3.axisLeft(yAges));
+
+                        // Bars
+                        svgAges.selectAll(".bar")
+                               .data(ageCounts)
+                               .enter()
+                               .append("rect")
+                               .attr("class", "bar")
+                               .attr("x", d => xAges(d[0]))
+                               .attr("y", d => yAges(d[1]))
+                               .attr("width", xAges.bandwidth())
+                               .attr("height", d => heightAges - yAges(d[1]));
+
+                        // Add axis labels
+                        svgAges.append("text")
+                               .attr("class", "axis-label")
+                               .attr("x", widthAges / 2)
+                               .attr("y", heightAges + marginAges.bottom)
+                               .attr("text-anchor", "middle")
+                               .text("Age");
+
+                        svgAges.append("text")
+                               .attr("class", "axis-label")
+                               .attr("x", -heightAges / 2)
+                               .attr("y", -marginAges.left + 10)
+                               .attr("text-anchor", "middle")
+                               .attr("transform", "rotate(-90)")
+                               .text("Count");
+                    }).catch(error => {
+                        console.error('Error loading the CSV data: ', error);
+                    });
+                </script>
             </div>
 
             <div id="overallRatings" class="visualization hidden">
