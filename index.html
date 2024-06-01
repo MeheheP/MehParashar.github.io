@@ -13,12 +13,20 @@
             <nav>
                 <ul>
                     <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
                     <li><a href="#projects">Projects</a></li>
+                    <li><a href="#experience">Experience</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
+    <section id="hero">
+        <div class="container">
+            <h2>Welcome to My Portfolio</h2>
+            <p>I am Mehul Parashar, a data scientist with expertise in data analysis, machine learning, and more.</p>
+        </div>
+    </section>
     <section id="about">
         <div class="container">
             <h2>About Me</h2>
@@ -26,31 +34,84 @@
             <p>Welcome to my portfolio! I am Mehul Parashar, a data scientist with expertise in data analysis, machine learning, and more. Explore my projects below to see my work in action.</p>
         </div>
     </section>
+    <section id="skills">
+        <div class="container">
+            <h2>Skills</h2>
+            <div class="skill">
+                <h3>Python</h3>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 90%;"></div>
+                </div>
+            </div>
+            <div class="skill">
+                <h3>Machine Learning</h3>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 85%;"></div>
+                </div>
+            </div>
+            <!-- Add other skills similarly -->
+        </div>
+    </section>
     <section id="projects">
         <div class="container">
             <h2>Projects</h2>
             <div class="project">
+                <img src="images/eafc-eda.jpg" alt="EAFC-EDA">
                 <h3>EAFC-EDA</h3>
-                <p>Exploratory Data Analysis of EAFC players, including machine learning.</p>
-                <a href="https://github.com/MehParashar/EAFC-EDA" target="_blank">View on GitHub</a>
+                <p>Exploratory Data Analysis of EAFC players, including machine learning. <a href="https://github.com/MehParashar/EAFC-EDA" target="_blank">View on GitHub</a></p>
+                <button onclick="window.location.href='eafc.html'">View EAFC Project</button>
             </div>
             <div class="project">
+                <img src="images/netflix-eda.jpg" alt="Netflix-EDA">
                 <h3>Netflix-EDA</h3>
-                <p>Exploratory Data Analysis of Netflix movies and shows.</p>
-                <a href="https://github.com/MehParashar/Netflix--EDA" target="_blank">View on GitHub</a>
+                <p>Exploratory Data Analysis of Netflix movies and shows. <a href="https://github.com/MehParashar/Netflix--EDA" target="_blank">View on GitHub</a></p>
+                <p><strong>Insights:</strong> Analyzed viewing patterns and trends to provide recommendations for content curation and marketing strategies.</p>
             </div>
             <!-- Add other projects similarly -->
+        </div>
+    </section>
+    <section id="experience">
+        <div class="container">
+            <h2>Experience</h2>
+            <div class="experience">
+                <h3>Spotlist Inc. (New Jersey, USA) - Lead Data Science Intern</h3>
+                <p><strong>July 2023 – March 2024</strong></p>
+                <ul>
+                    <li>Implemented a streamlined data pipeline reducing data collection time by 30%.</li>
+                    <li>Increased user engagement by 15% through data-driven strategies.</li>
+                    <li>Predicted customer behavior, increasing targeted marketing campaigns ROI by 30%.</li>
+                    <li>Developed interactive dashboards to visualize key user demographics.</li>
+                </ul>
+            </div>
+            <div class="experience">
+                <h3>Dhakad Events and Entertainment (Mumbai, India) - Junior Analyst (Data & Operations)</h3>
+                <p><strong>August 2019 - July 2021</strong></p>
+                <ul>
+                    <li>Conducted data analysis using advanced statistical techniques and machine learning.</li>
+                    <li>Utilized operational research methods to recommend optimal solutions for complex problems.</li>
+                </ul>
+            </div>
         </div>
     </section>
     <section id="contact">
         <div class="container">
             <h2>Contact</h2>
-            <p>If you would like to get in touch, please email me at <a href="mailto:parasharmeh@gmail.com">parasharmeh@gmail.com</a> or connect with me on <a href="https://www.linkedin.com/in/mehul-parashar/" target="_blank">LinkedIn</a>.</p>
+            <form>
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
         </div>
     </section>
     <footer>
         <div class="container">
             <p>&copy; 2024 Mehul Parashar</p>
+            <div class="social">
+                <a href="https://www.linkedin.com/in/mehul-parashar/" target="_blank">LinkedIn</a>
+                <a href="https://github.com/MehParashar" target="_blank">GitHub</a>
+                <!-- Add other social links -->
+            </div>
         </div>
     </footer>
     <script src="scripts.js"></script>
