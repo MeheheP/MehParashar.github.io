@@ -279,25 +279,402 @@
                 </script>
             </div>
 
-            <div id="overallRatings" class="visualization hidden">
+                        <div id="overallRatings" class="visualization hidden">
                 <h3>Distribution of Player Overall Ratings</h3>
                 <div id="chart-overallRatings"></div>
+                <!-- D3.js code for Player Overall Ratings -->
+                <script>
+                    // Set dimensions and margins
+                    const marginOverallRatings = {top: 20, right: 30, bottom: 40, left: 40},
+                          widthOverallRatings = 800 - marginOverallRatings.left - marginOverallRatings.right,
+                          heightOverallRatings = 500 - marginOverallRatings.top - marginOverallRatings.bottom;
+
+                    // Append SVG element
+                    const svgOverallRatings = d3.select("#chart-overallRatings")
+                                                .append("svg")
+                                                .attr("width", widthOverallRatings + marginOverallRatings.left + marginOverallRatings.right)
+                                                .attr("height", heightOverallRatings + marginOverallRatings.top + marginOverallRatings.bottom)
+                                                .append("g")
+                                                .attr("transform", `translate(${marginOverallRatings.left},${marginOverallRatings.top})`);
+
+                    // Tooltip
+                    const tooltipOverallRatings = d3.select("body").append("div")
+                                                    .attr("class", "tooltip")
+                                                    .style("opacity", 0);
+
+                    // Load data
+                    d3.csv("all_players.csv").then(data => {
+                        // Process data
+                        const overallRatingCounts = d3.rollup(data, v => v.length, d => d.Overall);
+                        const overallRatings = Array.from(overallRatingCounts.keys()).sort((a, b) => a - b);
+                        const counts = overallRatings.map(rating => overallRatingCounts.get(rating));
+
+                        // X axis
+                        const xOverallRatings = d3.scaleBand()
+                                                  .domain(overallRatings)
+                                                  .range([0, widthOverallRatings])
+                                                  .padding(0.1);
+                        svgOverallRatings.append("g")
+                                         .attr("transform", `translate(0,${heightOverallRatings})`)
+                                         .call(d3.axisBottom(xOverallRatings))
+                                         .selectAll("text")
+                                         .attr("transform", "rotate(-45)")
+                                         .style("text-anchor", "end");
+
+                        // Y axis
+                        const yOverallRatings = d3.scaleLinear()
+                                                  .domain([0, d3.max(counts)])
+                                                  .nice()
+                                                  .range([heightOverallRatings, 0]);
+                        svgOverallRatings.append("g")
+                                         .call(d3.axisLeft(yOverallRatings));
+
+                        // Bars
+                        svgOverallRatings.selectAll(".bar")
+                                         .data(counts)
+                                         .enter()
+                                         .append("rect")
+                                         .attr("class", "bar")
+                                         .attr("x", (d, i) => xOverallRatings(overallRatings[i]))
+                                         .attr("y", d => yOverallRatings(d))
+                                         .attr("width", xOverallRatings.bandwidth())
+                                         .attr("height", d => heightOverallRatings - yOverallRatings(d))
+                                         .on("mouseover", (event, d) => {
+                                             tooltipOverallRatings.transition()
+                                                                  .duration(200)
+                                                                  .style("opacity", .9);
+                                             tooltipOverallRatings.html(`Count: ${d}`)
+                                                                  .style("left", (event.pageX + 5) + "px")
+                                                                  .style("top", (event.pageY - 28) + "px");
+                                         })
+                                         .on("mouseout", (d) => {
+                                             tooltipOverallRatings.transition()
+                                                                  .duration(500)
+                                                                  .style("opacity", 0);
+                                         });
+
+                        // Add axis labels
+                        svgOverallRatings.append("text")
+                                         .attr("class", "axis-label")
+                                         .attr("x", widthOverallRatings / 2)
+                                         .attr("y", heightOverallRatings + marginOverallRatings.bottom)
+                                         .attr("text-anchor", "middle")
+                                         .text("Overall Rating");
+
+                        svgOverallRatings.append("text")
+                                         .attr("class", "axis-label")
+                                         .attr("x", -heightOverallRatings / 2)
+                                         .attr("y", -marginOverallRatings.left + 10)
+                                         .attr("text-anchor", "middle")
+                                         .attr("transform", "rotate(-90)")
+                                         .text("Count");
+                    }).catch(error => {
+                        console.error('Error loading the CSV data: ', error);
+                    });
+                </script>
             </div>
 
-            <div id="preferredFoot" class="visualization hidden">
+
+                       <div id="preferredFoot" class="visualization hidden">
                 <h3>Distribution of Player Preferred Foot</h3>
                 <div id="chart-preferredFoot"></div>
+                <!-- D3.js code for Player Preferred Foot -->
+                <script>
+                    // Set dimensions and margins
+                    const marginPreferredFoot = {top: 20, right: 30, bottom: 40, left: 40},
+                          widthPreferredFoot = 800 - marginPreferredFoot.left - marginPreferredFoot.right,
+                          heightPreferredFoot = 500 - marginPreferredFoot.top - marginPreferredFoot.bottom;
+
+                    // Append SVG element
+                    const svgPreferredFoot = d3.select("#chart-preferredFoot")
+                                               .append("svg")
+                                               .attr("width", widthPreferredFoot + marginPreferredFoot.left + marginPreferredFoot.right)
+                                               .attr("height", heightPreferredFoot + marginPreferredFoot.top + marginPreferredFoot.bottom)
+                                               .append("g")
+                                               .attr("transform", `translate(${marginPreferredFoot.left},${marginPreferredFoot.top})`);
+
+                    // Tooltip
+                    const tooltipPreferredFoot = d3.select("body").append("div")
+                                                   .attr("class", "tooltip")
+                                                   .style("opacity", 0);
+
+                    // Load data
+                    d3.csv("all_players.csv").then(data => {
+                        // Process data
+                        const preferredFootCounts = d3.rollup(data, v => v.length, d => d.PreferredFoot);
+                        const preferredFoots = Array.from(preferredFootCounts.keys()).sort();
+                        const counts = preferredFoots.map(foot => preferredFootCounts.get(foot));
+
+                        // X axis
+                        const xPreferredFoot = d3.scaleBand()
+                                                 .domain(preferredFoots)
+                                                 .range([0, widthPreferredFoot])
+                                                 .padding(0.1);
+                        svgPreferredFoot.append("g")
+                                        .attr("transform", `translate(0,${heightPreferredFoot})`)
+                                        .call(d3.axisBottom(xPreferredFoot));
+
+                        // Y axis
+                        const yPreferredFoot = d3.scaleLinear()
+                                                 .domain([0, d3.max(counts)])
+                                                 .nice()
+                                                 .range([heightPreferredFoot, 0]);
+                        svgPreferredFoot.append("g")
+                                        .call(d3.axisLeft(yPreferredFoot));
+
+                        // Bars
+                        svgPreferredFoot.selectAll(".bar")
+                                        .data(counts)
+                                        .enter()
+                                        .append("rect")
+                                        .attr("class", "bar")
+                                        .attr("x", (d, i) => xPreferredFoot(preferredFoots[i]))
+                                        .attr("y", d => yPreferredFoot(d))
+                                        .attr("width", xPreferredFoot.bandwidth())
+                                        .attr("height", d => heightPreferredFoot - yPreferredFoot(d))
+                                        .on("mouseover", (event, d) => {
+                                            tooltipPreferredFoot.transition()
+                                                                .duration(200)
+                                                                .style("opacity", .9);
+                                            tooltipPreferredFoot.html(`Count: ${d}`)
+                                                                .style("left", (event.pageX + 5) + "px")
+                                                                .style("top", (event.pageY - 28) + "px");
+                                        })
+                                        .on("mouseout", (d) => {
+                                            tooltipPreferredFoot.transition()
+                                                                .duration(500)
+                                                                .style("opacity", 0);
+                                        });
+
+                        // Add axis labels
+                        svgPreferredFoot.append("text")
+                                        .attr("class", "axis-label")
+                                        .attr("x", widthPreferredFoot / 2)
+                                        .attr("y", heightPreferredFoot + marginPreferredFoot.bottom)
+                                        .attr("text-anchor", "middle")
+                                        .text("Preferred Foot");
+
+                        svgPreferredFoot.append("text")
+                                        .attr("class", "axis-label")
+                                        .attr("x", -heightPreferredFoot / 2)
+                                        .attr("y", -marginPreferredFoot.left + 10)
+                                        .attr("text-anchor", "middle")
+                                        .attr("transform", "rotate(-90)")
+                                        .text("Count");
+                    }).catch(error => {
+                        console.error('Error loading the CSV data: ', error);
+                    });
+                </script>
             </div>
 
-            <div id="gender" class="visualization hidden">
+
+                       <div id="gender" class="visualization hidden">
                 <h3>Distribution of Player Gender</h3>
                 <div id="chart-gender"></div>
+                <!-- D3.js code for Player Gender -->
+                <script>
+                    // Set dimensions and margins
+                    const marginGender = {top: 20, right: 30, bottom: 40, left: 40},
+                          widthGender = 800 - marginGender.left - marginGender.right,
+                          heightGender = 500 - marginGender.top - marginGender.bottom;
+
+                    // Append SVG element
+                    const svgGender = d3.select("#chart-gender")
+                                        .append("svg")
+                                        .attr("width", widthGender + marginGender.left + marginGender.right)
+                                        .attr("height", heightGender + marginGender.top + marginGender.bottom)
+                                        .append("g")
+                                        .attr("transform", `translate(${marginGender.left},${marginGender.top})`);
+
+                    // Tooltip
+                    const tooltipGender = d3.select("body").append("div")
+                                            .attr("class", "tooltip")
+                                            .style("opacity", 0);
+
+                    // Load data
+                    d3.csv("all_players.csv").then(data => {
+                        // Process data
+                        const genderCounts = d3.rollup(data, v => v.length, d => d.Gender);
+                        const genders = Array.from(genderCounts.keys()).sort();
+                        const counts = genders.map(gender => genderCounts.get(gender));
+
+                        // X axis
+                        const xGender = d3.scaleBand()
+                                          .domain(genders)
+                                          .range([0, widthGender])
+                                          .padding(0.1);
+                        svgGender.append("g")
+                                 .attr("transform", `translate(0,${heightGender})`)
+                                 .call(d3.axisBottom(xGender));
+
+                        // Y axis
+                        const yGender = d3.scaleLinear()
+                                          .domain([0, d3.max(counts)])
+                                          .nice()
+                                          .range([heightGender, 0]);
+                        svgGender.append("g")
+                                 .call(d3.axisLeft(yGender));
+
+                        // Bars
+                        svgGender.selectAll(".bar")
+                                 .data(counts)
+                                 .enter()
+                                 .append("rect")
+                                 .attr("class", "bar")
+                                 .attr("x", (d, i) => xGender(genders[i]))
+                                 .attr("y", d => yGender(d))
+                                 .attr("width", xGender.bandwidth())
+                                 .attr("height", d => heightGender - yGender(d))
+                                 .on("mouseover", (event, d) => {
+                                     tooltipGender.transition()
+                                                  .duration(200)
+                                                  .style("opacity", .9);
+                                     tooltipGender.html(`Count: ${d}`)
+                                                  .style("left", (event.pageX + 5) + "px")
+                                                  .style("top", (event.pageY - 28) + "px");
+                                 })
+                                 .on("mouseout", (d) => {
+                                     tooltipGender.transition()
+                                                  .duration(500)
+                                                  .style("opacity", 0);
+                                 });
+
+                        // Add axis labels
+                        svgGender.append("text")
+                                 .attr("class", "axis-label")
+                                 .attr("x", widthGender / 2)
+                                 .attr("y", heightGender + marginGender.bottom)
+                                 .attr("text-anchor", "middle")
+                                 .text("Gender");
+
+                        svgGender.append("text")
+                                 .attr("class", "axis-label")
+                                 .attr("x", -heightGender / 2)
+                                 .attr("y", -marginGender.left + 10)
+                                 .attr("text-anchor", "middle")
+                                 .attr("transform", "rotate(-90)")
+                                 .text("Count");
+                    }).catch(error => {
+                        console.error('Error loading the CSV data: ', error);
+                    });
+                </script>
             </div>
 
-            <div id="positionsByGender" class="visualization hidden">
+
+                       <div id="positionsByGender" class="visualization hidden">
                 <h3>Distribution of Player Positions by Gender</h3>
                 <div id="chart-positionsByGender"></div>
+                <!-- D3.js code for Player Positions by Gender -->
+                <script>
+                    // Set dimensions and margins
+                    const marginPositionsByGender = {top: 20, right: 30, bottom: 40, left: 40},
+                          widthPositionsByGender = 800 - marginPositionsByGender.left - marginPositionsByGender.right,
+                          heightPositionsByGender = 500 - marginPositionsByGender.top - marginPositionsByGender.bottom;
+
+                    // Append SVG element
+                    const svgPositionsByGender = d3.select("#chart-positionsByGender")
+                                                   .append("svg")
+                                                   .attr("width", widthPositionsByGender + marginPositionsByGender.left + marginPositionsByGender.right)
+                                                   .attr("height", heightPositionsByGender + marginPositionsByGender.top + marginPositionsByGender.bottom)
+                                                   .append("g")
+                                                   .attr("transform", `translate(${marginPositionsByGender.left},${marginPositionsByGender.top})`);
+
+                    // Tooltip
+                    const tooltipPositionsByGender = d3.select("body").append("div")
+                                                       .attr("class", "tooltip")
+                                                       .style("opacity", 0);
+
+                    // Load data
+                    d3.csv("all_players.csv").then(data => {
+                        // Process data
+                        const nestedData = d3.groups(data, d => d.Gender, d => d.Position).map(group => {
+                            return {
+                                gender: group[0],
+                                positions: group[1].map(positionGroup => {
+                                    return {
+                                        position: positionGroup[0],
+                                        count: positionGroup[1].length
+                                    };
+                                })
+                            };
+                        });
+
+                        const genders = Array.from(new Set(data.map(d => d.Gender)));
+                        const positions = Array.from(new Set(data.map(d => d.Position)));
+
+                        // X axis
+                        const x0 = d3.scaleBand()
+                                     .domain(genders)
+                                     .rangeRound([0, widthPositionsByGender])
+                                     .paddingInner(0.1);
+                        const x1 = d3.scaleBand()
+                                     .domain(positions)
+                                     .rangeRound([0, x0.bandwidth()])
+                                     .padding(0.05);
+
+                        svgPositionsByGender.append("g")
+                                            .attr("transform", `translate(0,${heightPositionsByGender})`)
+                                            .call(d3.axisBottom(x0));
+
+                        // Y axis
+                        const yPositionsByGender = d3.scaleLinear()
+                                                     .domain([0, d3.max(nestedData, d => d3.max(d.positions, p => p.count))])
+                                                     .nice()
+                                                     .range([heightPositionsByGender, 0]);
+                        svgPositionsByGender.append("g")
+                                            .call(d3.axisLeft(yPositionsByGender));
+
+                        // Bars
+                        svgPositionsByGender.append("g")
+                                            .selectAll("g")
+                                            .data(nestedData)
+                                            .enter()
+                                            .append("g")
+                                            .attr("transform", d => `translate(${x0(d.gender)},0)`)
+                                            .selectAll("rect")
+                                            .data(d => d.positions)
+                                            .enter()
+                                            .append("rect")
+                                            .attr("x", d => x1(d.position))
+                                            .attr("y", d => yPositionsByGender(d.count))
+                                            .attr("width", x1.bandwidth())
+                                            .attr("height", d => heightPositionsByGender - yPositionsByGender(d.count))
+                                            .attr("fill", d => d.position === "Male" ? "steelblue" : "pink")
+                                            .on("mouseover", (event, d) => {
+                                                tooltipPositionsByGender.transition()
+                                                                        .duration(200)
+                                                                        .style("opacity", .9);
+                                                tooltipPositionsByGender.html(`Count: ${d.count}`)
+                                                                        .style("left", (event.pageX + 5) + "px")
+                                                                        .style("top", (event.pageY - 28) + "px");
+                                            })
+                                            .on("mouseout", (d) => {
+                                                tooltipPositionsByGender.transition()
+                                                                        .duration(500)
+                                                                        .style("opacity", 0);
+                                            });
+
+                        // Add axis labels
+                        svgPositionsByGender.append("text")
+                                            .attr("class", "axis-label")
+                                            .attr("x", widthPositionsByGender / 2)
+                                            .attr("y", heightPositionsByGender + marginPositionsByGender.bottom)
+                                            .attr("text-anchor", "middle")
+                                            .text("Gender");
+
+                        svgPositionsByGender.append("text")
+                                            .attr("class", "axis-label")
+                                            .attr("x", -heightPositionsByGender / 2)
+                                            .attr("y", -marginPositionsByGender.left + 10)
+                                            .attr("text-anchor", "middle")
+                                            .attr("transform", "rotate(-90)")
+                                            .text("Count");
+                    }).catch(error => {
+                        console.error('Error loading the CSV data: ', error);
+                    });
+                </script>
             </div>
+
         </div>
     </section>
     <footer>
