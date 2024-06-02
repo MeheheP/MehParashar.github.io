@@ -85,6 +85,7 @@
                 <button class="button" onclick="showVisualization('featureImportance')">Feature Importance</button>
                 <button class="button" onclick="showVisualization('kMeansClustering')">Enhanced K-Means Clustering of Players</button>
                 <button class="button" onclick="showVisualization('positionalHeatmaps')">Positional Heatmaps</button>
+                <button class="button" onclick="showVisualization('ageVsOverallRating')">Age vs. Overall Rating</button>
 
             </div>
 
@@ -1086,6 +1087,110 @@
         });
     </script>
 </div>
+
+            <div id="ageVsOverallRating" class="visualization hidden">
+    <h3 style="color: white;">Age vs. Overall Rating</h3>
+    <div id="chart-ageVsOverallRating"></div>
+    <!-- D3.js code for Age vs. Overall Rating -->
+    <script>
+        // Set dimensions and margins
+        const marginAgeVsOverallRating = {top: 20, right: 30, bottom: 100, left: 40},
+              widthAgeVsOverallRating = 800 - marginAgeVsOverallRating.left - marginAgeVsOverallRating.right,
+              heightAgeVsOverallRating = 500 - marginAgeVsOverallRating.top - marginAgeVsOverallRating.bottom;
+
+        // Append SVG element
+        const svgAgeVsOverallRating = d3.select("#chart-ageVsOverallRating")
+                                        .append("svg")
+                                        .attr("width", widthAgeVsOverallRating + marginAgeVsOverallRating.left + marginAgeVsOverallRating.right)
+                                        .attr("height", heightAgeVsOverallRating + marginAgeVsOverallRating.top + marginAgeVsOverallRating.bottom)
+                                        .append("g")
+                                        .attr("transform", `translate(${marginAgeVsOverallRating.left},${marginAgeVsOverallRating.top})`);
+
+        // Tooltip
+        const tooltipAgeVsOverallRating = d3.select("body").append("div")
+                                            .attr("class", "tooltip")
+                                            .style("opacity", 0)
+                                            .style("background", "lightsteelblue")
+                                            .style("border-radius", "5px")
+                                            .style("padding", "5px")
+                                            .style("position", "absolute")
+                                            .style("text-align", "center");
+
+        // Load data
+        d3.csv("all_players.csv").then(data => {
+            // Process data
+            const ageOverallData = data.map(d => ({
+                Age: +d.Age,
+                Overall: +d.Overall
+            })).filter(d => !isNaN(d.Age) && !isNaN(d.Overall));
+
+            // X axis
+            const xAgeVsOverallRating = d3.scaleLinear()
+                                          .domain([d3.min(ageOverallData, d => d.Age), d3.max(ageOverallData, d => d.Age)])
+                                          .nice()
+                                          .range([0, widthAgeVsOverallRating]);
+            svgAgeVsOverallRating.append("g")
+                                 .attr("transform", `translate(0,${heightAgeVsOverallRating})`)
+                                 .call(d3.axisBottom(xAgeVsOverallRating))
+                                 .selectAll("text")
+                                 .style("fill", "white");
+
+            // Y axis
+            const yAgeVsOverallRating = d3.scaleLinear()
+                                          .domain([d3.min(ageOverallData, d => d.Overall), d3.max(ageOverallData, d => d.Overall)])
+                                          .nice()
+                                          .range([heightAgeVsOverallRating, 0]);
+            svgAgeVsOverallRating.append("g")
+                                 .call(d3.axisLeft(yAgeVsOverallRating))
+                                 .selectAll("text")
+                                 .style("fill", "white");
+
+            // Points
+            svgAgeVsOverallRating.selectAll("circle")
+                                 .data(ageOverallData)
+                                 .enter()
+                                 .append("circle")
+                                 .attr("cx", d => xAgeVsOverallRating(d.Age))
+                                 .attr("cy", d => yAgeVsOverallRating(d.Overall))
+                                 .attr("r", 5)
+                                 .style("fill", "steelblue")
+                                 .on("mouseover", (event, d) => {
+                                     tooltipAgeVsOverallRating.transition()
+                                                              .duration(200)
+                                                              .style("opacity", .9);
+                                     tooltipAgeVsOverallRating.html(`Age: ${d.Age}<br>Overall Rating: ${d.Overall}`)
+                                                              .style("left", (event.pageX + 5) + "px")
+                                                              .style("top", (event.pageY - 28) + "px");
+                                 })
+                                 .on("mouseout", () => {
+                                     tooltipAgeVsOverallRating.transition()
+                                                              .duration(500)
+                                                              .style("opacity", 0);
+                                 });
+
+            // Add axis labels
+            svgAgeVsOverallRating.append("text")
+                                 .attr("class", "axis-label")
+                                 .attr("x", widthAgeVsOverallRating / 2)
+                                 .attr("y", heightAgeVsOverallRating + marginAgeVsOverallRating.bottom - 10)
+                                 .attr("text-anchor", "middle")
+                                 .style("fill", "white")
+                                 .text("Age");
+
+            svgAgeVsOverallRating.append("text")
+                                 .attr("class", "axis-label")
+                                 .attr("x", -heightAgeVsOverallRating / 2)
+                                 .attr("y", -marginAgeVsOverallRating.left + 10)
+                                 .attr("text-anchor", "middle")
+                                 .attr("transform", "rotate(-90)")
+                                 .style("fill", "white")
+                                 .text("Overall Rating");
+        }).catch(error => {
+            console.error('Error loading the CSV data: ', error);
+        });
+    </script>
+</div>
+
 
 
 
