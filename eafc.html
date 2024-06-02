@@ -84,6 +84,7 @@
                 <button class="button" onclick="showVisualization('positionsByGender')">Distribution of Player Positions by Gender</button>
                 <button class="button" onclick="showVisualization('featureImportance')">Feature Importance</button>
                 <button class="button" onclick="showVisualization('kMeansClustering')">Enhanced K-Means Clustering of Players</button>
+                <button class="button" onclick="showVisualization('positionalHeatmaps')">Positional Heatmaps</button>
 
             </div>
 
@@ -963,6 +964,123 @@
                     }
                 });
             }
+        }).catch(error => {
+            console.error('Error loading the CSV data: ', error);
+        });
+    </script>
+</div>
+
+                <div id="positionalHeatmaps" class="visualization hidden">
+    <h3 style="color: white;">Positional Heatmaps</h3>
+    <div id="chart-positionalHeatmaps"></div>
+    <!-- D3.js code for Positional Heatmaps -->
+    <script>
+        // Set dimensions and margins
+        const marginPositionalHeatmaps = {top: 20, right: 30, bottom: 100, left: 40},
+              widthPositionalHeatmaps = 800 - marginPositionalHeatmaps.left - marginPositionalHeatmaps.right,
+              heightPositionalHeatmaps = 500 - marginPositionalHeatmaps.top - marginPositionalHeatmaps.bottom;
+
+        // Append SVG element
+        const svgPositionalHeatmaps = d3.select("#chart-positionalHeatmaps")
+                                        .append("svg")
+                                        .attr("width", widthPositionalHeatmaps + marginPositionalHeatmaps.left + marginPositionalHeatmaps.right)
+                                        .attr("height", heightPositionalHeatmaps + marginPositionalHeatmaps.top + marginPositionalHeatmaps.bottom)
+                                        .append("g")
+                                        .attr("transform", `translate(${marginPositionalHeatmaps.left},${marginPositionalHeatmaps.top})`);
+
+        // Tooltip
+        const tooltipPositionalHeatmaps = d3.select("body").append("div")
+                                            .attr("class", "tooltip")
+                                            .style("opacity", 0)
+                                            .style("background", "lightsteelblue")
+                                            .style("border-radius", "5px")
+                                            .style("padding", "5px")
+                                            .style("position", "absolute")
+                                            .style("text-align", "center");
+
+        // Load data
+        d3.csv("all_players.csv").then(data => {
+            // Process data
+            const positions = Array.from(new Set(data.map(d => d.Position)));
+            const metrics = ['Pace', 'Shooting', 'Passing', 'Dribbling', 'Defending', 'Physicality'];
+
+            const heatmapData = [];
+            positions.forEach(pos => {
+                metrics.forEach(metric => {
+                    const meanValue = d3.mean(data.filter(d => d.Position === pos), d => +d[metric]);
+                    if (!isNaN(meanValue)) {
+                        heatmapData.push({ Position: pos, Metric: metric, Value: meanValue });
+                    }
+                });
+            });
+
+            // X axis
+            const xPositionalHeatmaps = d3.scaleBand()
+                                          .domain(metrics)
+                                          .range([0, widthPositionalHeatmaps])
+                                          .padding(0.05);
+            svgPositionalHeatmaps.append("g")
+                                 .attr("transform", `translate(0,${heightPositionalHeatmaps})`)
+                                 .call(d3.axisBottom(xPositionalHeatmaps))
+                                 .selectAll("text")
+                                 .style("fill", "white");
+
+            // Y axis
+            const yPositionalHeatmaps = d3.scaleBand()
+                                          .domain(positions)
+                                          .range([heightPositionalHeatmaps, 0])
+                                          .padding(0.05);
+            svgPositionalHeatmaps.append("g")
+                                 .call(d3.axisLeft(yPositionalHeatmaps))
+                                 .selectAll("text")
+                                 .style("fill", "white");
+
+            // Color scale
+            const colorScale = d3.scaleSequential()
+                                 .interpolator(d3.interpolateInferno)
+                                 .domain([0, d3.max(heatmapData, d => d.Value)]);
+
+            // Rectangles
+            svgPositionalHeatmaps.selectAll()
+                                 .data(heatmapData, d => d.Position + ':' + d.Metric)
+                                 .enter()
+                                 .append("rect")
+                                 .attr("x", d => xPositionalHeatmaps(d.Metric))
+                                 .attr("y", d => yPositionalHeatmaps(d.Position))
+                                 .attr("width", xPositionalHeatmaps.bandwidth())
+                                 .attr("height", yPositionalHeatmaps.bandwidth())
+                                 .style("fill", d => colorScale(d.Value))
+                                 .on("mouseover", (event, d) => {
+                                     tooltipPositionalHeatmaps.transition()
+                                                              .duration(200)
+                                                              .style("opacity", .9);
+                                     tooltipPositionalHeatmaps.html(`Position: ${d.Position}<br>Metric: ${d.Metric}<br>Value: ${d.Value.toFixed(2)}`)
+                                                              .style("left", (event.pageX + 5) + "px")
+                                                              .style("top", (event.pageY - 28) + "px");
+                                 })
+                                 .on("mouseout", () => {
+                                     tooltipPositionalHeatmaps.transition()
+                                                              .duration(500)
+                                                              .style("opacity", 0);
+                                 });
+
+            // Add axis labels
+            svgPositionalHeatmaps.append("text")
+                                 .attr("class", "axis-label")
+                                 .attr("x", widthPositionalHeatmaps / 2)
+                                 .attr("y", heightPositionalHeatmaps + marginPositionalHeatmaps.bottom - 10)
+                                 .attr("text-anchor", "middle")
+                                 .style("fill", "white")
+                                 .text("Metric");
+
+            svgPositionalHeatmaps.append("text")
+                                 .attr("class", "axis-label")
+                                 .attr("x", -heightPositionalHeatmaps / 2)
+                                 .attr("y", -marginPositionalHeatmaps.left + 10)
+                                 .attr("text-anchor", "middle")
+                                 .attr("transform", "rotate(-90)")
+                                 .style("fill", "white")
+                                 .text("Position");
         }).catch(error => {
             console.error('Error loading the CSV data: ', error);
         });
