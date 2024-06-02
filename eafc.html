@@ -561,7 +561,7 @@
             </div>
 
 
-                       <div id="positionsByGender" class="visualization hidden">
+                      <div id="positionsByGender" class="visualization hidden">
     <h3>Distribution of Player Positions by Gender</h3>
     <div id="chart-positionsByGender"></div>
     <!-- D3.js code for Player Positions by Gender -->
@@ -587,13 +587,13 @@
         // Load data
         d3.csv("all_players.csv").then(data => {
             // Process data
-            const nestedData = d3.groups(data, d => d.Gender, d => d.Position).map(group => {
+            const nestedData = d3.groups(data, d => d.Position, d => d.Gender).map(group => {
                 return {
-                    gender: group[0],
-                    positions: group[1].map(positionGroup => {
+                    position: group[0],
+                    genders: group[1].map(genderGroup => {
                         return {
-                            position: positionGroup[0],
-                            count: positionGroup[1].length
+                            gender: genderGroup[0],
+                            count: genderGroup[1].length
                         };
                     })
                 };
@@ -604,30 +604,41 @@
 
             // X axis
             const x0 = d3.scaleBand()
-                         .domain(genders)
+                         .domain(positions)
                          .rangeRound([0, widthPositionsByGender])
                          .paddingInner(0.1);
             const x1 = d3.scaleBand()
-                         .domain(positions)
+                         .domain(genders)
                          .rangeRound([0, x0.bandwidth()])
                          .padding(0.05);
 
             svgPositionsByGender.append("g")
                                 .attr("transform", `translate(0,${heightPositionsByGender})`)
-                                .call(d3.axisBottom(x0).ticks(2));
+                                .call(d3.axisBottom(x0).tickSize(0))
+                                .selectAll("text")
+                                .attr("transform", "rotate(-45)")
+                                .style("text-anchor", "end");
 
+            // Y axis
+            const yPositionsByGender = d3.scaleLinear()
+                                         .domain([0, d3.max(nestedData, d => d3.max(d.genders, g => g.count))])
+                                         .nice()
+                                         .range([heightPositionsByGender, 0]);
             svgPositionsByGender.append("g")
-                                .attr("transform", `translate(0,${heightPositionsByGender})`)
+                                .call(d3.axisLeft(yPositionsByGender));
+
+            // Bars
+            svgPositionsByGender.append("g")
                                 .selectAll("g")
                                 .data(nestedData)
                                 .enter()
                                 .append("g")
-                                .attr("transform", d => `translate(${x0(d.gender)},0)`)
+                                .attr("transform", d => `translate(${x0(d.position)},0)`)
                                 .selectAll("rect")
-                                .data(d => d.positions)
+                                .data(d => d.genders)
                                 .enter()
                                 .append("rect")
-                                .attr("x", d => x1(d.position))
+                                .attr("x", d => x1(d.gender))
                                 .attr("y", d => yPositionsByGender(d.count))
                                 .attr("width", x1.bandwidth())
                                 .attr("height", d => heightPositionsByGender - yPositionsByGender(d.count))
@@ -652,7 +663,7 @@
                                 .attr("x", widthPositionsByGender / 2)
                                 .attr("y", heightPositionsByGender + marginPositionsByGender.bottom - 10)
                                 .attr("text-anchor", "middle")
-                                .text("Gender");
+                                .text("Position");
 
             svgPositionsByGender.append("text")
                                 .attr("class", "axis-label")
@@ -661,14 +672,6 @@
                                 .attr("text-anchor", "middle")
                                 .attr("transform", "rotate(-90)")
                                 .text("Count");
-
-            // Y axis
-            const yPositionsByGender = d3.scaleLinear()
-                                         .domain([0, d3.max(nestedData, d => d3.max(d.positions, p => p.count))])
-                                         .nice()
-                                         .range([heightPositionsByGender, 0]);
-            svgPositionsByGender.append("g")
-                                .call(d3.axisLeft(yPositionsByGender));
 
             // Legend
             const legend = svgPositionsByGender.append("g")
@@ -702,7 +705,6 @@
         });
     </script>
 </div>
-
 
         </div>
     </section>
