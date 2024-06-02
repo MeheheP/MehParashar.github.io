@@ -1,14 +1,22 @@
+:root {
+    --primary-color: #39ff14; /* Neon green */
+    --secondary-color: #333;  /* Dark gray */
+    --accent-color: #555;     /* Light gray */
+    --background-color: #000; /* Black */
+    --text-color: #fff;       /* White */
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #000; /* Black background */
-    color: #fff; /* White text */
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 header {
-    background-color: #111; /* Dark background for header */
-    color: white;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
     padding: 1em 0;
     position: sticky;
     top: 0;
@@ -33,13 +41,18 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: var(--text-color);
     text-decoration: none;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: var(--primary-color);
 }
 
 #hero {
     background: url('images/hero-background.jpg') no-repeat center center/cover;
-    color: white;
+    color: var(--text-color);
     padding: 2em 0;
     text-align: center;
 }
@@ -65,53 +78,10 @@ section {
 }
 
 .progress-bar {
-    background-color: #333;
+    background-color: var(--secondary-color);
     border-radius: 5px;
+    box-shadow: 0 0 20px var(--primary-color); /* Neon green glow effect */
 }
 
 .progress {
-    background-color: #777;
-    height: 20px;
-    border-radius: 5px;
-}
-
-.project {
-    margin-bottom: 2em;
-    text-align: center;
-}
-
-.project img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
-
-.experience {
-    margin-bottom: 2em;
-}
-
-footer {
-    background-color: #111;
-    color: white;
-    text-align: center;
-    padding: 1em 0;
-}
-
-footer .social a {
-    margin: 0 1em;
-    color: white;
-    text-decoration: none;
-}
-
-button {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #555;
-}
+    background
