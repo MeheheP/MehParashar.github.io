@@ -708,7 +708,7 @@
         });
     </script>
 </div>
-            <div id="featureImportance" class="visualization hidden">
+           <div id="featureImportance" class="visualization hidden">
     <h3 style="color: white;">Feature Importance in Predicting Overall Ratings</h3>
     <div id="chart-featureImportance"></div>
     <!-- D3.js code for Feature Importance -->
@@ -738,14 +738,17 @@
 
         // Load data
         d3.csv("all_players.csv").then(data => {
-            // Process data
-            data.forEach(d => {
-                d.Importance = +d.Importance;
-            });
+            // Process data to calculate feature importance
+            // Assuming features are 'Pace', 'Shooting', 'Passing', 'Dribbling', 'Defending', 'Physicality'
+            const features = ['Pace', 'Shooting', 'Passing', 'Dribbling', 'Defending', 'Physicality'];
+            const importance = features.map(feature => ({
+                Feature: feature,
+                Importance: d3.mean(data, d => +d[feature])
+            }));
 
             // X axis
             const xFeatureImportance = d3.scaleBand()
-                                         .domain(data.map(d => d.Feature))
+                                         .domain(importance.map(d => d.Feature))
                                          .range([0, widthFeatureImportance])
                                          .padding(0.1);
             svgFeatureImportance.append("g")
@@ -758,7 +761,7 @@
 
             // Y axis
             const yFeatureImportance = d3.scaleLinear()
-                                         .domain([0, d3.max(data, d => d.Importance)])
+                                         .domain([0, d3.max(importance, d => d.Importance)])
                                          .nice()
                                          .range([heightFeatureImportance, 0]);
             svgFeatureImportance.append("g")
@@ -768,7 +771,7 @@
 
             // Bars
             svgFeatureImportance.selectAll(".bar")
-                                .data(data)
+                                .data(importance)
                                 .enter()
                                 .append("rect")
                                 .attr("class", "bar")
@@ -815,7 +818,7 @@
 </div>
 
 
-    <div id="kMeansClustering" class="visualization hidden">
+   <div id="kMeansClustering" class="visualization hidden">
     <h3 style="color: white;">Enhanced K-Means Clustering of Players</h3>
     <div id="chart-kMeansClustering"></div>
     <!-- D3.js code for K-Means Clustering -->
@@ -847,17 +850,24 @@
         d3.csv("all_players.csv").then(data => {
             // Process data
             data.forEach(d => {
-                d.x = +d.x;
-                d.y = +d.y;
-                d.cluster = +d.cluster;
+                d.Pace = +d.Pace;
+                d.Shooting = +d.Shooting;
+                d.Passing = +d.Passing;
+                d.Dribbling = +d.Dribbling;
+                d.Defending = +d.Defending;
+                d.Physicality = +d.Physicality;
             });
+
+            // K-Means Clustering (Assuming we have clusters predefined)
+            const clusters = kmeans(data, 3); // 3 clusters for example
+            clusters.forEach((d, i) => d.cluster = i);
 
             // Color scale
             const color = d3.scaleOrdinal(d3.schemeSet2);
 
             // X axis
             const xKMeansClustering = d3.scaleLinear()
-                                        .domain([d3.min(data, d => d.x), d3.max(data, d => d.x)])
+                                        .domain([d3.min(clusters, d => d.Pace), d3.max(clusters, d => d.Pace)])
                                         .nice()
                                         .range([0, widthKMeansClustering]);
             svgKMeansClustering.append("g")
@@ -868,7 +878,7 @@
 
             // Y axis
             const yKMeansClustering = d3.scaleLinear()
-                                        .domain([d3.min(data, d => d.y), d3.max(data, d => d.y)])
+                                        .domain([d3.min(clusters, d => d.Shooting), d3.max(clusters, d => d.Shooting)])
                                         .nice()
                                         .range([heightKMeansClustering, 0]);
             svgKMeansClustering.append("g")
@@ -878,18 +888,18 @@
 
             // Points
             svgKMeansClustering.selectAll("circle")
-                               .data(data)
+                               .data(clusters)
                                .enter()
                                .append("circle")
-                               .attr("cx", d => xKMeansClustering(d.x))
-                               .attr("cy", d => yKMeansClustering(d.y))
+                               .attr("cx", d => xKMeansClustering(d.Pace))
+                               .attr("cy", d => yKMeansClustering(d.Shooting))
                                .attr("r", 5)
                                .style("fill", d => color(d.cluster))
-                               .on("mouseover", (event, d) => {
+                                                               .on("mouseover", (event, d) => {
                                    tooltipKMeansClustering.transition()
                                                           .duration(200)
                                                           .style("opacity", .9);
-                                   tooltipKMeansClustering.html(`Cluster: ${d.cluster}<br>x: ${d.x}<br>y: ${d.y}`)
+                                   tooltipKMeansClustering.html(`Cluster: ${d.cluster}<br>Pace: ${d.Pace}<br>Shooting: ${d.Shooting}`)
                                                           .style("left", (event.pageX + 5) + "px")
                                                           .style("top", (event.pageY - 28) + "px");
                                })
@@ -906,7 +916,7 @@
                                .attr("y", heightKMeansClustering + marginKMeansClustering.bottom - 10)
                                .attr("text-anchor", "middle")
                                .style("fill", "white")
-                               .text("x");
+                               .text("Pace");
 
             svgKMeansClustering.append("text")
                                .attr("class", "axis-label")
@@ -915,14 +925,43 @@
                                .attr("text-anchor", "middle")
                                .attr("transform", "rotate(-90)")
                                .style("fill", "white")
-                               .text("y");
+                               .text("Shooting");
         }).catch(error => {
             console.error('Error loading the CSV data: ', error);
         });
+
+        // Simple K-means clustering function
+        function kmeans(data, k) {
+            // Initial centroids
+            const centroids = data.slice(0, k).map(d => ({
+                Pace: d.Pace,
+                Shooting: d.Shooting,
+                cluster: 0
+            }));
+
+            let assignments = [];
+            for (let i = 0; i < 10; i++) { // 10 iterations
+                // Assign points to clusters
+                assignments = data.map(d => {
+                    let distances = centroids.map(c => Math.sqrt(Math.pow(d.Pace - c.Pace, 2) + Math.pow(d.Shooting - c.Shooting, 2)));
+                    return distances.indexOf(Math.min(...distances));
+                });
+
+                // Recompute centroids
+                for (let j = 0; j < k; j++) {
+                    let clusterPoints = data.filter((_, idx) => assignments[idx] === j);
+                    centroids[j] = {
+                        Pace: d3.mean(clusterPoints, d => d.Pace),
+                        Shooting: d3.mean(clusterPoints, d => d.Shooting),
+                        cluster: j
+                    };
+                }
+            }
+            return data.map((d, idx) => ({...d, cluster: assignments[idx]}));
+        }
     </script>
 </div>
 
-            
 
 
 
