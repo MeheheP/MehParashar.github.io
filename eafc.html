@@ -737,7 +737,7 @@
                                            .style("text-align", "center");
 
         // Load data
-        d3.csv("feature_importance.csv").then(data => {
+        d3.csv("all_players.csv").then(data => {
             // Process data
             data.forEach(d => {
                 d.Importance = +d.Importance;
@@ -844,7 +844,7 @@
                                           .style("text-align", "center");
 
         // Load data
-        d3.csv("kmeans_clustering.csv").then(data => {
+        d3.csv("all_players.csv").then(data => {
             // Process data
             data.forEach(d => {
                 d.x = +d.x;
