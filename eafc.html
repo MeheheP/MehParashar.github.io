@@ -31,6 +31,16 @@
         .button:hover {
             background-color: #218838;
         }
+        .visualization svg {
+            width: 100%;
+            height: auto;
+        }
+        .bar {
+            fill: steelblue;
+        }
+        .bar:hover {
+            fill: orange;
+        }
     </style>
 </head>
 <body>
@@ -87,10 +97,14 @@
 
                     // Load data
                     d3.csv("all_players.csv").then(data => {
+                        console.log(data); // Log data to ensure it's loaded correctly
+
                         // Process data
                         const ageCounts = d3.rollup(data, v => v.length, d => d.Age);
                         const ages = Array.from(ageCounts.keys());
                         const counts = Array.from(ageCounts.values());
+
+                        console.log(ageCounts); // Log processed data to ensure correct processing
 
                         // X axis
                         const xAges = d3.scaleBand()
