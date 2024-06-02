@@ -82,6 +82,9 @@
                 <button class="button" onclick="showVisualization('preferredFoot')">Distribution of Player Preferred Foot</button>
                 <button class="button" onclick="showVisualization('gender')">Distribution of Player Gender</button>
                 <button class="button" onclick="showVisualization('positionsByGender')">Distribution of Player Positions by Gender</button>
+                <button class="button" onclick="showVisualization('featureImportance')">Feature Importance</button>
+                <button class="button" onclick="showVisualization('kMeansClustering')">Enhanced K-Means Clustering of Players</button>
+
             </div>
 
                        <div id="positions" class="visualization hidden">
@@ -705,6 +708,235 @@
         });
     </script>
 </div>
+            <div id="featureImportance" class="visualization hidden">
+    <h3 style="color: white;">Feature Importance in Predicting Overall Ratings</h3>
+    <div id="chart-featureImportance"></div>
+    <!-- D3.js code for Feature Importance -->
+    <script>
+        // Set dimensions and margins
+        const marginFeatureImportance = {top: 20, right: 30, bottom: 100, left: 40},
+              widthFeatureImportance = 800 - marginFeatureImportance.left - marginFeatureImportance.right,
+              heightFeatureImportance = 500 - marginFeatureImportance.top - marginFeatureImportance.bottom;
+
+        // Append SVG element
+        const svgFeatureImportance = d3.select("#chart-featureImportance")
+                                       .append("svg")
+                                       .attr("width", widthFeatureImportance + marginFeatureImportance.left + marginFeatureImportance.right)
+                                       .attr("height", heightFeatureImportance + marginFeatureImportance.top + marginFeatureImportance.bottom)
+                                       .append("g")
+                                       .attr("transform", `translate(${marginFeatureImportance.left},${marginFeatureImportance.top})`);
+
+        // Tooltip
+        const tooltipFeatureImportance = d3.select("body").append("div")
+                                           .attr("class", "tooltip")
+                                           .style("opacity", 0)
+                                           .style("background", "lightsteelblue")
+                                           .style("border-radius", "5px")
+                                           .style("padding", "5px")
+                                           .style("position", "absolute")
+                                           .style("text-align", "center");
+
+        // Load data
+        d3.csv("feature_importance.csv").then(data => {
+            // Process data
+            data.forEach(d => {
+                d.Importance = +d.Importance;
+            });
+
+            // X axis
+            const xFeatureImportance = d3.scaleBand()
+                                         .domain(data.map(d => d.Feature))
+                                         .range([0, widthFeatureImportance])
+                                         .padding(0.1);
+            svgFeatureImportance.append("g")
+                                .attr("transform", `translate(0,${heightFeatureImportance})`)
+                                .call(d3.axisBottom(xFeatureImportance))
+                                .selectAll("text")
+                                .attr("transform", "rotate(-45)")
+                                .style("text-anchor", "end")
+                                .style("fill", "white");
+
+            // Y axis
+            const yFeatureImportance = d3.scaleLinear()
+                                         .domain([0, d3.max(data, d => d.Importance)])
+                                         .nice()
+                                         .range([heightFeatureImportance, 0]);
+            svgFeatureImportance.append("g")
+                                .call(d3.axisLeft(yFeatureImportance))
+                                .selectAll("text")
+                                .style("fill", "white");
+
+            // Bars
+            svgFeatureImportance.selectAll(".bar")
+                                .data(data)
+                                .enter()
+                                .append("rect")
+                                .attr("class", "bar")
+                                .attr("x", d => xFeatureImportance(d.Feature))
+                                .attr("y", d => yFeatureImportance(d.Importance))
+                                .attr("width", xFeatureImportance.bandwidth())
+                                .attr("height", d => heightFeatureImportance - yFeatureImportance(d.Importance))
+                                .attr("fill", "steelblue")
+                                .on("mouseover", (event, d) => {
+                                    tooltipFeatureImportance.transition()
+                                                            .duration(200)
+                                                            .style("opacity", .9);
+                                    tooltipFeatureImportance.html(`Importance: ${d.Importance}`)
+                                                            .style("left", (event.pageX + 5) + "px")
+                                                            .style("top", (event.pageY - 28) + "px");
+                                })
+                                .on("mouseout", () => {
+                                    tooltipFeatureImportance.transition()
+                                                            .duration(500)
+                                                            .style("opacity", 0);
+                                });
+
+            // Add axis labels
+            svgFeatureImportance.append("text")
+                                .attr("class", "axis-label")
+                                .attr("x", widthFeatureImportance / 2)
+                                .attr("y", heightFeatureImportance + marginFeatureImportance.bottom - 10)
+                                .attr("text-anchor", "middle")
+                                .style("fill", "white")
+                                .text("Feature");
+
+            svgFeatureImportance.append("text")
+                                .attr("class", "axis-label")
+                                .attr("x", -heightFeatureImportance / 2)
+                                .attr("y", -marginFeatureImportance.left + 10)
+                                .attr("text-anchor", "middle")
+                                .attr("transform", "rotate(-90)")
+                                .style("fill", "white")
+                                .text("Importance");
+        }).catch(error => {
+            console.error('Error loading the CSV data: ', error);
+        });
+    </script>
+</div>
+
+
+    <div id="kMeansClustering" class="visualization hidden">
+    <h3 style="color: white;">Enhanced K-Means Clustering of Players</h3>
+    <div id="chart-kMeansClustering"></div>
+    <!-- D3.js code for K-Means Clustering -->
+    <script>
+        // Set dimensions and margins
+        const marginKMeansClustering = {top: 20, right: 30, bottom: 100, left: 40},
+              widthKMeansClustering = 800 - marginKMeansClustering.left - marginKMeansClustering.right,
+              heightKMeansClustering = 500 - marginKMeansClustering.top - marginKMeansClustering.bottom;
+
+        // Append SVG element
+        const svgKMeansClustering = d3.select("#chart-kMeansClustering")
+                                      .append("svg")
+                                      .attr("width", widthKMeansClustering + marginKMeansClustering.left + marginKMeansClustering.right)
+                                      .attr("height", heightKMeansClustering + marginKMeansClustering.top + marginKMeansClustering.bottom)
+                                      .append("g")
+                                      .attr("transform", `translate(${marginKMeansClustering.left},${marginKMeansClustering.top})`);
+
+        // Tooltip
+        const tooltipKMeansClustering = d3.select("body").append("div")
+                                          .attr("class", "tooltip")
+                                          .style("opacity", 0)
+                                          .style("background", "lightsteelblue")
+                                          .style("border-radius", "5px")
+                                          .style("padding", "5px")
+                                          .style("position", "absolute")
+                                          .style("text-align", "center");
+
+        // Load data
+        d3.csv("kmeans_clustering.csv").then(data => {
+            // Process data
+            data.forEach(d => {
+                d.x = +d.x;
+                d.y = +d.y;
+                d.cluster = +d.cluster;
+            });
+
+            // Color scale
+            const color = d3.scaleOrdinal(d3.schemeSet2);
+
+            // X axis
+            const xKMeansClustering = d3.scaleLinear()
+                                        .domain([d3.min(data, d => d.x), d3.max(data, d => d.x)])
+                                        .nice()
+                                        .range([0, widthKMeansClustering]);
+            svgKMeansClustering.append("g")
+                               .attr("transform", `translate(0,${heightKMeansClustering})`)
+                               .call(d3.axisBottom(xKMeansClustering))
+                               .selectAll("text")
+                               .style("fill", "white");
+
+            // Y axis
+            const yKMeansClustering = d3.scaleLinear()
+                                        .domain([d3.min(data, d => d.y), d3.max(data, d => d.y)])
+                                        .nice()
+                                        .range([heightKMeansClustering, 0]);
+            svgKMeansClustering.append("g")
+                               .call(d3.axisLeft(yKMeansClustering))
+                               .selectAll("text")
+                               .style("fill", "white");
+
+            // Points
+            svgKMeansClustering.selectAll("circle")
+                               .data(data)
+                               .enter()
+                               .append("circle")
+                               .attr("cx", d => xKMeansClustering(d.x))
+                               .attr("cy", d => yKMeansClustering(d.y))
+                               .attr("r", 5)
+                               .style("fill", d => color(d.cluster))
+                               .on("mouseover", (event, d) => {
+                                   tooltipKMeansClustering.transition()
+                                                          .duration(200)
+                                                          .style("opacity", .9);
+                                   tooltipKMeansClustering.html(`Cluster: ${d.cluster}<br>x: ${d.x}<br>y: ${d.y}`)
+                                                          .style("left", (event.pageX + 5) + "px")
+                                                          .style("top", (event.pageY - 28) + "px");
+                               })
+                               .on("mouseout", () => {
+                                   tooltipKMeansClustering.transition()
+                                                          .duration(500)
+                                                          .style("opacity", 0);
+                               });
+
+            // Add axis labels
+            svgKMeansClustering.append("text")
+                               .attr("class", "axis-label")
+                               .attr("x", widthKMeansClustering / 2)
+                               .attr("y", heightKMeansClustering + marginKMeansClustering.bottom - 10)
+                               .attr("text-anchor", "middle")
+                               .style("fill", "white")
+                               .text("x");
+
+            svgKMeansClustering.append("text")
+                               .attr("class", "axis-label")
+                               .attr("x", -heightKMeansClustering / 2)
+                               .attr("y", -marginKMeansClustering.left + 10)
+                               .attr("text-anchor", "middle")
+                               .attr("transform", "rotate(-90)")
+                               .style("fill", "white")
+                               .text("y");
+        }).catch(error => {
+            console.error('Error loading the CSV data: ', error);
+        });
+    </script>
+</div>
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
 
 
         </div>
