@@ -820,7 +820,7 @@
 </div>
 
 
-   <div id="kMeansClustering" class="visualization hidden">
+  <div id="kMeansClustering" class="visualization hidden">
     <h3 style="color: white;">Enhanced K-Means Clustering of Players</h3>
     <div id="chart-kMeansClustering"></div>
     <!-- D3.js code for K-Means Clustering -->
@@ -850,26 +850,31 @@
 
         // Load data
         d3.csv("all_players.csv").then(data => {
-            // Process data
-            data.forEach(d => {
-                d.Pace = +d.Pace;
-                d.Shooting = +d.Shooting;
-                d.Passing = +d.Passing;
-                d.Dribbling = +d.Dribbling;
-                d.Defending = +d.Defending;
-                d.Physicality = +d.Physicality;
-            });
+            // Process data to calculate clusters
+            const clusterData = data.map(d => ({
+                Pace: +d.Pace,
+                Shooting: +d.Shooting,
+                cluster: null
+            }));
 
-            // K-Means Clustering (Assuming we have clusters predefined)
-            const clusters = kmeans(data, 3); // 3 clusters for example
-            clusters.forEach((d, i) => d.cluster = i);
+            // Implement K-Means Clustering
+            const k = 3; // Number of clusters
+            const centroids = initializeCentroids(clusterData, k);
+            let clusters = assignClusters(clusterData, centroids);
+
+            // Recalculate centroids and reassign clusters until convergence
+            let iterations = 10; // Maximum number of iterations
+            for (let i = 0; i < iterations; i++) {
+                recalculateCentroids(clusters, centroids);
+                clusters = assignClusters(clusterData, centroids);
+            }
 
             // Color scale
             const color = d3.scaleOrdinal(d3.schemeSet2);
 
             // X axis
             const xKMeansClustering = d3.scaleLinear()
-                                        .domain([d3.min(clusters, d => d.Pace), d3.max(clusters, d => d.Pace)])
+                                        .domain([d3.min(clusterData, d => d.Pace), d3.max(clusterData, d => d.Pace)])
                                         .nice()
                                         .range([0, widthKMeansClustering]);
             svgKMeansClustering.append("g")
@@ -880,7 +885,7 @@
 
             // Y axis
             const yKMeansClustering = d3.scaleLinear()
-                                        .domain([d3.min(clusters, d => d.Shooting), d3.max(clusters, d => d.Shooting)])
+                                        .domain([d3.min(clusterData, d => d.Shooting), d3.max(clusterData, d => d.Shooting)])
                                         .nice()
                                         .range([heightKMeansClustering, 0]);
             svgKMeansClustering.append("g")
@@ -897,7 +902,7 @@
                                .attr("cy", d => yKMeansClustering(d.Shooting))
                                .attr("r", 5)
                                .style("fill", d => color(d.cluster))
-                                                               .on("mouseover", (event, d) => {
+                               .on("mouseover", (event, d) => {
                                    tooltipKMeansClustering.transition()
                                                           .duration(200)
                                                           .style("opacity", .9);
@@ -928,42 +933,41 @@
                                .attr("transform", "rotate(-90)")
                                .style("fill", "white")
                                .text("Shooting");
+
+            // Initialize centroids randomly from the data points
+            function initializeCentroids(data, k) {
+                const centroids = [];
+                for (let i = 0; i < k; i++) {
+                    const randomIndex = Math.floor(Math.random() * data.length);
+                    centroids.push({ ...data[randomIndex], cluster: i });
+                }
+                return centroids;
+            }
+
+            // Assign clusters based on nearest centroid
+            function assignClusters(data, centroids) {
+                return data.map(d => {
+                    const distances = centroids.map(c => Math.sqrt(Math.pow(d.Pace - c.Pace, 2) + Math.pow(d.Shooting - c.Shooting, 2)));
+                    const cluster = distances.indexOf(Math.min(...distances));
+                    return { ...d, cluster: cluster };
+                });
+            }
+
+            // Recalculate centroids
+            function recalculateCentroids(clusters, centroids) {
+                centroids.forEach((centroid, i) => {
+                    const clusterPoints = clusters.filter(d => d.cluster === i);
+                    if (clusterPoints.length > 0) {
+                        centroid.Pace = d3.mean(clusterPoints, d => d.Pace);
+                        centroid.Shooting = d3.mean(clusterPoints, d => d.Shooting);
+                    }
+                });
+            }
         }).catch(error => {
             console.error('Error loading the CSV data: ', error);
         });
-
-        // Simple K-means clustering function
-        function kmeans(data, k) {
-            // Initial centroids
-            const centroids = data.slice(0, k).map(d => ({
-                Pace: d.Pace,
-                Shooting: d.Shooting,
-                cluster: 0
-            }));
-
-            let assignments = [];
-            for (let i = 0; i < 10; i++) { // 10 iterations
-                // Assign points to clusters
-                assignments = data.map(d => {
-                    let distances = centroids.map(c => Math.sqrt(Math.pow(d.Pace - c.Pace, 2) + Math.pow(d.Shooting - c.Shooting, 2)));
-                    return distances.indexOf(Math.min(...distances));
-                });
-
-                // Recompute centroids
-                for (let j = 0; j < k; j++) {
-                    let clusterPoints = data.filter((_, idx) => assignments[idx] === j);
-                    centroids[j] = {
-                        Pace: d3.mean(clusterPoints, d => d.Pace),
-                        Shooting: d3.mean(clusterPoints, d => d.Shooting),
-                        cluster: j
-                    };
-                }
-            }
-            return data.map((d, idx) => ({...d, cluster: assignments[idx]}));
-        }
     </script>
 </div>
-
 
 
 
