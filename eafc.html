@@ -84,10 +84,101 @@
                 <button class="button" onclick="showVisualization('positionsByGender')">Distribution of Player Positions by Gender</button>
             </div>
 
-            <div id="positions" class="visualization hidden">
+                       <div id="positions" class="visualization hidden">
                 <h3>Distribution of Player Positions</h3>
                 <div id="chart-positions"></div>
+                <!-- D3.js code for Player Positions -->
+                <script>
+                    // Set dimensions and margins
+                    const marginPositions = {top: 20, right: 30, bottom: 40, left: 40},
+                          widthPositions = 800 - marginPositions.left - marginPositions.right,
+                          heightPositions = 500 - marginPositions.top - marginPositions.bottom;
+
+                    // Append SVG element
+                    const svgPositions = d3.select("#chart-positions")
+                                           .append("svg")
+                                           .attr("width", widthPositions + marginPositions.left + marginPositions.right)
+                                           .attr("height", heightPositions + marginPositions.top + marginPositions.bottom)
+                                           .append("g")
+                                           .attr("transform", `translate(${marginPositions.left},${marginPositions.top})`);
+
+                    // Tooltip
+                    const tooltipPositions = d3.select("body").append("div")
+                                               .attr("class", "tooltip")
+                                               .style("opacity", 0);
+
+                    // Load data
+                    d3.csv("all_players.csv").then(data => {
+                        // Process data
+                        const positionCounts = d3.rollup(data, v => v.length, d => d.Position);
+                        const positions = Array.from(positionCounts.keys()).sort();
+                        const counts = positions.map(position => positionCounts.get(position));
+
+                        // X axis
+                        const xPositions = d3.scaleBand()
+                                             .domain(positions)
+                                             .range([0, widthPositions])
+                                             .padding(0.1);
+                        svgPositions.append("g")
+                                    .attr("transform", `translate(0,${heightPositions})`)
+                                    .call(d3.axisBottom(xPositions))
+                                    .selectAll("text")
+                                    .attr("transform", "rotate(-45)")
+                                    .style("text-anchor", "end");
+
+                        // Y axis
+                        const yPositions = d3.scaleLinear()
+                                             .domain([0, d3.max(counts)])
+                                             .nice()
+                                             .range([heightPositions, 0]);
+                        svgPositions.append("g")
+                                    .call(d3.axisLeft(yPositions));
+
+                        // Bars
+                        svgPositions.selectAll(".bar")
+                                    .data(counts)
+                                    .enter()
+                                    .append("rect")
+                                    .attr("class", "bar")
+                                    .attr("x", (d, i) => xPositions(positions[i]))
+                                    .attr("y", d => yPositions(d))
+                                    .attr("width", xPositions.bandwidth())
+                                    .attr("height", d => heightPositions - yPositions(d))
+                                    .on("mouseover", (event, d) => {
+                                        tooltipPositions.transition()
+                                                        .duration(200)
+                                                        .style("opacity", .9);
+                                        tooltipPositions.html(`Count: ${d}`)
+                                                        .style("left", (event.pageX + 5) + "px")
+                                                        .style("top", (event.pageY - 28) + "px");
+                                    })
+                                    .on("mouseout", (d) => {
+                                        tooltipPositions.transition()
+                                                        .duration(500)
+                                                        .style("opacity", 0);
+                                    });
+
+                        // Add axis labels
+                        svgPositions.append("text")
+                                    .attr("class", "axis-label")
+                                    .attr("x", widthPositions / 2)
+                                    .attr("y", heightPositions + marginPositions.bottom)
+                                    .attr("text-anchor", "middle")
+                                    .text("Position");
+
+                        svgPositions.append("text")
+                                    .attr("class", "axis-label")
+                                    .attr("x", -heightPositions / 2)
+                                    .attr("y", -marginPositions.left + 10)
+                                    .attr("text-anchor", "middle")
+                                    .attr("transform", "rotate(-90)")
+                                    .text("Count");
+                    }).catch(error => {
+                        console.error('Error loading the CSV data: ', error);
+                    });
+                </script>
             </div>
+
 
             <div id="ages" class="visualization hidden">
                 <h3>Distribution of Player Ages</h3>
