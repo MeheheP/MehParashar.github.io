@@ -562,118 +562,147 @@
 
 
                        <div id="positionsByGender" class="visualization hidden">
-                <h3>Distribution of Player Positions by Gender</h3>
-                <div id="chart-positionsByGender"></div>
-                <!-- D3.js code for Player Positions by Gender -->
-                <script>
-                    // Set dimensions and margins
-                    const marginPositionsByGender = {top: 20, right: 30, bottom: 40, left: 40},
-                          widthPositionsByGender = 800 - marginPositionsByGender.left - marginPositionsByGender.right,
-                          heightPositionsByGender = 500 - marginPositionsByGender.top - marginPositionsByGender.bottom;
+    <h3>Distribution of Player Positions by Gender</h3>
+    <div id="chart-positionsByGender"></div>
+    <!-- D3.js code for Player Positions by Gender -->
+    <script>
+        // Set dimensions and margins
+        const marginPositionsByGender = {top: 20, right: 30, bottom: 100, left: 40},
+              widthPositionsByGender = 800 - marginPositionsByGender.left - marginPositionsByGender.right,
+              heightPositionsByGender = 500 - marginPositionsByGender.top - marginPositionsByGender.bottom;
 
-                    // Append SVG element
-                    const svgPositionsByGender = d3.select("#chart-positionsByGender")
-                                                   .append("svg")
-                                                   .attr("width", widthPositionsByGender + marginPositionsByGender.left + marginPositionsByGender.right)
-                                                   .attr("height", heightPositionsByGender + marginPositionsByGender.top + marginPositionsByGender.bottom)
-                                                   .append("g")
-                                                   .attr("transform", `translate(${marginPositionsByGender.left},${marginPositionsByGender.top})`);
+        // Append SVG element
+        const svgPositionsByGender = d3.select("#chart-positionsByGender")
+                                       .append("svg")
+                                       .attr("width", widthPositionsByGender + marginPositionsByGender.left + marginPositionsByGender.right)
+                                       .attr("height", heightPositionsByGender + marginPositionsByGender.top + marginPositionsByGender.bottom)
+                                       .append("g")
+                                       .attr("transform", `translate(${marginPositionsByGender.left},${marginPositionsByGender.top})`);
 
-                    // Tooltip
-                    const tooltipPositionsByGender = d3.select("body").append("div")
-                                                       .attr("class", "tooltip")
-                                                       .style("opacity", 0);
+        // Tooltip
+        const tooltipPositionsByGender = d3.select("body").append("div")
+                                           .attr("class", "tooltip")
+                                           .style("opacity", 0);
 
-                    // Load data
-                    d3.csv("all_players.csv").then(data => {
-                        // Process data
-                        const nestedData = d3.groups(data, d => d.Gender, d => d.Position).map(group => {
-                            return {
-                                gender: group[0],
-                                positions: group[1].map(positionGroup => {
-                                    return {
-                                        position: positionGroup[0],
-                                        count: positionGroup[1].length
-                                    };
+        // Load data
+        d3.csv("all_players.csv").then(data => {
+            // Process data
+            const nestedData = d3.groups(data, d => d.Gender, d => d.Position).map(group => {
+                return {
+                    gender: group[0],
+                    positions: group[1].map(positionGroup => {
+                        return {
+                            position: positionGroup[0],
+                            count: positionGroup[1].length
+                        };
+                    })
+                };
+            });
+
+            const genders = Array.from(new Set(data.map(d => d.Gender)));
+            const positions = Array.from(new Set(data.map(d => d.Position)));
+
+            // X axis
+            const x0 = d3.scaleBand()
+                         .domain(genders)
+                         .rangeRound([0, widthPositionsByGender])
+                         .paddingInner(0.1);
+            const x1 = d3.scaleBand()
+                         .domain(positions)
+                         .rangeRound([0, x0.bandwidth()])
+                         .padding(0.05);
+
+            svgPositionsByGender.append("g")
+                                .attr("transform", `translate(0,${heightPositionsByGender})`)
+                                .call(d3.axisBottom(x0).ticks(2));
+
+            svgPositionsByGender.append("g")
+                                .attr("transform", `translate(0,${heightPositionsByGender})`)
+                                .selectAll("g")
+                                .data(nestedData)
+                                .enter()
+                                .append("g")
+                                .attr("transform", d => `translate(${x0(d.gender)},0)`)
+                                .selectAll("rect")
+                                .data(d => d.positions)
+                                .enter()
+                                .append("rect")
+                                .attr("x", d => x1(d.position))
+                                .attr("y", d => yPositionsByGender(d.count))
+                                .attr("width", x1.bandwidth())
+                                .attr("height", d => heightPositionsByGender - yPositionsByGender(d.count))
+                                .attr("fill", d => d.gender === "Male" ? "steelblue" : "pink")
+                                .on("mouseover", (event, d) => {
+                                    tooltipPositionsByGender.transition()
+                                                            .duration(200)
+                                                            .style("opacity", .9);
+                                    tooltipPositionsByGender.html(`Count: ${d.count}`)
+                                                            .style("left", (event.pageX + 5) + "px")
+                                                            .style("top", (event.pageY - 28) + "px");
                                 })
-                            };
-                        });
+                                .on("mouseout", (d) => {
+                                    tooltipPositionsByGender.transition()
+                                                            .duration(500)
+                                                            .style("opacity", 0);
+                                });
 
-                        const genders = Array.from(new Set(data.map(d => d.Gender)));
-                        const positions = Array.from(new Set(data.map(d => d.Position)));
+            // Add axis labels
+            svgPositionsByGender.append("text")
+                                .attr("class", "axis-label")
+                                .attr("x", widthPositionsByGender / 2)
+                                .attr("y", heightPositionsByGender + marginPositionsByGender.bottom - 10)
+                                .attr("text-anchor", "middle")
+                                .text("Gender");
 
-                        // X axis
-                        const x0 = d3.scaleBand()
-                                     .domain(genders)
-                                     .rangeRound([0, widthPositionsByGender])
-                                     .paddingInner(0.1);
-                        const x1 = d3.scaleBand()
-                                     .domain(positions)
-                                     .rangeRound([0, x0.bandwidth()])
-                                     .padding(0.05);
+            svgPositionsByGender.append("text")
+                                .attr("class", "axis-label")
+                                .attr("x", -heightPositionsByGender / 2)
+                                .attr("y", -marginPositionsByGender.left + 10)
+                                .attr("text-anchor", "middle")
+                                .attr("transform", "rotate(-90)")
+                                .text("Count");
 
-                        svgPositionsByGender.append("g")
-                                            .attr("transform", `translate(0,${heightPositionsByGender})`)
-                                            .call(d3.axisBottom(x0));
+            // Y axis
+            const yPositionsByGender = d3.scaleLinear()
+                                         .domain([0, d3.max(nestedData, d => d3.max(d.positions, p => p.count))])
+                                         .nice()
+                                         .range([heightPositionsByGender, 0]);
+            svgPositionsByGender.append("g")
+                                .call(d3.axisLeft(yPositionsByGender));
 
-                        // Y axis
-                        const yPositionsByGender = d3.scaleLinear()
-                                                     .domain([0, d3.max(nestedData, d => d3.max(d.positions, p => p.count))])
-                                                     .nice()
-                                                     .range([heightPositionsByGender, 0]);
-                        svgPositionsByGender.append("g")
-                                            .call(d3.axisLeft(yPositionsByGender));
+            // Legend
+            const legend = svgPositionsByGender.append("g")
+                                               .attr("transform", `translate(${widthPositionsByGender - 60}, 10)`);
 
-                        // Bars
-                        svgPositionsByGender.append("g")
-                                            .selectAll("g")
-                                            .data(nestedData)
-                                            .enter()
-                                            .append("g")
-                                            .attr("transform", d => `translate(${x0(d.gender)},0)`)
-                                            .selectAll("rect")
-                                            .data(d => d.positions)
-                                            .enter()
-                                            .append("rect")
-                                            .attr("x", d => x1(d.position))
-                                            .attr("y", d => yPositionsByGender(d.count))
-                                            .attr("width", x1.bandwidth())
-                                            .attr("height", d => heightPositionsByGender - yPositionsByGender(d.count))
-                                            .attr("fill", d => d.position === "Male" ? "steelblue" : "pink")
-                                            .on("mouseover", (event, d) => {
-                                                tooltipPositionsByGender.transition()
-                                                                        .duration(200)
-                                                                        .style("opacity", .9);
-                                                tooltipPositionsByGender.html(`Count: ${d.count}`)
-                                                                        .style("left", (event.pageX + 5) + "px")
-                                                                        .style("top", (event.pageY - 28) + "px");
-                                            })
-                                            .on("mouseout", (d) => {
-                                                tooltipPositionsByGender.transition()
-                                                                        .duration(500)
-                                                                        .style("opacity", 0);
-                                            });
+            legend.append("rect")
+                  .attr("x", 0)
+                  .attr("y", 0)
+                  .attr("width", 20)
+                  .attr("height", 20)
+                  .attr("fill", "steelblue");
 
-                        // Add axis labels
-                        svgPositionsByGender.append("text")
-                                            .attr("class", "axis-label")
-                                            .attr("x", widthPositionsByGender / 2)
-                                            .attr("y", heightPositionsByGender + marginPositionsByGender.bottom)
-                                            .attr("text-anchor", "middle")
-                                            .text("Gender");
+            legend.append("text")
+                  .attr("x", 25)
+                  .attr("y", 15)
+                  .text("Male");
 
-                        svgPositionsByGender.append("text")
-                                            .attr("class", "axis-label")
-                                            .attr("x", -heightPositionsByGender / 2)
-                                            .attr("y", -marginPositionsByGender.left + 10)
-                                            .attr("text-anchor", "middle")
-                                            .attr("transform", "rotate(-90)")
-                                            .text("Count");
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
+            legend.append("rect")
+                  .attr("x", 0)
+                  .attr("y", 30)
+                  .attr("width", 20)
+                  .attr("height", 20)
+                  .attr("fill", "pink");
+
+            legend.append("text")
+                  .attr("x", 25)
+                  .attr("y", 45)
+                  .text("Female");
+        }).catch(error => {
+            console.error('Error loading the CSV data: ', error);
+        });
+    </script>
+</div>
+
 
         </div>
     </section>
