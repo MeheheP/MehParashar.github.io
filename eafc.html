@@ -739,16 +739,18 @@
         // Load data
         d3.csv("all_players.csv").then(data => {
             // Process data to calculate feature importance
-            // Assuming features are 'Pace', 'Shooting', 'Passing', 'Dribbling', 'Defending', 'Physicality'
             const features = ['Pace', 'Shooting', 'Passing', 'Dribbling', 'Defending', 'Physicality'];
             const importance = features.map(feature => ({
                 Feature: feature,
                 Importance: d3.mean(data, d => +d[feature])
             }));
 
+            // Filter out any NaN values
+            const filteredImportance = importance.filter(d => !isNaN(d.Importance));
+
             // X axis
             const xFeatureImportance = d3.scaleBand()
-                                         .domain(importance.map(d => d.Feature))
+                                         .domain(filteredImportance.map(d => d.Feature))
                                          .range([0, widthFeatureImportance])
                                          .padding(0.1);
             svgFeatureImportance.append("g")
@@ -761,7 +763,7 @@
 
             // Y axis
             const yFeatureImportance = d3.scaleLinear()
-                                         .domain([0, d3.max(importance, d => d.Importance)])
+                                         .domain([0, d3.max(filteredImportance, d => d.Importance)])
                                          .nice()
                                          .range([heightFeatureImportance, 0]);
             svgFeatureImportance.append("g")
@@ -771,7 +773,7 @@
 
             // Bars
             svgFeatureImportance.selectAll(".bar")
-                                .data(importance)
+                                .data(filteredImportance)
                                 .enter()
                                 .append("rect")
                                 .attr("class", "bar")
