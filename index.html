@@ -11,6 +11,104 @@
         html {
             scroll-behavior: smooth;
         }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #f4f4f4;
+            margin: 0;
+        }
+        header {
+            background: #1c1c1c;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2, h3, h4 {
+            margin: 0;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 15px;
+        }
+        nav ul li a {
+            color: #f4f4f4;
+            text-decoration: none;
+        }
+        .hero {
+            text-align: center;
+            padding: 50px 0;
+        }
+        .hero img {
+            max-width: 150px;
+            border-radius: 50%;
+            border: 5px solid #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .hero h1 {
+            font-size: 2.5em;
+            margin-top: 20px;
+        }
+        section {
+            padding: 50px 0;
+        }
+        .project, .experience {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .project img {
+            max-width: 100px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        .project div, .experience div {
+            max-width: 700px;
+        }
+        .progress-bar {
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress {
+            height: 10px;
+            background: #f4f4f4;
+        }
+        .project-button {
+            background: #333;
+            color: #f4f4f4;
+            padding: 10px 15px;
+            margin-right: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        footer {
+            background: #1c1c1c;
+            padding: 20px 0;
+            text-align: center;
+        }
+        footer p {
+            margin: 0;
+        }
+        .social a {
+            color: #f4f4f4;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        .certification img {
+            max-width: 150px;
+            margin: 10px;
+        }
     </style>
 </head>
 <body>
@@ -24,6 +122,8 @@
                     <li><a href="#projects">Projects</a></li>
                     <li><a href="#experience">Experience</a></li>
                     <li><a href="#contact">Contact</a></li>
+                    <li><a href="https://drive.google.com/file/d/1OW1-GZaDZtnMVEo5sfbMxhnvWRXK0qhZ/view?usp=drive_link" target="_blank">Resume</a></li>
+                    <li><a href="https://www.linkedin.com/in/mehul-parashar/details/certifications/" target="_blank">Certifications</a></li>
                 </ul>
             </nav>
         </div>
@@ -69,7 +169,7 @@
         <div class="container">
             <h2>Projects</h2>
             <div class="project">
-                <img src="images/EAlogo.png" alt="EAFC-EDA">
+                <img src="images/FC24.jpeg" alt="EAFC-EDA">
                 <div>
                     <h3>EA Sports FC24-EDA</h3>
                     <p>Exploratory Data Analysis of players in the game and how it brings about realism in performance of players in game as well as implemented machine learning models to accurately predict the overall ratings of the players.</p>
@@ -110,10 +210,22 @@
                 <h3>Spotlist Inc. (New Jersey, USA) - Lead Data Science Intern</h3>
                 <p><strong>July 2023 – March 2024</strong></p>
             </div>
-            <div class="experience">
+            <divthe "Certifications" section.
+
+```html
                 <h3>Dhakad Events and Entertainment (Mumbai, India) - Junior Analyst (Data & Operations)</h3>
                 <p><strong>August 2019 - July 2021</strong></p>
             </div>
+        </div>
+    </section>
+    <section id="certifications" class="animate__animated animate__fadeInUp">
+        <div class="container">
+            <h2>Certifications</h2>
+            <div class="certification">
+                <img src="images/google-data-analytics-professional-certificate.2.png" alt="Google Data Analytics Certificate">
+                <img src="images/data-science-orientation.png" alt="IBM Data Science Orientation">
+            </div>
+            <a class="project-button" href="https://www.linkedin.com/in/mehul-parashar/details/certifications/" target="_blank">View More on LinkedIn</a>
         </div>
     </section>
     <section id="contact" class="animate__animated animate__fadeInUp">
