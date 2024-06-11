@@ -35,6 +35,8 @@
         nav ul {
             list-style: none;
             padding: 0;
+            display: flex;
+            flex-wrap: wrap;
         }
         nav ul li {
             display: inline;
@@ -107,6 +109,51 @@
             max-width: 150px;
             margin: 10px;
         }
+        .about-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .about-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        .about-text {
+            max-width: 600px;
+            margin-left: 20px;
+        }
+        .about-text p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #ddd;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .about-text {
+                margin-left: 0;
+            }
+            nav ul {
+                flex-direction: column;
+            }
+            nav ul li {
+                margin: 5px 0;
+            }
+            .hero h1 {
+                font-size: 2em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -126,20 +173,21 @@
             </nav>
         </div>
     </header>
-    <section id="hero" class="hero">
-    <div class="container">
-       
-    </div>
-</section>
-    <section id="about" class="animate__animated animate__fadeInUp">
-    <div class="container">
-        <div class="about-content">
-            <img src="images/profile.jpg" alt="Mehul Parashar" class="about-image">
-            <p>I am Mehul Parashar, a Data Analyst with expertise in data analysis, machine learning, and more. Explore my projects below to see my work in action.</p>
+        <section id="hero" class="hero">
+        <div class="container">
+            <img src="images/heroimg.webp" alt="Hero Image">
         </div>
-    </div>
-</section>
-
+    </section>
+    <section id="about" class="animate__animated animate__fadeInUp">
+        <div class="container">
+            <div class="about-content">
+                <img src="images/profile.jpg" alt="Mehul Parashar" class="about-image">
+                <div class="about-text">
+                    <p>I am Mehul Parashar, a Data Analyst with expertise in data analysis, machine learning, and more. Explore my projects below to see my work in action.</p>
+                </div>
+            </div>
+        </div>
+    </section>
     <section id="skills" class="animate__animated animate__fadeInUp">
         <div class="container">
             <h2>Skills</h2>
@@ -157,6 +205,18 @@
             </div>
             <div class="skill">
                 <h3>Data Storytelling</h3>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 100%;"></div>
+                </div>
+            </div>
+             <div class="skill">
+                <h3>Pandas</h3>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 100%;"></div>
+                </div>
+            </div>
+             <div class="skill">
+                <h3>Scikit</h3>
                 <div class="progress-bar">
                     <div class="progress" style="width: 100%;"></div>
                 </div>
@@ -203,46 +263,49 @@
         </div>
     </section>
     <section id="experience" class="animate__animated animate__fadeInUp">
-    <div class="container">
-        <h2>Experience</h2>
-        <div class="experience">
-            <h3>Spotlist Inc. (New Jersey, USA) - Lead Data Science Intern</h3>
-            <p><strong>July 2023 – March 2024</strong></p>
+        <div class="container">
+            <h2>Experience</h2>
+            <div class="experience">
+                <h3>Spotlist Inc. (New Jersey, USA) - Lead Data Science Intern</h3>
+                <p><strong>July 2023 – March 2024</strong></p>
+            </div>
+            <div class="experience">
+                <h3>Dhakad Events and Entertainment (Mumbai, India) - Junior Analyst (Data & Operations)</h3>
+                <p><strong>August 2019 - July 2021</strong></p>
+            </div>
         </div>
-        <div class="experience">
-            <h3>Dhakad Events and Entertainment (Mumbai, India) - Junior Analyst (Data & Operations)</h3>
-            <p><strong>August 2019 - July 2021</strong></p>
+    </section>
+    <section id="certifications" class="animate__animated animate__fadeInUp">
+        <div class="container">
+            <h2>Certifications</h2>
+            <div class="certification">
+                <img src="images/google-data-analytics-professional-certificate.2.png" alt="Google Data Analytics Certificate">
+                <img src="images/data-science-orientation.png" alt="IBM Data Science Orientation">
+            </div>
+            <a class="project-button" href="https://www.linkedin.com/in/mehul-parashar/details/certifications/" target="_blank">View More on LinkedIn</a>
         </div>
-    </div>
-</section>
-<section id="certifications" class="animate__animated animate__fadeInUp">
-    <div class="container">
-        <h2>Certifications</h2>
-        <div class="certification">
-            <img src="images/google-data-analytics-professional-certificate.2.png" alt="Google Data Analytics Certificate">
-            <img src="images/data-science-orientation.png" alt="IBM Data Science Orientation">
+    </section>
+    <section id="contact" class="animate__animated animate__fadeInUp">
+        <div class="container">
+            <h2>Contact</h2>
+            <form>
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
         </div>
-        <a class="project-button" href="https://www.linkedin.com/in/mehul-parashar/details/certifications/" target="_blank">View More on LinkedIn</a>
-    </div>
-</section>
-<section id="contact" class="animate__animated animate__fadeInUp">
-    <div class="container">
-        <h2>Contact</h2>
-        <form>
-            <input type="text" placeholder="Your Name" required>
-            <input type="email" placeholder="Your Email" required>
-            <textarea placeholder="Your Message" required></textarea>
-            <button type="submit">Send Message</button>
-        </form>
-    </div>
-</section>
-<footer>
-    <div class="container">
-        <p>&copy; 2024 Mehul Parashar</p>
-        <div class="social">
-            <a href="https://www.linkedin.com/in/mehul-parashar/" target="_blank">LinkedIn</a>
-            <a href="https://github.com/MehParashar" target="_blank">GitHub</a>
+    </section>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Mehul Parashar</p>
+            <div class="social">
+                <a href="https://www.linkedin.com/in/mehul-parashar/" target="_blank">LinkedIn</a>
+                <a href="https://github.com/MehParashar" target="_blank">GitHub</a>
+            </div>
         </div>
-    </div>
-</footer>
-<script src="scripts.js"></script>
+    </footer>
+    <script src="scripts.js"></script>
+</body>
+</html>
+
