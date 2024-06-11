@@ -55,7 +55,7 @@ nav ul li a:hover {
     color: var(--text-color);
     padding: 4em 0;
     text-align: center;
-    height: 100vh; /* Full height of viewport */
+    height: 60vh; /* Full height of viewport */
     display: flex;
     align-items: center;
     justify-content: center;
