@@ -54,22 +54,60 @@
             max-width: 100%;
             height: auto;
         }
-        .hero h1 {
-            font-size: 2.5em;
-            margin-top: 20px;
-        }
         section {
             padding: 50px 0;
+        }
+        .projects-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+        }
+        .project-card {
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+            max-width: 300px;
+        }
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        .project-card img {
+            width: 100%;
+            height: auto;
+        }
+        .project-content {
+            padding: 20px;
+            text-align: left;
+        }
+        .project-content h3 {
+            margin-top: 0;
+            color: #39ff14;
+        }
+        .project-content p {
+            color: #f4f4f4;
+        }
+        .project-button {
+            background-color: #39ff14;
+            color: #000;
+            padding: 10px 15px;
+            margin-right: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .project-button:hover {
+            background-color: #fff;
+            color: #39ff14;
         }
         .project, .experience {
             display: flex;
             align-items: center;
             margin-bottom: 30px;
-        }
-        .project img {
-            max-width: 100px;
-            margin-right: 20px;
-            border-radius: 5px;
         }
         .project div, .experience div {
             max-width: 700px;
@@ -83,14 +121,6 @@
         .progress {
             height: 10px;
             background: #f4f4f4;
-        }
-        .project-button {
-            background: #333;
-            color: #f4f4f4;
-            padding: 10px 15px;
-            margin-right: 10px;
-            text-decoration: none;
-            border-radius: 5px;
         }
         footer {
             background: #1c1c1c;
@@ -135,7 +165,6 @@
             padding: 20px;
             border-radius: 10px;
         }
-
         @media (max-width: 768px) {
             .about-content {
                 flex-direction: column;
@@ -152,6 +181,10 @@
             }
             .hero h1 {
                 font-size: 2em;
+            }
+            .project-card {
+                width: 100%;
+                max-width: none;
             }
         }
     </style>
@@ -173,7 +206,7 @@
             </nav>
         </div>
     </header>
-        <section id="hero" class="hero">
+    <section id="hero" class="hero">
         <div class="container">
             <img src="images/heroimg.webp" alt="Hero Image">
         </div>
@@ -209,64 +242,60 @@
                     <div class="progress" style="width: 100%;"></div>
                 </div>
             </div>
-             <div class="skill">
+            <div class="skill">
                 <h3>Pandas</h3>
                 <div class="progress-bar">
                     <div class="progress" style="width: 100%;"></div>
                 </div>
             </div>
-             <div class="skill">
+            <div class="skill">
                 <h3>Scikit</h3>
                 <div class="progress-bar">
                     <div class="progress" style="width: 100%;"></div>
                 </div>
             </div>
-            <!-- Add other skills similarly -->
         </div>
     </section>
     <section id="projects" class="animate__animated animate__fadeInUp">
         <div class="container">
             <h2>Projects</h2>
-            <div class="project">
-                <img src="images/EAlogo.png" alt="EAFC-EDA">
-                <div>
-                    <h3>EA Sports FC24-EDA</h3>
-                    <p>Exploratory Data Analysis of players in the game and how it brings about realism in performance of players in game as well as implemented machine learning models to accurately predict the overall ratings of the players.</p>
-                    <a class="project-button" href="https://github.com/MehParashar/EAFC-EDA" target="_blank">View on GitHub</a>
-                    <a class="project-button" href="eafc.html">View EAFC Project</a>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <img src="images/EAlogo.png" alt="EAFC-EDA">
+                    <div class="project-content">
+                        <h3>EA Sports FC24-EDA</h3>
+                        <p>Exploratory Data Analysis of players in the game and how it brings about realism in performance of players in game as well as implemented machine learning models to accurately predict the overall ratings of the players.</p>
+                        <a class="project-button" href="https://github.com/MehParashar/EAFC-EDA" target="_blank">View on GitHub</a>
+                        <a class="project-button" href="eafc.html">View EAFC Project</a>
+                    </div>
                 </div>
-            </div>
-            <div class="project">
-                <img src="images/netflix-logo.png" alt="Netflix-EDA">
-                <div>
-                    <h3>Netflix-EDA</h3>
-                    <p>Exploratory Data Analysis of Netflix movies and shows.</p>
-                    <a class="project-button" href="https://github.com/MehParashar/Netflix--EDA" target="_blank">View on GitHub</a>
+                <div class="project-card">
+                    <img src="images/netflix-logo.png" alt="Netflix-EDA">
+                    <div class="project-content">
+                        <h3>Netflix-EDA</h3>
+                        <p>Exploratory Data Analysis of Netflix movies and shows.</p>
+                        <a class="project-button" href="https://github.com/MehParashar/Netflix--EDA" target="_blank">View on GitHub</a>
+                    </div>
                 </div>
-            </div>
-            <div class="project">
-                <img src="images/SAP.jpg" alt="Soccer-Football-Player-Performance-Analysis">
-                <div>
-                    <h3>Soccer-Football-Player-Performance-Analysis</h3>
-                    <p>This repository contains a set of functions to scrape, process, and analyze soccer player performance data from FBRef. The analysis covers various performance metrics across different player positions.</p>
-                    <a class="project-button" href="https://github.com/MehParashar/Soccer-Football-Player-Performance-Analysis" target="_blank">View on GitHub</a>
+                <div class="project-card">
+                    <img src="images/SAP.jpg" alt="Soccer-Football-Player-Performance-Analysis">
+                    <div class="project-content">
+                        <h3>Soccer-Football-Player-Performance-Analysis</h3>
+                        <p>This repository contains a set of functions to scrape, process, and analyze soccer player performance data from FBRef. The analysis covers various performance metrics across different player positions.</p>
+                        <a class="project-button" href="https://github.com/MehParashar/Soccer-Football-Player-Performance-Analysis" target="_blank">View on GitHub</a>
+                    </div>
                 </div>
-            </div>
-           <section id="projects" class="animate__animated animate__fadeInUp">
-    <div class="container">
-        <h2>Projects</h2>
-        <div class="project">
-            <img src="images/hwave.jpeg" alt="Climate-Change-anomaly-detection-2024">
-            <div>
-                <h3>Climate-Change-anomaly-detection-2024</h3>
-                <p>Exploratory Data Analysis and anomaly detection in climate change data.</p>
-                <a class="project-button" href="https://github.com/MehParashar/Climate-Change-anomaly-detection-2024" target="_blank">View on GitHub</a>
-                <a class="project-button" href="projects/CCAD.html">View Project</a>
+                <div class="project-card">
+                    <img src="images/hwave.jpeg" alt="Climate-Change-anomaly-detection-2024">
+                    <div class="project-content">
+                        <h3>Climate-Change-anomaly-detection-2024</h3>
+                        <p>Exploratory Data Analysis and anomaly detection in climate change data.</p>
+                        <a class="project-button" href="https://github.com/MehParashar/Climate-Change-anomaly-detection-2024" target="_blank">View on GitHub</a>
+                        <a class="project-button" href="projects/CCAD.html">View Project</a>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Add other projects similarly -->
-    </div>
-</section>
     </section>
     <section id="experience" class="animate__animated animate__fadeInUp">
         <div class="container">
@@ -314,4 +343,3 @@
     <script src="scripts.js"></script>
 </body>
 </html>
-
