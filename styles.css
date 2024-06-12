@@ -51,11 +51,11 @@ nav ul li a:hover {
 }
 
 .hero {
-    background: url('images/HeroOg.png') no-repeat center center/cover;
+    background: url('images/heroimg.webp') no-repeat center center/cover;
     color: var(--text-color);
     padding: 4em 0;
     text-align: center;
-    height: 50vh; /* Full height of viewport */
+    height: 60vh; /* Full height of viewport */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -70,11 +70,44 @@ section {
     margin: 0 auto;
 }
 
-#about img {
+.about-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    padding: 50px 0;
+}
+
+.about-image {
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
-    max-width: 150px;
-    display: block;
-    margin: 1em auto;
+    border: 5px solid var(--secondary-color);
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    margin-right: 20px;
+}
+
+.about-text {
+    max-width: 600px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 25px 25px 25px 0;
+    position: relative;
+    color: var(--text-color);
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+.about-text::before {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: -15px;
+    width: 0;
+    height: 0;
+    border-right: 15px solid rgba(0, 0, 0, 0.8);
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
 }
 
 .skill {
@@ -91,34 +124,6 @@ section {
     background-color: var(--primary-color);
     height: 10px;
     border-radius: 5px;
-}
-
-.about-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    padding: 50px 0;
-}
-
-.about-image {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    border: 5px solid var(--secondary-color);
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    margin-bottom: 20px;
-}
-
-.about-content p {
-    max-width: 800px;
-    font-size: 1.2em;
-    line-height: 1.6;
-    color: var(--text-color);
-    background: rgba(0, 0, 0, 0.6);
-    padding: 20px;
-    border-radius: 10px;
 }
 
 .projects-grid {
@@ -225,6 +230,17 @@ footer p {
     }
     .about-text {
         margin-left: 0;
+        border-radius: 25px;
+        text-align: center;
+    }
+    .about-text::before {
+        left: 50%;
+        transform: translateX(-50%);
+        border-right: 0;
+        border-top: 0;
+        border-left: 15px solid rgba(0, 0, 0, 0.8);
+        border-bottom: 15px solid transparent;
+        top: -15px;
     }
     nav ul {
         flex-direction: column;
