@@ -61,6 +61,13 @@ nav ul li a:hover {
     justify-content: center;
 }
 
+.hero img {
+    width: 100%;
+    height: auto;
+    display: none; /* Hide the img element as we are using it as a background */
+}
+
+
 section {
     padding: 2em 0;
 }
