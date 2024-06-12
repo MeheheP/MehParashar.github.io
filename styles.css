@@ -4,6 +4,7 @@
     --accent-color: #555;     /* Light gray */
     --background-color: #000; /* Black */
     --text-color: #fff;       /* White */
+    --bubble-color: #888888; /* Grey color for the text bubble */
 }
 
 body {
@@ -105,10 +106,10 @@ section {
 
 .about-text {
     max-width: 600px;
-    background-color: var(--text-color);
-    color: var(--background-color);
+    background-color: var(--bubble-color);
+    color: var(--text-color);
     padding: 20px;
-    border-radius: 20px;
+    border-radius: 20px 20px 20px 0;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     position: relative;
 }
@@ -116,11 +117,11 @@ section {
 .about-text::after {
     content: "";
     position: absolute;
-    bottom: -20px;
-    left: 20px;
+    bottom: 0;
+    left: -20px;
     width: 20px;
     height: 20px;
-    background-color: var(--text-color);
+    background-color: var(--bubble-color);
     transform: rotate(45deg);
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
