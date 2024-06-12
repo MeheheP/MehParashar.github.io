@@ -203,13 +203,12 @@
     </style>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WRR0BBBR6H"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-    
-      gtag('config', 'G-WRR0BBBR6H');
-    </script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-WRR0BBBR6H', { cookie_flags: 'SameSite=None;Secure' });
+</script>
 </head>
 <body>
     <header>
@@ -344,11 +343,11 @@
         <div class="container">
             <h2>Contact</h2>
             <form>
-                <input type="text" placeholder="Your Name" required>
-                <input type="email" placeholder="Your Email" required>
-                <textarea placeholder="Your Message" required></textarea>
-                <button type="submit">Send Message</button>
-            </form>
+    <input type="text" id="name" name="name" placeholder="Your Name" required>
+    <input type="email" id="email" name="email" placeholder="Your Email" required>
+    <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+</form>
         </div>
     </section>
     <footer>
@@ -360,6 +359,6 @@
             </div>
         </div>
     </footer>
-    <script src="scripts.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
