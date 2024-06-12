@@ -7,6 +7,187 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #f4f4f4;
+            margin: 0;
+        }
+        header {
+            background: #1c1c1c;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2, h3, h4 {
+            margin: 0;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 15px;
+        }
+        nav ul li a {
+            color: #f4f4f4;
+            text-decoration: none;
+        }
+        .hero {
+            text-align: center;
+            padding: 50px 0;
+        }
+        .hero img {
+            max-width: 100%;
+            height: auto;
+        }
+        section {
+            padding: 50px 0;
+        }
+        .projects-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+        }
+        .project-card {
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+            max-width: 300px;
+        }
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        .project-card img {
+            width: 100%;
+            height: auto;
+        }
+        .project-content {
+            padding: 20px;
+            text-align: left;
+        }
+        .project-content h3 {
+            margin-top: 0;
+            color: #39ff14;
+        }
+        .project-content p {
+            color: #f4f4f4;
+        }
+        .project-button {
+            background-color: #39ff14;
+            color: #000;
+            padding: 10px 15px;
+            margin-right: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .project-button:hover {
+            background-color: #fff;
+            color: #39ff14;
+        }
+        .project, .experience {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .project div, .experience div {
+            max-width: 700px;
+        }
+        .progress-bar {
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress {
+            height: 10px;
+            background: #f4f4f4;
+        }
+        footer {
+            background: #1c1c1c;
+            padding: 20px 0;
+            text-align: center;
+        }
+        footer p {
+            margin: 0;
+        }
+        .social a {
+            color: #f4f4f4;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        .certification img {
+            max-width: 150px;
+            margin: 10px;
+        }
+        .about-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .about-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        .about-text {
+            max-width: 600px;
+            margin-left: 20px;
+        }
+        .about-text p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #ddd;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        @media (max-width: 768px) {
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .about-text {
+                margin-left: 0;
+            }
+            nav ul {
+                flex-direction: column;
+            }
+            nav ul li {
+                margin: 5px 0;
+            }
+            .hero h1 {
+                font-size: 2em;
+            }
+            .project-card {
+                width: 100%;
+                max-width: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -27,13 +208,13 @@
     </header>
     <section id="hero" class="hero">
         <div class="container">
-            <img src="images/HeroOg.png" alt="Hero Image">
+            <img src="images/heroimg.webp" alt="Hero Image">
         </div>
     </section>
     <section id="about" class="animate__animated animate__fadeInUp">
         <div class="container">
             <div class="about-content">
-                <img src="images/photoofficial.jpg" alt="Mehul Parashar" class="about-image">
+                <img src="images/profile.jpg" alt="Mehul Parashar" class="about-image">
                 <div class="about-text">
                     <p>I am Mehul Parashar, a Data Analyst with expertise in data analysis, machine learning, and more. Explore my projects below to see my work in action.</p>
                 </div>
@@ -70,19 +251,20 @@
             <div class="skill">
                 <h3>Scikit</h3>
                 <div class="progress-bar">
-                    <div the="progress" style="width: 100%;"></div>
+                    <div class="progress" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
     </section>
-    <section id="projects" class="animate__animated animate__fadeInUp">
-        <div class="container">
-            <h2>Projects</h2>
+   <section id="projects" class="animate__animated animate__fadeInUp">
+    <div class="container">
+        <h2>Projects</h2>
+        <div class="projects-grid">
             <div class="project-card">
-                <img src="images/ealogo.webp" alt="EA Sports FC24-EDA">
+                <img src="images/EAlogo.png" alt="EAFC-EDA">
                 <div class="project-content">
                     <h3>EA Sports FC24-EDA</h3>
-                    <p>Exploratory Data Analysis of players in the game and how it brings about realism in performance of players in game as well as implemented machine learning models to accurately predict the overall ratings of the players.</p>
+                    <p>Exploratory Data Analysis of players in the game and how it brings about realism in the game.</p>
                     <a class="project-button" href="https://github.com/MehParashar/EAFC-EDA" target="_blank">View on GitHub</a>
                     <a class="project-button" href="eafc.html">View EAFC Project</a>
                 </div>
@@ -99,7 +281,7 @@
                 <img src="images/SAP.jpg" alt="Soccer-Football-Player-Performance-Analysis">
                 <div class="project-content">
                     <h3>Soccer-Football-Player-Performance-Analysis</h3>
-                    <p>This repository contains a set of functions to scrape, process, and analyze soccer player performance data from FBRef. The analysis covers various performance metrics across different player positions.</p>
+                    <p>This repository contains a set of functions to scrape, process, and analyze soccer player performance data from FBRef.</p>
                     <a class="project-button" href="https://github.com/MehParashar/Soccer-Football-Player-Performance-Analysis" target="_blank">View on GitHub</a>
                 </div>
             </div>
@@ -113,7 +295,8 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
     <section id="experience" class="animate__animated animate__fadeInUp">
         <div class="container">
             <h2>Experience</h2>
