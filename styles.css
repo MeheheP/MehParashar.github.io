@@ -72,7 +72,7 @@ section {
 }
 
 .skill {
-    margin-bottom: 1em;
+    margin-bottom: 1.5em; /* Increased spacing between skill elements */
 }
 
 .progress-bar {
@@ -92,11 +92,12 @@ section {
     align-items: flex-start;
     justify-content: flex-start;
     flex-wrap: wrap;
+    gap: 20px; /* Add spacing between elements */
 }
 
 .about-image {
-    width: 250px;
-    height: 250px;
+    width: 300px; /* Increased size of the profile image */
+    height: 300px;
     border-radius: 50%;
     border: 5px solid var(--secondary-color);
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
@@ -106,8 +107,8 @@ section {
 
 .about-text {
     max-width: 600px;
-    background-color: var(--background-color);
-    color: var(--background-color);
+    background-color: var(--bubble-color);
+    color: var(--text-color);
     padding: 20px;
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
