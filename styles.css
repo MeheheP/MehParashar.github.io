@@ -70,13 +70,6 @@ section {
     margin: 0 auto;
 }
 
-#about img {
-    border-radius: 50%;
-    max-width: 150px;
-    display: block;
-    margin: 1em auto;
-}
-
 .skill {
     margin-bottom: 1em;
 }
@@ -95,24 +88,25 @@ section {
 
 .about-content {
     display: flex;
-    align-items: flex-start; /* Align items to the start for vertical alignment */
+    align-items: flex-start;
     justify-content: flex-start;
     flex-wrap: wrap;
 }
 
 .about-image {
-    width: 250px; /* Increase the size of the profile image */
+    width: 250px;
     height: 250px;
     border-radius: 50%;
     border: 5px solid var(--secondary-color);
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    margin-right: 20px; /* Add margin to the right for spacing */
+    margin-right: 20px;
+    object-fit: cover;
 }
 
 .about-text {
     max-width: 600px;
-    background-color: #fff;
-    color: #000;
+    background-color: var(--text-color);
+    color: var(--background-color);
     padding: 20px;
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -122,20 +116,19 @@ section {
 .about-text::after {
     content: "";
     position: absolute;
-    bottom: -20px; /* Adjust this value to control the position of the arrow */
-    left: 30px; /* Adjust this value to control the position of the arrow */
+    bottom: -20px;
+    left: 20px;
     width: 20px;
     height: 20px;
-    background-color: #fff;
-    border-top-left-radius: 15px;
-    transform: rotate(-45deg);
+    background-color: var(--text-color);
+    transform: rotate(45deg);
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 .about-text p {
     font-size: 1.2em;
     line-height: 1.6;
-    background: none; /* Remove background color */
+    background: none;
     padding: 0;
     border-radius: 0;
 }
@@ -244,7 +237,7 @@ footer p {
     }
     .about-image {
         margin-right: 0;
-        margin-bottom: 20px; /* Add margin at the bottom for spacing */
+        margin-bottom: 20px;
     }
     .about-text {
         max-width: 90%;
