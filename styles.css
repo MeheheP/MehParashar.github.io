@@ -1,7 +1,7 @@
 :root {
     --primary-color: #39ff14; /* Neon green */
     --secondary-color: #333;  /* Dark gray */
-    --accent-color: #fdd835;  /* Yellow */
+    --accent-color: #555;     /* Light gray */
     --background-color: #000; /* Black */
     --text-color: #fff;       /* White */
     --bubble-color: #888888;  /* Grey color for the text bubble */
@@ -145,7 +145,7 @@ section {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(315deg, var(--primary-color), var(--accent-color));
+    background: linear-gradient(315deg, #03a9f4, #ff0058);
 }
 
 .project-card::after {
@@ -155,7 +155,7 @@ section {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(315deg, var(--primary-color), var(--accent-color));
+    background: linear-gradient(315deg, #03a9f4, #ff0058);
     filter: blur(30px);
 }
 
@@ -171,30 +171,34 @@ section {
     position: absolute;
     z-index: 3;
     width: 80%;
+    height: auto;
     opacity: 0.25;
     transition: 0.5s;
 }
 
 .project-card:hover img {
-    width: 50%;
+    width: 80%;
     opacity: 0.9;
-    transform: translateY(-70px);
+    transform: translateY(-20px);
 }
 
 .project-card .content {
     position: absolute;
     z-index: 3;
-    bottom: 10px;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    width: 100%;
     transform: scale(0);
     transition: 0.5s;
 }
 
 .project-card:hover .content {
     transform: scale(1);
-    bottom: 30px;
 }
 
 .content .title {
@@ -206,11 +210,7 @@ section {
     letter-spacing: 0.1em;
     text-transform: uppercase;
     text-align: center;
-}
-
-.content .title span {
-    font-weight: 300;
-    font-size: 0.70em;
+    margin-bottom: 10px;
 }
 
 .content .sci {
@@ -219,7 +219,7 @@ section {
     justify-content: center;
     align-items: center;
     gap: 8px;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .sci li {
