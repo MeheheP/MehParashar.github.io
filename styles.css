@@ -4,7 +4,7 @@
     --accent-color: #555;     /* Light gray */
     --background-color: #000; /* Black */
     --text-color: #fff;       /* White */
-    --bubble-color: #888888; /* Grey color for the text bubble */
+    --bubble-color: #888888;  /* Grey color for the text bubble */
 }
 
 body {
@@ -127,72 +127,128 @@ section {
 }
 
 .project-card {
-    background-color: var(--secondary-color);
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
-    width: 100%;
-    max-width: 500px;
-    height: 250px;
+    width: 190px;
+    height: 254px;
+    background: #f00;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
 }
 
-.project-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-}
-
-.project-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.project-content {
-    position:absolute;
+.project-card::before {
+    content: '';
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: var(--text-color);
-    opacity: 0;
-    transition: opacity 0.3s;
+    background: linear-gradient(315deg, #03a9f4, #ff0058);
+}
+
+.project-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(315deg, #03a9f4, #ff0058);
+    filter: blur(30px);
+}
+
+.project-card b {
+    position: absolute;
+    inset: 6px;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2;
+}
+
+.project-card img {
+    position: absolute;
+    z-index: 3;
+    scale: 0.8;
+    opacity: 0.25;
+    transition: 0.5s;
+}
+
+.project-card:hover img {
+    scale: 0.5;
+    opacity: 0.9;
+    transform: translateY(-70px);
+}
+
+.project-card .content {
+    position: absolute;
+    z-index: 3;
+    bottom: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    transform: scale(0);
+    transition: 0.5s;
+}
+
+.project-card:hover .content {
+    transform: scale(1);
+    bottom: 25px;
+}
+
+.content .title {
+    position: relative;
+    color: #fff;
+    font-weight: 500;
+    line-height: 1em;
+    font-size: 1em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.content .title span {
+    font-weight: 300;
+    font-size: 0.70em;
+}
+
+.content .sci {
+    position: relative;
+    display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    padding: 20px;
+    gap: 8px;
+    margin-top: 5px;
 }
 
-.project-card:hover .project-content {
-    opacity: 1;
+.sci li {
+    list-style: none;
 }
 
-.project-content h3 {
-    margin-top: 0;
-    color: var(--primary-color);
+.sci li .fa-brands {
+    width: 14px;
 }
 
-.project-content p {
-    color: var(--text-color);
+.sci li .fa-facebook {
+    width: 10px;
 }
 
-.project-button {
-    background-color: var(--primary-color);
-    color: var(--background-color);
-    padding: 10px 15px;
-    margin-top: 10px;
+.sci li a {
+    position: relative;
     text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.2);
+    fill: currentColor;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    transition: 0.5s;
 }
 
-.project-button:hover {
-    background-color: var(--text-color);
-    color: var(--primary-color);
+.sci li a:hover {
+    fill: currentColor;
+    color: rgba(255, 255, 255, 1);
 }
 
 footer {
