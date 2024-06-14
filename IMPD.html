@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>D3.js EDA</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        .hidden { display: none; }
+        .button { margin: 5px; }
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 6px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <button class="button" onclick="showVisualization('timeSeries')">Time Series Plot</button>
+    <button class="button" onclick="showVisualization('heatmap')">Heatmap</button>
+    
+    <div id="timeSeries" class="hidden"></div>
+    <div id="heatmap" class="hidden"></div>
+
+    <script>
+        function showVisualization(id) {
+            document.querySelectorAll('.hidden').forEach(div => div.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+
+        Promise.all([
+            d3.csv('IMPD_UCR_2019_Data.csv'),
+            d3.csv('IMPD_UCR_2020_Data.csv'),
+            d3.csv('IMPD_UCR_2021_Data.csv'),
+            d3.json('Indy_Neighborhoods.geojson'),
+            d3.json('Indy_Racial_Equity_Score_By_Tract.geojson')
+        ]).then(function(files) {
+            const data2019 = files[0];
+            const data2020 = files[1];
+            const data2021 = files[2];
+            const neighborhoodsGeoJSON = files[3];
+            const equityScoreGeoJSON = files[4];
+
+            createTimeSeriesPlot(data2019, data2020, data2021);
+            createHeatmap(neighborhoodsGeoJSON, equityScoreGeoJSON);
+        });
+
+        function createTimeSeriesPlot(data2019, data2020, data2021) {
+            const data = data2019.concat(data2020, data2021);
+
+            // Process data to get crime counts per month
+            const parseDate = d3.timeParse("%Y-%m-%d");
+            data.forEach(d => d.Date = parseDate(d.Date));
+
+            const nestedData = d3.nest()
+                .key(d => d3.timeMonth(d.Date))
+                .rollup(v => v.length)
+                .entries(data)
+                .map(d => ({ date: new Date(d.key), count: d.value }));
+
+            const svg = d3.select("#timeSeries").append("svg")
+                .attr("width", 960)
+                .attr("height", 500);
+
+            const margin = { top: 20, right: 30, bottom: 40, left: 50 },
+                  width = +svg.attr("width") - margin.left - margin.right,
+                  height = +svg.attr("height") - margin.top - margin.bottom;
+
+            const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleTime().range([0, width]);
+            const y = d3.scaleLinear().range([height, 0]);
+
+            const line = d3.line()
+                .x(d => x(d.date))
+                .y(d => y(d.count));
+
+            x.domain(d3.extent(nestedData, d => d.date));
+            y.domain([0, d3.max(nestedData, d => d.count)]);
+
+            g.append("g")
+                .attr("class", "x axis")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).ticks(d3.timeMonth.every(1)));
+
+            g.append("g")
+                .attr("class", "y axis")
+                .call(d3.axisLeft(y));
+
+            g.append("path")
+                .datum(nestedData)
+                .attr("class", "line")
+                .attr("d", line)
+                .on("mouseover", function(event, d) {
+                    d3.select(this).style("stroke", "orange");
+                })
+                .on("mouseout", function(event, d) {
+                    d3.select(this).style("stroke", "steelblue");
+                });
+
+            // Adding interaction: Tooltips
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            g.selectAll("dot")
+                .data(nestedData)
+                .enter().append("circle")
+                .attr("r", 5)
+                .attr("cx", d => x(d.date))
+                .attr("cy", d => y(d.count))
+                .on("mouseover", function(event, d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`Date: ${d.date.toLocaleDateString()}<br>Count: ${d.count}`)
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(event, d) {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+        }
+
+        function createHeatmap(neighborhoodsGeoJSON, equityScoreGeoJSON) {
+            const width = 960;
+            const height = 600;
+
+            const svg = d3.select("#heatmap").append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            const projection = d3.geoMercator().fitSize([width, height], neighborhoodsGeoJSON);
+            const path = d3.geoPath().projection(projection);
+
+            // Color scale for heatmap
+            const color = d3.scaleSequential(d3.interpolateReds)
+                .domain([0, d3.max(equityScoreGeoJSON.features, d => d.properties.crime_count)]);
+
+            svg.selectAll("path")
+                .data(neighborhoodsGeoJSON.features)
+                .enter().append("path")
+                .attr("d", path)
+                .style("fill", d => {
+                    const neighborhood = equityScoreGeoJSON.features.find(e => e.properties.neighborhood === d.properties.neighborhood);
+                    return neighborhood ? color(neighborhood.properties.crime_count) : "#ccc";
+                })
+                .style("stroke", "black")
+                .style("stroke-width", 0.5)
+                .on("mouseover", function(event, d) {
+                    d3.select(this).style("fill", "orange");
+                })
+                .on("mouseout", function(event, d) {
+                    d3.select(this).style("fill", d => {
+                        const neighborhood = equityScoreGeoJSON.features.find(e => e.properties.neighborhood === d.properties.neighborhood);
+                        return neighborhood ? color(neighborhood.properties.crime_count) : "#ccc";
+                    });
+                });
+
+            // Adding interaction: Tooltips
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            svg.selectAll("path")
+                .on("mouseover", function(event, d) {
+                    const neighborhood = equityScoreGeoJSON.features.find(e => e.properties.neighborhood === d.properties.neighborhood);
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`Neighborhood: ${d.properties.neighborhood}<br>Crime Count: ${neighborhood ? neighborhood.properties.crime_count : 'N/A'}`)
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(event, d) {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+        }
+    </script>
+</body>
+</html>
