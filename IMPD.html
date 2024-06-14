@@ -63,11 +63,11 @@
         }
 
         Promise.all([
-            d3.csv('../data/IMPD_UCR_2019_Data.csv'),
-            d3.csv('../data/IMPD_UCR_2020_Data.csv'),
-            d3.csv('../data/IMPD_UCR_2021_Data.csv'),
-            d3.json('../data/Indy_Neighborhoods.geojson'),
-            d3.json('../data/Indy_Racial_Equity_Score_By_Tract.geojson')
+            d3.csv('IMPD_UCR_2019_Data.csv'),
+            d3.csv('IMPD_UCR_2020_Data.csv'),
+            d3.csv('IMPD_UCR_2021_Data.csv'),
+            d3.json('Indy_Neighborhoods.geojson'),
+            d3.json('Indy_Racial_Equity_Score_By_Tract.geojson')
         ]).then(function(files) {
             const data2019 = files[0];
             const data2020 = files[1];
