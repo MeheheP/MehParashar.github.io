@@ -98,45 +98,31 @@
             document.getElementById(id).classList.remove('hidden');
         }
 
-        Promise.all([
-            d3.csv('../data/IMPD_UCR_2019_Data.csv'),
-            d3.csv('../data/IMPD_UCR_2020_Data.csv'),
-            d3.csv('../data/IMPD_UCR_2021_Data.csv'),
-            d3.json('../data/Indy_Neighborhoods.geojson'),
-            d3.json('../data/Indy_Racial_Equity_Score_By_Tract.geojson')
-        ]).then(function(files) {
-            let data2019 = files[0];
-            let data2020 = files[1];
-            let data2021 = files[2];
-            const neighborhoodsGeoJSON = files[3];
-            const equityScoreGeoJSON = files[4];
-
+        // Load the cleaned merged data
+        d3.csv('merged_clean_data.csv').then(function(data) {
             // Clean the data
-            data2019 = cleanData(data2019);
-            data2020 = cleanData(data2020);
-            data2021 = cleanData(data2021);
+            data = cleanData(data);
 
-            createTimeSeriesPlot(data2019, data2020, data2021);
-            createHeatmap(neighborhoodsGeoJSON, equityScoreGeoJSON);
+            createTimeSeriesPlot(data);
+            createHeatmap(data);
         });
 
         function cleanData(data) {
-            return data.filter(d => d.Date).map(d => {
-                d.Date = d.Date.split(' ')[0]; // Remove the time part
-                return d;
+            const parseDate = d3.timeParse("%Y/%m/%d");
+            data.forEach(d => {
+                d.DATE_ = parseDate(d.DATE_);
+                d.LATITUDE = +d.LATITUDE;
+                d.LONGITUDE = +d.LONGITUDE;
             });
+            return data;
         }
 
-        function createTimeSeriesPlot(data2019, data2020, data2021) {
-            const data = data2019.concat(data2020, data2021);
-            const parseDate = d3.timeParse("%Y/%m/%d");
-            data.forEach(d => d.Date = parseDate(d.Date));
-
+        function createTimeSeriesPlot(data) {
             const nestedData = Array.from(d3.rollup(
-            data,
-            v => v.length,
-            d => d3.timeMonth(d.Date)
-          ), ([key, value]) => ({ date: new Date(key), count: value }));
+                data,
+                v => v.length,
+                d => d3.timeMonth(d.DATE_)
+            ), ([key, value]) => ({ date: new Date(key), count: value }));
 
             const svgWidth = 960;
             const svgHeight = 500;
@@ -172,7 +158,7 @@
             g.append("path")
                 .datum(nestedData)
                 .attr("class", "line")
-                .attr("d", line)
+                                .attr("d", line)
                 .style("stroke", "steelblue")
                 .style("stroke-width", 2)
                 .on("mouseover", function(event, d) {
@@ -207,60 +193,70 @@
                 });
         }
 
-        function createHeatmap(neighborhoodsGeoJSON, equityScoreGeoJSON) {
-            const width = 960;
-            const height = 600;
+        function createHeatmap(data) {
+            d3.json('Indy_Racial_Equity_Score_By_Tract.geojson').then(function(geojson) {
+                // Count crimes in each tract
+                const crimeCounts = d3.rollup(
+                    data,
+                    v => v.length,
+                    d => `${Math.round(d.LATITUDE * 1000) / 1000},${Math.round(d.LONGITUDE * 1000) / 1000}`
+                );
 
-            const svg = d3.select("#heatmap").append("svg")
-                .attr("width", width)
-                .attr("height", height);
+                geojson.features.forEach(function(feature) {
+                    const centroid = d3.geoCentroid(feature);
+                    const key = `${Math.round(centroid[1] * 1000) / 1000},${Math.round(centroid[0] * 1000) / 1000}`;
+                    feature.properties.crime_count = crimeCounts.get(key) || 0;
+                });
 
-            const projection = d3.geoMercator().fitSize([width, height], neighborhoodsGeoJSON);
-            const path = d3.geoPath().projection(projection);
+                const width = 960;
+                const height = 600;
 
-            const color = d3.scaleSequential(d3.interpolateReds)
-                .domain([0, d3.max(equityScoreGeoJSON.features, d => d.properties.crime_count)]);
+                const svg = d3.select("#heatmap").append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
 
-            svg.selectAll("path")
-                .data(neighborhoodsGeoJSON.features)
-                .enter().append("path")
-                .attr("d", path)
-                .style("fill", d => {
-                                        const neighborhood = equityScoreGeoJSON.features.find(e => e.properties.neighborhood === d.properties.neighborhood);
-                    return neighborhood ? color(neighborhood.properties.crime_count) : "#ccc";
-                })
-                .style("stroke", "black")
-                .style("stroke-width", 0.5)
-                .on("mouseover", function(event, d) {
-                    d3.select(this).style("fill", "orange");
-                })
-                .on("mouseout", function(event, d) {
-                    d3.select(this).style("fill", d => {
-                        const neighborhood = equityScoreGeoJSON.features.find(e => e.properties.neighborhood === d.properties.neighborhood);
-                        return neighborhood ? color(neighborhood.properties.crime_count) : "#ccc";
+                const projection = d3.geoMercator().fitSize([width, height], geojson);
+                const path = d3.geoPath().projection(projection);
+
+                const color = d3.scaleSequential(d3.interpolateReds)
+                    .domain([0, d3.max(geojson.features, d => d.properties.crime_count)]);
+
+                svg.selectAll("path")
+                    .data(geojson.features)
+                    .enter().append("path")
+                    .attr("d", path)
+                    .style("fill", d => color(d.properties.crime_count))
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .on("mouseover", function(event, d) {
+                        d3.select(this).style("fill", "orange");
+                    })
+                    .on("mouseout", function(event, d) {
+                        d3.select(this).style("fill", color(d.properties.crime_count));
                     });
-                });
 
-            const tooltip = d3.select("body").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
+                const tooltip = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
 
-            svg.selectAll("path")
-                .on("mouseover", function(event, d) {
-                    const neighborhood = equityScoreGeoJSON.features.find(e => e.properties.neighborhood === d.properties.neighborhood);
-                    tooltip.transition()
-                        .duration(200)
-                        .style("opacity", .9);
-                    tooltip.html(`Neighborhood: ${d.properties.neighborhood}<br>Crime Count: ${neighborhood ? neighborhood.properties.crime_count : 'N/A'}`)
-                        .style("left", (event.pageX + 5) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", function(event, d) {
-                    tooltip.transition()
-                        .duration(500)
-                        .style("opacity", 0);
-                });
+                svg.selectAll("path")
+                    .on("mouseover", function(event, d) {
+                        tooltip.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        tooltip.html(`Tract: ${d.properties.NAME10}<br>Crime Count: ${d.properties.crime_count}`)
+                            .style("left", (event.pageX + 5) + "px")
+                            .style("top", (event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function(event, d) {
+                        tooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+            });
         }
     </script>
 </body>
 </html>
+
+
