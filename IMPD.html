@@ -122,11 +122,12 @@
             const parseDate = d3.timeParse("%Y-%m-%d");
             data.forEach(d => d.Date = parseDate(d.Date));
 
-            const nestedData = d3.nest()
-                .key(d => d3.timeMonth(d.Date))
-                .rollup(v => v.length)
-                .entries(data)
-                .map(d => ({ date: new Date(d.key), count: d.value }));
+            const nestedData = Array.from(d3.rollup(
+            data,
+            v => v.length,
+            d => d3.timeMonth(d.Date)
+          ), ([key, value]) => ({ date: new Date(key), count: value }));
+
 
             const svg = d3.select("#timeSeries").append("svg")
                 .attr("width", 960)
