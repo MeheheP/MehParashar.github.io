@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        img {
-            border-radius: 10px;
-        }
+        /* Add necessary styles */
         .hidden {
             display: none;
         }
@@ -21,7 +19,7 @@
         }
         .button {
             padding: 10px 20px;
-            margin: 10px 10px 10px 0; /* Add margin for spacing */
+            margin: 10px 10px 10px 0;
             background-color: #28a745;
             color: white;
             border: none;
@@ -128,14 +126,16 @@
             d => d3.timeMonth(d.Date)
           ), ([key, value]) => ({ date: new Date(key), count: value }));
 
+            // Define dimensions and margins
+            const svgWidth = 960;
+            const svgHeight = 500;
+            const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+            const width = svgWidth - margin.left - margin.right;
+            const height = svgHeight - margin.top - margin.bottom;
 
             const svg = d3.select("#timeSeries").append("svg")
-                .attr("width", 960)
-                .attr("height", 500);
-
-            const margin = { top: 20, right: 30, bottom: 40, left: 50 },
-                  width = +svg.attr("width") - margin.left - margin.right,
-                  height = +svg.attr("height") - margin.top - margin.bottom;
+                .attr("width", svgWidth)
+                .attr("height", svgHeight);
 
             const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -162,6 +162,8 @@
                 .datum(nestedData)
                 .attr("class", "line")
                 .attr("d", line)
+                .style("stroke", "steelblue")
+                .style("stroke-width", 2)
                 .on("mouseover", function(event, d) {
                     d3.select(this).style("stroke", "orange");
                 })
@@ -193,7 +195,8 @@
                         .style("opacity", 0);
                 });
         }
-function createHeatmap(neighborhoodsGeoJSON, equityScoreGeoJSON) {
+
+        function createHeatmap(neighborhoodsGeoJSON, equityScoreGeoJSON) {
             const width = 960;
             const height = 600;
 
@@ -204,7 +207,7 @@ function createHeatmap(neighborhoodsGeoJSON, equityScoreGeoJSON) {
             const projection = d3.geoMercator().fitSize([width, height], neighborhoodsGeoJSON);
             const path = d3.geoPath().projection(projection);
 
-            const color = d3.scaleSequential(d3.interpolateReds)
+                        const color = d3.scaleSequential(d3.interpolateReds)
                 .domain([0, d3.max(equityScoreGeoJSON.features, d => d.properties.crime_count)]);
 
             svg.selectAll("path")
