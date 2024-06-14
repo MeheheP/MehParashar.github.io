@@ -4,18 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crime Analysis - Mehul Parashar</title>
-    <link rel="stylesheet" href="../styles.css">
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        .hidden { display: none; }
-        .button { margin: 5px; }
+        img {
+            border-radius: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        .visualization {
+            margin: 20px 0;
+        }
+        .buttons {
+            margin: 20px 0;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px 10px 10px 0; /* Add margin for spacing */
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .visualization svg {
+            width: 100%;
+            height: auto;
+        }
+        .bar {
+            fill: steelblue;
+        }
+        .bar:hover {
+            fill: orange;
+        }
         .tooltip {
             position: absolute;
             text-align: center;
-            padding: 6px;
+            width: 60px;
+            height: 28px;
+            padding: 2px;
             font: 12px sans-serif;
             background: lightsteelblue;
-            border: 0;
+            border: 0px;
             border-radius: 8px;
             pointer-events: none;
         }
@@ -24,7 +58,7 @@
 <body>
     <header>
         <div class="container">
-            <h1>Crime Analysis</h1>
+            <h1>Crime Analysis - Mehul Parashar</h1>
             <nav>
                 <ul>
                     <li><a href="../index.html#about" title="About">About</a></li>
@@ -56,18 +90,22 @@
             </div>
         </div>
     </footer>
+
     <script>
         function showVisualization(id) {
-            document.querySelectorAll('.visualization').forEach(div => div.classList.add('hidden'));
+            const visualizations = document.querySelectorAll('.visualization');
+            visualizations.forEach(visualization => {
+                visualization.classList.add('hidden');
+            });
             document.getElementById(id).classList.remove('hidden');
         }
 
         Promise.all([
-            d3.csv('IMPD_UCR_2019_Data.csv'),
-            d3.csv('IMPD_UCR_2020_Data.csv'),
-            d3.csv('IMPD_UCR_2021_Data.csv'),
-            d3.json('Indy_Neighborhoods.geojson'),
-            d3.json('Indy_Racial_Equity_Score_By_Tract.geojson')
+            d3.csv('../data/IMPD_UCR_2019_Data.csv'),
+            d3.csv('../data/IMPD_UCR_2020_Data.csv'),
+            d3.csv('../data/IMPD_UCR_2021_Data.csv'),
+            d3.json('../data/Indy_Neighborhoods.geojson'),
+            d3.json('../data/Indy_Racial_Equity_Score_By_Tract.geojson')
         ]).then(function(files) {
             const data2019 = files[0];
             const data2020 = files[1];
@@ -154,8 +192,7 @@
                         .style("opacity", 0);
                 });
         }
-
-        function createHeatmap(neighborhoodsGeoJSON, equityScoreGeoJSON) {
+function createHeatmap(neighborhoodsGeoJSON, equityScoreGeoJSON) {
             const width = 960;
             const height = 600;
 
@@ -212,11 +249,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
