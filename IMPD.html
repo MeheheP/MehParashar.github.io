@@ -105,19 +105,31 @@
             d3.json('../data/Indy_Neighborhoods.geojson'),
             d3.json('../data/Indy_Racial_Equity_Score_By_Tract.geojson')
         ]).then(function(files) {
-            const data2019 = files[0];
-            const data2020 = files[1];
-            const data2021 = files[2];
+            let data2019 = files[0];
+            let data2020 = files[1];
+            let data2021 = files[2];
             const neighborhoodsGeoJSON = files[3];
             const equityScoreGeoJSON = files[4];
+
+            // Clean the data
+            data2019 = cleanData(data2019);
+            data2020 = cleanData(data2020);
+            data2021 = cleanData(data2021);
 
             createTimeSeriesPlot(data2019, data2020, data2021);
             createHeatmap(neighborhoodsGeoJSON, equityScoreGeoJSON);
         });
 
+        function cleanData(data) {
+            return data.filter(d => d.Date).map(d => {
+                d.Date = d.Date.split(' ')[0]; // Remove the time part
+                return d;
+            });
+        }
+
         function createTimeSeriesPlot(data2019, data2020, data2021) {
             const data = data2019.concat(data2020, data2021);
-            const parseDate = d3.timeParse("%Y-%m-%d");
+            const parseDate = d3.timeParse("%Y/%m/%d");
             data.forEach(d => d.Date = parseDate(d.Date));
 
             const nestedData = Array.from(d3.rollup(
@@ -126,7 +138,6 @@
             d => d3.timeMonth(d.Date)
           ), ([key, value]) => ({ date: new Date(key), count: value }));
 
-            // Define dimensions and margins
             const svgWidth = 960;
             const svgHeight = 500;
             const margin = { top: 20, right: 30, bottom: 40, left: 50 };
@@ -207,7 +218,7 @@
             const projection = d3.geoMercator().fitSize([width, height], neighborhoodsGeoJSON);
             const path = d3.geoPath().projection(projection);
 
-                        const color = d3.scaleSequential(d3.interpolateReds)
+            const color = d3.scaleSequential(d3.interpolateReds)
                 .domain([0, d3.max(equityScoreGeoJSON.features, d => d.properties.crime_count)]);
 
             svg.selectAll("path")
@@ -215,7 +226,7 @@
                 .enter().append("path")
                 .attr("d", path)
                 .style("fill", d => {
-                    const neighborhood = equityScoreGeoJSON.features.find(e => e.properties.neighborhood === d.properties.neighborhood);
+                                        const neighborhood = equityScoreGeoJSON.features.find(e => e.properties.neighborhood === d.properties.neighborhood);
                     return neighborhood ? color(neighborhood.properties.crime_count) : "#ccc";
                 })
                 .style("stroke", "black")
