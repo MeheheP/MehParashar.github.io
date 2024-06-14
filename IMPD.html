@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>D3.js EDA</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Analysis - Mehul Parashar</title>
+    <link rel="stylesheet" href="../styles.css">
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
         .hidden { display: none; }
@@ -19,24 +22,52 @@
     </style>
 </head>
 <body>
-    <button class="button" onclick="showVisualization('timeSeries')">Time Series Plot</button>
-    <button class="button" onclick="showVisualization('heatmap')">Heatmap</button>
-    
-    <div id="timeSeries" class="hidden"></div>
-    <div id="heatmap" class="hidden"></div>
-
+    <header>
+        <div class="container">
+            <h1>Crime Analysis</h1>
+            <nav>
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#skills">Skills</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#experience">Experience</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section id="crime-analysis">
+        <div class="container">
+            <h2>Exploratory Data Analysis of Crime Data in Indianapolis</h2>
+            <div class="buttons">
+                <button class="button" onclick="showVisualization('timeSeries')">Time Series Plot</button>
+                <button class="button" onclick="showVisualization('heatmap')">Heatmap</button>
+            </div>
+            <div id="timeSeries" class="visualization hidden"></div>
+            <div id="heatmap" class="visualization hidden"></div>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Mehul Parashar</p>
+            <div class="social">
+                <a href="https://www.linkedin.com/in/mehul-parashar/" target="_blank">LinkedIn</a>
+                <a href="https://github.com/MehParashar" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
     <script>
         function showVisualization(id) {
-            document.querySelectorAll('.hidden').forEach(div => div.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
+            document.querySelectorAll('.visualization').forEach(div => div.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
         }
 
         Promise.all([
-            d3.csv('IMPD_UCR_2019_Data.csv'),
-            d3.csv('IMPD_UCR_2020_Data.csv'),
-            d3.csv('IMPD_UCR_2021_Data.csv'),
-            d3.json('Indy_Neighborhoods.geojson'),
-            d3.json('Indy_Racial_Equity_Score_By_Tract.geojson')
+            d3.csv('../data/IMPD_UCR_2019_Data.csv'),
+            d3.csv('../data/IMPD_UCR_2020_Data.csv'),
+            d3.csv('../data/IMPD_UCR_2021_Data.csv'),
+            d3.json('../data/Indy_Neighborhoods.geojson'),
+            d3.json('../data/Indy_Racial_Equity_Score_By_Tract.geojson')
         ]).then(function(files) {
             const data2019 = files[0];
             const data2020 = files[1];
@@ -50,8 +81,6 @@
 
         function createTimeSeriesPlot(data2019, data2020, data2021) {
             const data = data2019.concat(data2020, data2021);
-
-            // Process data to get crime counts per month
             const parseDate = d3.timeParse("%Y-%m-%d");
             data.forEach(d => d.Date = parseDate(d.Date));
 
@@ -101,7 +130,6 @@
                     d3.select(this).style("stroke", "steelblue");
                 });
 
-            // Adding interaction: Tooltips
             const tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
@@ -138,7 +166,6 @@
             const projection = d3.geoMercator().fitSize([width, height], neighborhoodsGeoJSON);
             const path = d3.geoPath().projection(projection);
 
-            // Color scale for heatmap
             const color = d3.scaleSequential(d3.interpolateReds)
                 .domain([0, d3.max(equityScoreGeoJSON.features, d => d.properties.crime_count)]);
 
@@ -162,7 +189,6 @@
                     });
                 });
 
-            // Adding interaction: Tooltips
             const tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
@@ -186,3 +212,11 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
