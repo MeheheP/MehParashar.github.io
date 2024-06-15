@@ -147,6 +147,9 @@ section {
     background-color: #1b1b1b; /* Dark background for section */
     height: 100vh; /* Full viewport height */
     display: flex;
+    justify-content: center; /* Center section content horizontally */
+    align-items: center; /* Center section content vertically */
+    text-align: center; /* Center text in the section */
 }
 
 /* Title styling for the section */
@@ -297,12 +300,12 @@ section .title span a::after {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: space-around;
+    justify-content: center; /* Center align the project cards */
 }
 
 .project-card {
-    width: 190px;
-    height: 254px;
+    width: 250px; /* Increased width for rectangular shape */
+    height: 300px; /* Increased height for rectangular shape */
     background: var(--secondary-color);
     display: flex;
     justify-content: center;
@@ -362,29 +365,27 @@ section .title span a::after {
 .project-card .content {
     position: absolute;
     z-index: 3;
-    bottom: 50%; /* Adjust this value to change the vertical position */
-    left: 50%; /* Adjust this value to change the horizontal position */
-    transform: translate(-50%, 50%);
+    top: 50%; /* Center the content vertically */
+    left: 50%; /* Center the content horizontally */
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    height: 100%;
-    width: 100%;
     transition: 0.5s;
 }
 
 .project-card:hover .content {
-    transform: translate(-50%, 30%); /* Adjust the hover effect */
+    transform: translate(-50%, -20%); /* Adjust the hover effect */
 }
 
 .content .title {
     position: relative;
-    color: var(--primary-color);
+    color: #efefef; /* Light grey color for better visibility */
     font-weight: 500;
     line-height: 1em;
-    font-size: 1em;
+    font-size: 1.2em; /* Slightly larger font size */
     letter-spacing: 0.1em;
     text-transform: uppercase;
     text-align: center;
@@ -408,12 +409,8 @@ section .title span a::after {
     position: relative;
     text-decoration: none;
     color: var(--text-color);
-    background: rgba(0, 0, 0, 0.2);
-    width: 60px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: rgba(0, 0, 0, 0.6); /* Darker background for buttons */
+    padding: 10px 15px; /* Added padding for better button appearance */
     border-radius: 4px;
     transition: 0.5s;
 }
