@@ -152,15 +152,27 @@ section {
     text-align: center; /* Center text in the section */
 }
 
+/* Title container styling */
+.title-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between image and text */
+}
+
+/* Profile picture styling */
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 /* Title styling for the section */
 section .title {
-    max-width: 60%;
-    width: 100%;
-    align-self: center;
-    transform: translateY(-50px);
-    margin: 0 auto;
-    overflow: hidden;
-    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
 }
 section .title span {
     display: inline-block;
@@ -168,7 +180,6 @@ section .title span {
     color: #efefef; /* Light grey color */
     width: 100%;
     text-transform: uppercase;
-    transform: translateX(-100%);
     animation: byBottom 1s ease both; /* Animation */
     font-weight: 600;
     letter-spacing: 0.25vw;
