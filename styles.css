@@ -452,6 +452,50 @@ footer p {
     margin: 10px;
 }
 
+/* Skills section styling */
+#skills .card {
+    background: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    overflow: hidden;
+    padding: 20px;
+    text-align: left;
+    margin-top: 20px;
+}
+
+#skills .header {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+#skills .body .skill {
+    margin-bottom: 15px;
+}
+
+#skills .skill-name {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+#skills .skill-level {
+    background: #444;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 10px;
+}
+
+#skills .skill-percent {
+    background: #39ff14; /* Neon green color */
+    height: 100%;
+    transition: width 0.3s;
+}
+
+#skills .skill-percent-number {
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
 @media (max-width: 768px) {
     .about-content {
         flex-direction: column;
