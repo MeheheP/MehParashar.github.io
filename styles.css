@@ -1,20 +1,8 @@
-/* Reset link styles */
-a {
-    color: inherit;
-    text-decoration: inherit;
-}
-
 /* Basic body styling */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Open Sans', sans-serif;
-}
-
-/* Selection color styling */
-::selection {
-    background-color: #f7ca18;
-    color: #1b1b1b;
 }
 
 /* Section styling */
@@ -82,102 +70,30 @@ section .title span a::after {
 }
 
 /* Keyframes for animations */
-@-moz-keyframes pop {
-     0% {
-      transform: translateY(100%);
-    }
-    100% {
-      transform: translateY(0);
-    }
-}
-@-webkit-keyframes pop {
-     0% {
-      transform: translateY(100%);
-    }
-    100% {
-      transform: translateY(0);
-    }
-}
-@-o-keyframes pop {
-     0% {
-      transform: translateY(100%);
-    }
-    100% {
-      transform: translateY(0);
-    }
-}
 @keyframes pop {
-     0% {
-      transform: translateY(100%);
+    0% {
+        transform: translateY(100%);
     }
     100% {
-      transform: translateY(0);
+        transform: translateY(0);
     }
 }
 
-@-moz-keyframes byBottom {
-     0% {
-      transform: translateY(150%);
-    }
-    100% {
-      transform: translateY(0);
-    }
-}
-@-webkit-keyframes byBottom {
-     0% {
-      transform: translateY(150%);
-    }
-    100% {
-      transform: translateY(0);
-    }
-}
-@-o-keyframes byBottom {
-     0% {
-      transform: translateY(150%);
-    }
-    100% {
-      transform: translateY(0);
-    }
-}
 @keyframes byBottom {
-     0% {
-      transform: translateY(150%);
+    0% {
+        transform: translateY(150%);
     }
     100% {
-      transform: translateY(0);
+        transform: translateY(0);
     }
 }
 
-@-moz-keyframes linkAfter {
-    0% {
-      width: 0;
-    }
-    100% {
-      width: 30px;
-    }
-}
-@-webkit-keyframes linkAfter {
-    0% {
-      width: 0;
-    }
-    100% {
-      width: 30px;
-    }
-}
-@-o-keyframes linkAfter {
-    0% {
-      width: 0;
-    }
-    100% {
-      width: 30px;
-    }
-}
 @keyframes linkAfter {
     0% {
-      width: 0;
+        width: 0;
     }
     100% {
-      width: 30px;
+        width: 30px;
     }
 }
 
@@ -196,6 +112,10 @@ section .title span a::after {
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     padding: 20px;
     overflow: hidden;
+}
+
+.skills-card {
+    align-self: flex-start; /* Align the skills card to the top */
 }
 
 .skills-card .header, .timeline-card .header {
@@ -244,6 +164,18 @@ section .title span a::after {
     margin-bottom: 20px;
     padding-left: 20px;
     border-left: 3px solid #39ff14; /* Neon green color */
+    position: relative;
+}
+
+.timeline__item::before {
+    content: "";
+    position: absolute;
+    left: -1.5px; /* Adjust position to connect lines */
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #39ff14; /* Neon green color */
+    z-index: -1; /* Ensure the line is behind the content */
 }
 
 .timeline__item-header {
