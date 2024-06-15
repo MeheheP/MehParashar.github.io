@@ -17,131 +17,6 @@ body {
     color: #1b1b1b;
 }
 
-/* Navigation bar styling */
-nav {
-    width: 100%;
-    background-color: #0b0b0b; /* Black background for the nav */
-    position: fixed; /* Fixed position at the bottom */
-    bottom: 0;
-    height: 100px;
-    overflow: hidden; /* Hide overflow */
-}
-
-/* Navigation list styling */
-nav ul {
-    position: absolute;
-    top: 0;
-    left: 0;
-    list-style-type: none; /* Remove bullets */
-    padding: 0;
-    margin: 0;
-    width: 140vw; /* Extra width for sliding effect */
-}
-
-/* Navigation list item styling */
-nav li {
-    margin: 0;
-    float: left;
-    display: inline-block;
-    height: 98px;
-    margin-bottom: 2px;
-    line-height: 100px; /* Center text vertically */
-    width: 20vw;
-    text-align: center;
-    color: #555; /* Light grey color for text */
-    transition: background-color 0.5s 0.2s ease, color 0.3s ease; /* Transition effects */
-    cursor: pointer;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    font-weight: 800;
-    transform: translateY(100%); /* Start off-screen */
-}
-
-/* Active navigation list item styling */
-nav li.active {
-    background-color: #151515; /* Dark grey background */
-    color: #efefef; /* Light grey color */
-}
-
-/* Active navigation list item underline */
-nav li.active::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #f7ca18; /* Yellow underline */
-}
-
-/* Animation delay for each nav item */
-nav li:nth-child(1) {
-    animation: pop 0.5s 0.15s 1 forwards;
-}
-nav li:nth-child(2) {
-    animation: pop 0.5s 0.3s 1 forwards;
-}
-nav li:nth-child(3) {
-    animation: pop 0.5s 0.45s 1 forwards;
-}
-nav li:nth-child(4) {
-    animation: pop 0.5s 0.6s 1 forwards;
-}
-nav li:nth-child(5) {
-    animation: pop 0.5s 0.75s 1 forwards;
-}
-nav li:nth-child(6) {
-    animation: pop 0.5s 0.9s 1 forwards;
-}
-nav li:nth-child(7) {
-    animation: pop 0.5s 1.05s 1 forwards;
-}
-
-/* Hover and active states for nav items */
-nav li:hover {
-    color: #ececec;
-}
-nav li:active {
-    background-color: #222;
-}
-
-/* Sliding effect for the active underline */
-nav li:nth-child(1):hover ~ .slide {
-    left: 0;
-}
-nav li:nth-child(2):hover ~ .slide {
-    left: 20vw;
-}
-nav li:nth-child(3):hover ~ .slide {
-    left: 40vw;
-}
-nav li:nth-child(4):hover ~ .slide {
-    left: 60vw;
-}
-nav li:nth-child(5):hover ~ .slide {
-    left: 80vw;
-}
-nav li:nth-child(6):hover ~ .slide {
-    left: 100vw;
-}
-nav li:nth-child(7):hover ~ .slide {
-    left: 120vw;
-}
-
-/* Slide indicator for navigation */
-nav li.slide {
-    position: absolute;
-    left: -20vw;
-    top: 0;
-    background-color: #fff; /* White color for the slide */
-    z-index: -1;
-    height: 2px;
-    margin-top: 98px;
-    transition: left 0.3s ease;
-    transform: translateY(0);
-}
-
 /* Section styling */
 section {
     background-color: #1b1b1b; /* Dark background for section */
@@ -306,7 +181,136 @@ section .title span a::after {
     }
 }
 
-/* Additional styles for the project cards */
+/* Skills and Timeline Section Styling */
+.skills-timeline-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.skills-card, .timeline-card {
+    width: 48%;
+    background: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    padding: 20px;
+    overflow: hidden;
+}
+
+.skills-card .header, .timeline-card .header {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #fff;
+}
+
+.skills-card .body .skill {
+    margin-bottom: 15px;
+}
+
+.skills-card .skill-name {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.skills-card .skill-level {
+    background: #444;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 10px;
+}
+
+.skills-card .skill-percent {
+    background: #39ff14; /* Neon green color */
+    height: 100%;
+    transition: width 0.3s;
+}
+
+.skills-card .skill-percent-number {
+    font-size: 0.9em;
+    margin-top: 5px;
+    color: #fff;
+}
+
+/* Timeline Styling */
+.timeline {
+    margin-top: 20px;
+}
+
+.timeline__item {
+    margin-bottom: 20px;
+    padding-left: 20px;
+    border-left: 3px solid #39ff14; /* Neon green color */
+}
+
+.timeline__item-header {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.timeline__arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.timeline__arrow-icon {
+    fill: #fff; /* White color for arrow */
+    transition: transform 0.3s;
+}
+
+.timeline__dot {
+    width: 10px;
+    height: 10px;
+    background-color: #39ff14; /* Neon green color */
+    border-radius: 50%;
+    position: absolute;
+    left: -16px;
+}
+
+.timeline__meta {
+    color: #fff; /* White color for text */
+}
+
+.timeline__date {
+    font-weight: bold;
+}
+
+.timeline__title {
+    font-size: 1.1em;
+}
+
+.timeline__item-body {
+    display: none;
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.timeline__item-body-content {
+    background: #444; /* Dark background for content */
+    border-radius: 5px;
+    padding: 10px;
+    color: #fff; /* White color for text */
+}
+
+.timeline__item[aria-expanded="true"] .timeline__item-body {
+    display: block;
+}
+
+.timeline__item[aria-expanded="true"] .timeline__arrow-icon {
+    transform: rotate(180deg);
+}
+
+/* Project Cards Styling */
 .projects-grid {
     display: flex;
     flex-wrap: wrap;
@@ -376,30 +380,28 @@ section .title span a::after {
 .project-card .content {
     position: absolute;
     z-index: 3;
-    top: 50%; /* Center the content vertically */
-    left: 50%; /* Center the content horizontally */
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    transition: transform 0.5s;
     text-align: center;
-    transition: 0.5s;
 }
 
 .project-card:hover .content {
-    transform: translate(-50%, -20%); /* Adjust the hover effect */
+    transform: translate(-50%, -25%);
 }
 
 .content .title {
     position: relative;
-    color: #efefef; /* Light grey color for better visibility */
+    color: #fff;
     font-weight: 500;
     line-height: 1em;
-    font-size: 1.2em; /* Slightly larger font size */
+    font-size: 1.2em;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    text-align: center;
     margin-bottom: 10px;
 }
 
@@ -431,6 +433,7 @@ section .title span a::after {
     color: var(--background-color);
 }
 
+/* Footer Styling */
 footer {
     background: #1c1c1c;
     padding: 20px 0;
@@ -439,6 +442,7 @@ footer {
 
 footer p {
     margin: 0;
+    color: #fff; /* White color for text */
 }
 
 .social a {
@@ -452,50 +456,7 @@ footer p {
     margin: 10px;
 }
 
-/* Skills section styling */
-#skills .card {
-    background: #333;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    overflow: hidden;
-    padding: 20px;
-    text-align: left;
-    margin-top: 20px;
-}
-
-#skills .header {
-    font-size: 1.5em;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-#skills .body .skill {
-    margin-bottom: 15px;
-}
-
-#skills .skill-name {
-    font-size: 1.1em;
-    margin-bottom: 5px;
-}
-
-#skills .skill-level {
-    background: #444;
-    border-radius: 5px;
-    overflow: hidden;
-    height: 10px;
-}
-
-#skills .skill-percent {
-    background: #39ff14; /* Neon green color */
-    height: 100%;
-    transition: width 0.3s;
-}
-
-#skills .skill-percent-number {
-    font-size: 0.9em;
-    margin-top: 5px;
-}
-
+/* Media Queries for Responsive Design */
 @media (max-width: 768px) {
     .about-content {
         flex-direction: column;
@@ -509,14 +470,13 @@ footer p {
         max-width: 90%;
         margin-left: 0;
     }
-    nav ul {
+    .skills-timeline-grid {
         flex-direction: column;
+        align-items: center;
     }
-    nav ul li {
-        margin: 5px 0;
-    }
-    .hero h1 {
-        font-size: 2em;
+    .skills-card, .timeline-card {
+        width: 100%;
+        margin-bottom: 20px;
     }
     .project-card {
         width: 100%;
