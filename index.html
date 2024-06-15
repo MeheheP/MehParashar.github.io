@@ -17,21 +17,8 @@
     </script>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="https://drive.google.com/file/d/1SrNzZNNRl64euLlu4qUe06ExGVsyY1P9/view?usp=sharing" target="_blank" class="nav-button">Resume</a></li>
-            <li><a href="https://www.linkedin.com/in/mehul-parashar/details/certifications/" target="_blank" class="nav-button">Certifications</a></li>
-        </ul>
-    </nav>
-
     <!-- Section for Landing Page or About Me -->
-    <section id="home">
+    <section>
         <div class="title-container">
             <div class="profile-picture">
                 <img src="images/photoofficial.jpg" alt="Mehul Parashar">
@@ -46,6 +33,62 @@
         </div>
     </section>
 
+    <!-- Skills and Timeline Section -->
+    <section id="skills-timeline" class="animate__animated animate__fadeInUp">
+        <div class="container skills-timeline-grid">
+            <!-- Skills Section -->
+            <div class="skills-card">
+                <div class="header">My Skills</div>
+                <div class="body">
+                    <div class="skill">
+                        <div class="skill-name">Python</div>
+                        <div class="skill-level">
+                            <div class="skill-percent" style="width: 90%"></div>
+                        </div>
+                        <div class="skill-percent-number">90%</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-name">Machine Learning</div>
+                        <div class="skill-level">
+                            <div class="skill-percent" style="width: 85%"></div>
+                        </div>
+                        <div class="skill-percent-number">85%</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-name">SQL</div>
+                        <div class="skill-level">
+                            <div class="skill-percent" style="width: 80%"></div>
+                        </div>
+                        <div class="skill-percent-number">80%</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-name">Data Visualization</div>
+                        <div class="skill-level">
+                            <div class="skill-percent" style="width: 75%"></div>
+                        </div>
+                        <div class="skill-percent-number">75%</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-name">Data Cleaning</div>
+                        <div class="skill-level">
+                            <div class="skill-percent" style="width: 90%"></div>
+                        </div>
+                        <div class="skill-percent-number">90%</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-name">GIS</div>
+                        <div class="skill-level">
+                            <div class="skill-percent" style="width: 90%"></div>
+                        </div>
+                        <div class="skill-percent-number">90%</div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-name">R</div>
+                        <div class="skill-level">
+                            <div class="skill-percent" style="width: 70%"></div>
+                        </div>
+                        <div class="skill-percent-number">70%</div>
+                    </div>
     <!-- Skills Section -->
     <section id="skills" class="animate__animated animate__fadeInUp">
         <div class="container skills-card">
@@ -58,11 +101,118 @@
                     </div>
                     <div class="skill-percent-number">90%</div>
                 </div>
+            </div>
+            <!-- Timeline Section -->
+            <div class="timeline-card">
+                <svg display="none">
+                    <symbol id="arrow">
+                        <polyline points="7 10,12 15,17 10" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                    </symbol>
+                </svg>
+                <h1>My Academic and Professional Career</h1>
+                <div id="timeline" class="timeline">
+                    <div class="btn-group">
+                        <button class="btn" type="button" data-action="expand">Expand All</button>
+                        <button class="btn" type="button" data-action="collapse">Collapse All</button>
+                    </div>
+                    <div class="timeline__item">
+                        <div class="timeline__item-header">
+                            <button class="timeline__arrow" type="button" id="item1" aria-labelledby="item1-name" aria-expanded="false" aria-controls="item1-ctrld" aria-haspopup="true" data-item="1">
+                                <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                                    <use href="#arrow" />
+                                </svg>
+                            </button>
+                            <span class="timeline__dot"></span>
+                            <span id="item1-name" class="timeline__meta">
+                                <time class="timeline__date" datetime="2015">2015</time><br>
+                                <strong class="timeline__title">Completed High School</strong>
+                            </span>
+                        </div>
+                        <div class="timeline__item-body" id="item1-ctrld" role="region" aria-labelledby="item1" aria-hidden="true">
+                            <div class="timeline__item-body-content">
+                                <p class="timeline__item-p">Graduated from high school with a focus on science subjects.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline__item">
+                        <div class="timeline__item-header">
+                            <button class="timeline__arrow" type="button" id="item2" aria-labelledby="item2-name" aria-expanded="false" aria-controls="item2-ctrld" aria-haspopup="true" data-item="2">
+                                <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                                    <use href="#arrow" />
+                                </svg>
+                            </button>
+                            <span class="timeline__dot"></span>
+                            <span id="item2-name" class="timeline__meta">
+                                <time class="timeline__date" datetime="2017">2017</time><br>
+                                <strong class="timeline__title">Completed Junior College</strong>
+                            </span>
+                        </div>
+                        <div class="timeline__item-body" id="item2-ctrld" role="region" aria-labelledby="item2" aria-hidden="true">
+                            <div class="timeline__item-body-content">
+                                <p class="timeline__item-p">Graduated with a major in Physics, Chemistry, Mathematics, and Computer Science.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline__item">
+                        <div class="timeline__item-header">
+                            <button class="timeline__arrow" type="button" id="item3" aria-labelledby="item3-name" aria-expanded="false" aria-controls="item3-ctrld" aria-haspopup="true" data-item="3">
+                                <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                                    <use href="#arrow" />
+                                </svg>
+                            </button>
+                            <span class="timeline__dot"></span>
+                            <span id="item3-name" class="timeline__meta">
+                                <time class="timeline__date" datetime="2020-11">November 2020</time><br>
+                                <strong class="timeline__title">Graduated with Bsc Computer Science from Mumbai University</strong>
+                            </span>
+                        </div>
+                        <div class="timeline__item-body" id="item3-ctrld" role="region" aria-labelledby="item3" aria-hidden="true">
+                            <div class="timeline__item-body-content">
+                                <p class="timeline__item-p">Earned a Bachelor of Science degree in Computer Science.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline__item">
+                        <div class="timeline__item-header">
+                            <button class="timeline__arrow" type="button" id="item4" aria-labelledby="item4-name" aria-expanded="false" aria-controls="item4-ctrld" aria-haspopup="true" data-item="4">
+                                <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                                    <use href="#arrow" />
+                                </svg>
+                            </button>
+                            <span class="timeline__dot"></span>
+                            <span id="item4-name" class="timeline__meta">
+                                <time class="timeline__date" datetime="2023-05">May 2023</time><br>
+                                <strong class="timeline__title">Developed Online Store Using Java RMI</strong>
+                            </span>
+                        </div>
+                        <div class="timeline__item-body" id="item4-ctrld" role="region" aria-labelledby="item4" aria-hidden="true">
+                            <div class="timeline__item-body-content">
+                                <p class="timeline__item-p">Created an online store application leveraging Java Remote Method Invocation (RMI).</p>
+                            </div>
+                        </div>
                 <div class="skill">
                     <div class="skill-name">Machine Learning</div>
                     <div class="skill-level">
                         <div class="skill-percent" style="width: 85%"></div>
                     </div>
+                    <div class="timeline__item">
+                        <div class="timeline__item-header">
+                            <button class="timeline__arrow" type="button" id="item5" aria-labelledby="item5-name" aria-expanded="false" aria-controls="item5-ctrld" aria-haspopup="true" data-item="5">
+                                <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                                    <use href="#arrow" />
+                                </svg>
+                            </button>
+                            <span class="timeline__dot"></span>
+                            <span id="item5-name" class="timeline__meta">
+                                <time class="timeline__date" datetime="2023-12">December 2023</time><br>
+                                <strong class="timeline__title">Designed 'Intelligent Health Assistant'</strong>
+                            </span>
+                        </div>
+                        <div class="timeline__item-body" id="item5-ctrld" role="region" aria-labelledby="item5" aria-hidden="true">
+                            <div class="timeline__item-body-content">
+                                <p class="timeline__item-p">Implemented a project utilizing Machine Learning and NLP techniques to assist with health-related queries.</p>
+                            </div>
+                        </div>
                     <div class="skill-percent-number">85%</div>
                 </div>
                 <div class="skill">
@@ -70,6 +220,24 @@
                     <div class="skill-level">
                         <div class="skill-percent" style="width: 80%"></div>
                     </div>
+                    <div class="timeline__item">
+                        <div class="timeline__item-header">
+                            <button class="timeline__arrow" type="button" id="item6" aria-labelledby="item6-name" aria-expanded="false" aria-controls="item6-ctrld" aria-haspopup="true" data-item="6">
+                                <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                                    <use href="#arrow" />
+                                </svg>
+                            </button>
+                            <span class="timeline__dot"></span>
+                            <span id="item6-name" class="timeline__meta">
+                                <time class="timeline__date" datetime="2022-08">August 2022</time><br>
+                                <strong class="timeline__title">Started my Master's Journey at Purdue University</strong>
+                            </span>
+                        </div>
+                        <div class="timeline__item-body" id="item6-ctrld" role="region" aria-labelledby="item6" aria-hidden="true">
+                            <div class="timeline__item-body-content">
+                                <p class="timeline__item-p">Began pursuing a Master's degree in Computer Information Science.</p>
+                            </div>
+                        </div>
                     <div class="skill-percent-number">80%</div>
                 </div>
                 <div class="skill">
@@ -77,6 +245,25 @@
                     <div class="skill-level">
                         <div class="skill-percent" style="width: 75%"></div>
                     </div>
+                    <div class="timeline__item">
+                        <div class="timeline__item-header">
+                            <button class="timeline__arrow" type="button" id="item7" aria-labelledby="item7-name" aria-expanded="false" aria-controls="item7-ctrld" aria-haspopup="true" data-item="7">
+                                <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                                    <use href="#arrow" />
+                                </svg>
+                            </button>
+                            <span class="timeline__dot"></span>
+                              <span id="item7-name" class="timeline__meta">
+                                    <time class="timeline__date" datetime="2024-05">May 2024</time><br>
+                                    <strong class="timeline__title">Graduated from Purdue University</strong>
+                                </span>
+                            </div>
+                            <div class="timeline__item-body" id="item7-ctrld" role="region" aria-labelledby="item7" aria-hidden="true">
+                                <div class="timeline__item-body-content">
+                                    <p class="timeline__item-p">Completed my Master's degree in Computer Information Science.</p>
+                                </div>
+                            </div>
+                        </div>
                     <div class="skill-percent-number">75%</div>
                 </div>
                 <div class="skill">
@@ -84,6 +271,24 @@
                     <div class="skill-level">
                         <div class="skill-percent" style="width: 90%"></div>
                     </div>
+                    <div class="timeline__item">
+                        <div class="timeline__item-header">
+                            <button class="timeline__arrow" type="button" id="item8" aria-labelledby="item8-name" aria-expanded="false" aria-controls="item8-ctrld" aria-haspopup="true" data-item="8">
+                                <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                                    <use href="#arrow" />
+                                </svg>
+                            </button>
+                            <span class="timeline__dot"></span>
+                            <span id="item8-name" class="timeline__meta">
+                                <time class="timeline__date" datetime="2023-07">July 2023 - March 2024</time><br>
+                                <strong class="timeline__title">Lead Data Scientist Intern at Spotlist Inc.</strong>
+                            </span>
+                        </div>
+                        <div class="timeline__item-body" id="item8-ctrld" role="region" aria-labelledby="item8" aria-hidden="true">
+                            <div class="timeline__item-body-content">
+                                <p class="timeline__item-p">Implemented a streamlined data pipeline, proposed data-driven strategies, leveraged machine learning algorithms, and developed interactive dashboards.</p>
+                            </div>
+                        </div>
                     <div class="skill-percent-number">90%</div>
                 </div>
                 <div class="skill">
@@ -91,6 +296,24 @@
                     <div class="skill-level">
                         <div class="skill-percent" style="width: 90%"></div>
                     </div>
+                    <div class="timeline__item">
+                        <div class="timeline__item-header">
+                            <button class="timeline__arrow" type="button" id="item9" aria-labelledby="item9-name" aria-expanded="false" aria-controls="item9-ctrld" aria-haspopup="true" data-item="9">
+                                <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                                    <use href="#arrow" />
+                                </svg>
+                            </button>
+                            <span class="timeline__dot"></span>
+                            <span id="item9-name" class="timeline__meta">
+                                <time class="timeline__date" datetime="2019-08">August 2019 - July 2021</time><br>
+                                <strong class="timeline__title">Junior Analyst at Dhakad Events and Entertainment</strong>
+                            </span>
+                        </div>
+                        <div class="timeline__item-body" id="item9-ctrld" role="region" aria-labelledby="item9" aria-hidden="true">
+                            <div class="timeline__item-body-content">
+                                <p class="timeline__item-p">Conducted data analysis and utilized operational research methods, working with movies, shows, and celebrities data at this celebrity management company.</p>
+                            </div>
+                        </div>
                     <div class="skill-percent-number">90%</div>
                 </div>
                 <div class="skill">
@@ -174,6 +397,17 @@
             </div>
         </div>
     </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Mehul Parashar</p>
+            <div class="social">
+                <a href="https://www.linkedin.com/in/mehul-parashar/" target="_blank">LinkedIn</a>
+                <a href="https://github.com/MehParashar" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
     <script src="script.js"></script>
 </body>
 </html>
