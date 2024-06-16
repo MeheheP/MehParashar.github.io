@@ -36,16 +36,16 @@ body {
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.7);
     font-size: 16px;
-    text-decoration: none;
+    text-decoration: none; /* Remove underline */
     display: block;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
     transition: background 0.3s, color 0.3s;
 }
 
 .option .btn:hover,
 .option .input:checked + .btn {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
     color: rgba(255, 255, 255, 1);
 }
 
@@ -99,7 +99,7 @@ section .title span a {
     position: relative;
     display: inline-block;
     margin-left: 0.5rem;
-    text-decoration: none;
+    text-decoration: none; /* Remove underline */
     color: #f7ca18; /* Yellow color for link */
 }
 section .title span a::after {
@@ -334,7 +334,6 @@ footer p {
     margin: 10px;
 }
 
-/* Media Queries for Responsive Design */
 @media (max-width: 768px) {
     .about-content {
         flex-direction: column;
@@ -348,7 +347,7 @@ footer p {
         width: 100%;
         margin-bottom: 20px;
     }
-.projects-grid {
+    .projects-grid {
         flex-direction: column;
         align-items: center;
     }
