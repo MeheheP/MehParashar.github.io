@@ -229,7 +229,7 @@ section .title span a::after {
 
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* Ensure exactly two cards per row */
     gap: 30px;
     justify-content: center; /* Center align the project cards */
     padding: 0 20px; /* Ensure space for footer */
