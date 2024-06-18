@@ -222,6 +222,9 @@
                 <p>This scatter plot shows the relationship between Tesla stock's closing price and volume. Hover over the dots to see the exact values for each point.</p>
                 <!-- Scatter plot -->
                 <div id="scatter-plot" class="chart"></div>
+                <!-- Pie chart -->
+                <p>This pie chart shows the proportion of Tesla stock trading volume by month.</p>
+                <div id="pie-chart" class="chart"></div>
             </div>
         </div>
     </section>
@@ -446,6 +449,56 @@
         const tooltipScatter = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
+         // Pie Chart
+        const svgPie = d3.select("#pie-chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${(width + margin.left + margin.right) / 2},${(height + margin.top + margin.bottom) / 2})`);
+
+        const radius = Math.min(width, height) / 2;
+
+        const pie = d3.pie()
+            .value(d => d.Volume)
+            .sort(null);
+
+        const arc = d3.arc()
+            .innerRadius(0)
+            .outerRadius(radius);
+
+        const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+        // Group data by month
+        const monthData = d3.nest()
+            .key(d => d3.timeFormat("%B")(d.Date))
+            .rollup(v => d3.sum(v, d => d.Volume))
+            .entries(data);
+
+        svgPie.selectAll('path')
+            .data(pie(monthData))
+            .enter()
+            .append('path')
+            .attr('d', arc)
+            .attr('fill', (d, i) => color(i))
+            .on("mouseover", function(event, d) {
+                tooltipPie.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltipPie.html(`Month: ${d.data.key}<br>Volume: ${d3.format(".2s")(d.value)}`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltipPie.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+
+        const tooltipPie = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
     });
 </script>
 
