@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Stock Analysis and Prediction</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WRR0BBBR6H"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-WRR0BBBR6H', { cookie_flags: 'samesite=none;secure' });
+    </script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="wrapper">
+            <div class="option">
+                <a href="index.html#about" class="button">About</a>
+            </div>
+            <div class="option">
+                <a href="index.html#skills" class="button">Skills</a>
+            </div>
+            <div class="option">
+                <a href="index.html#projects" class="button">Projects</a>
+            </div>
+            <div class="option">
+                <a href="index.html#contact" class="button">Contact</a>
+            </div>
+            <div class="option">
+                <a href="https://drive.google.com/file/d/1SrNzZNNRl64euLlu4qUe06ExGVsyY1P9/view?usp=sharing" target="_blank" class="button">Resume</a>
+            </div>
+            <div class="option">
+                <a href="https://www.linkedin.com/in/mehul-parashar/details/certifications/" target="_blank" class="button">Certifications</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tesla Stock Analysis Section -->
+    <section id="tesla-analysis">
+        <div class="container">
+            <div class="header">
+                <h1>Tesla Stock Analysis and Prediction</h1>
+            </div>
+            <div class="body">
+                <p>In this project, we analyze and predict Tesla stock prices using various data analysis techniques.</p>
+                <!-- This is where your D3.js visualizations will go -->
+                <div id="visualization"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer id="contact">
+        <div class="container contact-card">
+            <div class="header">Get In Touch</div>
+            <div class="body">
+                <a href="mailto:parasharmeh@gmail.com" class="contact-link">Email Me</a>
+                <a href="https://www.linkedin.com/in/mehul-parashar/" target="_blank" class="contact-link">LinkedIn</a>
+                <a href="https://github.com/MehParashar" target="_blank" class="contact-link">GitHub</a>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+        // Load the dataset
+        d3.csv("data/Tesla_Dataset.csv").then(function(data) {
+            // Parse the date and close price
+            const parseDate = d3.timeParse("%Y-%m-%d");
+            data.forEach(d => {
+                d.Date = parseDate(d.Date);
+                d.Close = +d.Close;
+            });
+
+            // Set dimensions and margins for the graph
+            const margin = { top: 20, right: 30, bottom: 30, left: 40 },
+                width = 800 - margin.left - margin.right,
+                height = 400 - margin.top - margin.bottom;
+
+            // Append SVG object to the div with id "visualization"
+            const svg = d3.select("#visualization")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Set up scales
+            const x = d3.scaleTime().domain(d3.extent(data, d => d.Date)).range([0, width]);
+            const y = d3.scaleLinear().domain([0, d3.max(data, d => d.Close)]).range([height, 0]);
+
+            // Add the x-axis
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x));
+
+            // Add the y-axis
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            // Add the line
+            svg.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 1.5)
+                .attr("d", d3.line()
+                    .x(d => x(d.Date))
+                    .y(d => y(d.Close))
+                );
+        });
+    </script>
+</body>
+
+</html>
