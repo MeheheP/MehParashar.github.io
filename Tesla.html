@@ -220,189 +220,213 @@
         </div>
     </footer>
     <script src="script.js"></script>
-   <script src="script.js"></script>
-    <script>
-        // Load the dataset
-        d3.csv("data/Tesla_Dataset.csv").then(function(data) {
-            // Parse the date, close price, and volume
-            const parseDate = d3.timeParse("%Y-%m-%d");
-            data.forEach(d => {
-                d.Date = parseDate(d.Date);
-                d.Close = +d.Close;
-                d.Volume = +d.Volume;
+   <script>
+    // Load the dataset
+    d3.csv("data/Tesla_Dataset.csv").then(function(data) {
+        // Parse the date, close price, and volume
+        const parseDate = d3.timeParse("%Y-%m-%d");
+        data.forEach(d => {
+            d.Date = parseDate(d.Date);
+            d.Close = +d.Close;
+            d.Volume = +d.Volume;
+        });
+
+        // Set dimensions and margins for the graphs
+        const margin = { top: 20, right: 30, bottom: 50, left: 60 },
+            width = 800 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+        // Line Chart
+        const svgLine = d3.select("#visualization")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const xLine = d3.scaleTime().domain(d3.extent(data, d => d.Date)).range([0, width]);
+        const yLine = d3.scaleLinear().domain([0, d3.max(data, d => d.Close)]).range([height, 0]);
+
+        svgLine.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xLine))
+            .selectAll("text")
+            .style("fill", "white")
+            .style("font-size", "12px");
+
+        svgLine.append("g")
+            .call(d3.axisLeft(yLine))
+            .selectAll("text")
+            .style("fill", "white")
+            .style("font-size", "12px");
+
+        svgLine.append("path")
+            .datum(data)
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 2)
+            .attr("d", d3.line()
+                .x(d => xLine(d.Date))
+                .y(d => yLine(d.Close))
+            );
+
+        const tooltipLine = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        svgLine.selectAll("dot")
+            .data(data)
+            .enter().append("circle")
+            .attr("r", 3)
+            .attr("cx", d => xLine(d.Date))
+            .attr("cy", d => yLine(d.Close))
+            .attr("fill", "steelblue")
+            .attr("stroke", "white")
+            .attr("opacity", 0.6)
+            .on("mouseover", function(event, d) {
+                tooltipLine.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltipLine.html(`Date: ${d3.timeFormat("%B %d, %Y")(d.Date)}<br>Close: $${d.Close.toFixed(2)}`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltipLine.transition()
+                    .duration(500)
+                    .style("opacity", 0);
             });
 
-            // Set dimensions and margins for the graphs
-            const margin = { top: 20, right: 30, bottom: 50, left: 60 },
-                width = 800 - margin.left - margin.right,
-                height = 400 - margin.top - margin.bottom;
+        // Bar Chart
+        const svgBar = d3.select("#volume-chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            // Line Chart
-            const svgLine = d3.select("#visualization")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
+        const binData = d3.histogram()
+            .value(d => d.Date)
+            .domain(xLine.domain())
+            .thresholds(xLine.ticks(d3.timeMonth))
+            (data);
 
-            const xLine = d3.scaleTime().domain(d3.extent(data, d => d.Date)).range([0, width]);
-            const yLine = d3.scaleLinear().domain([0, d3.max(data, d => d.Close)]).range([height, 0]);
+        const yBar = d3.scaleLinear()
+            .domain([0, d3.max(binData, d => d3.sum(d, d => d.Volume))])
+            .range([height, 0]);
 
-            svgLine.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(xLine))
-                .selectAll("text")
-                .style("fill", "white")
-                .style("font-size", "12px");
+        svgBar.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xLine).ticks(d3.timeMonth).tickFormat(d3.timeFormat("%b %Y")))
+            .selectAll("text")
+            .style("fill", "white")
+            .style("font-size", "12px")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "end");
 
-            svgLine.append("g")
-                .call(d3.axisLeft(yLine))
-                .selectAll("text")
-                .style("fill", "white")
-                .style("font-size", "12px");
+        svgBar.append("g")
+            .call(d3.axisLeft(yBar))
+            .selectAll("text")
+            .style("fill", "white")
+            .style("font-size", "12px");
 
-            svgLine.append("path")
-                .datum(data)
-                .attr("fill", "none")
-                .attr("stroke", "steelblue")
-                .attr("stroke-width", 2)
-                .attr("d", d3.line()
-                    .x(d => xLine(d.Date))
-                    .y(d => yLine(d.Close))
-                );
+        svgBar.selectAll(".bar")
+            .data(binData)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", d => xLine(d.x0))
+            .attr("y", d => yBar(d3.sum(d, d => d.Volume)))
+            .attr("width", xLine(binData[0].x1) - xLine(binData[0].x0) - 1)
+            .attr("height", d => height - yBar(d3.sum(d, d => d.Volume)))
+            .attr("fill", "steelblue")
+            .on("mouseover", function(event, d) {
+                tooltipBar.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltipBar.html(`Volume: ${d3.sum(d, d => d.Volume)}`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltipBar.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
 
-            const tooltipLine = d3.select("body").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
+        const tooltipBar = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
 
-            svgLine.selectAll("dot")
-                .data(data)
-                .enter().append("circle")
-                .attr("r", 3)
-                .attr("cx", d => xLine(d.Date))
-                .attr("cy", d => yLine(d.Close))
-                .attr("fill", "steelblue")
-                .attr("stroke", "white")
-                .attr("opacity", 0.6)
-                .on("mouseover", function(event, d) {
-                    tooltipLine.transition()
-                        .duration(200)
-                        .style("opacity", .9);
-                    tooltipLine.html(`Date: ${d3.timeFormat("%B %d, %Y")(d.Date)}<br>Close: $${d.Close.toFixed(2)}`)
-                        .style("left", (event.pageX + 5) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", function(d) {
-                    tooltipLine.transition()
-                        .duration(500)
-                        .style("opacity", 0);
-                });
+        // Scatter Plot (Hexbin)
+        const svgScatter = d3.select("#scatter-plot")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            // Bar Chart
-            const svgBar = d3.select("#volume-chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
+        const xScatter = d3.scaleLinear().domain([0, d3.max(data, d => d.Volume)]).range([0, width]);
+        const yScatter = d3.scaleLinear().domain([0, d3.max(data, d => d.Close)]).range([height, 0]);
 
-            const xBar = d3.scaleBand().domain(data.map(d => d.Date)).range([0, width]).padding(0.1);
-            const yBar = d3.scaleLinear().domain([0, d3.max(data, d => d.Volume)]).range([height, 0]);
+        svgScatter.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xScatter))
+            .selectAll("text")
+            .style("fill", "white")
+            .style("font-size", "12px");
 
-            svgBar.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(xBar).tickFormat(d3.timeFormat("%b %d")))
-                .selectAll("text")
-                .style("fill", "white")
-                .style("font-size", "12px")
-                .attr("transform", "rotate(-45)")
-                .style("text-anchor", "end");
+        svgScatter.append("g")
+            .call(d3.axisLeft(yScatter))
+            .selectAll("text")
+            .style("fill", "white")
+            .style("font-size", "12px");
 
-            svgBar.append("g")
-                .call(d3.axisLeft(yBar))
-                .selectAll("text")
-                .style("fill", "white")
-                .style("font-size", "12px");
+        const hexbin = d3.hexbin()
+            .x(d => xScatter(d.Volume))
+            .y(d => yScatter(d.Close))
+            .radius(20)
+            .extent([[0, 0], [width, height]]);
 
-            svgBar.selectAll(".bar")
-                .data(data)
-                .enter().append("rect")
-                .attr("class", "bar")
-                .attr("x", d => xBar(d.Date))
-                .attr("y", d => yBar(d.Volume))
-                .attr("width", xBar.bandwidth())
-                .attr("height", d => height - yBar(d.Volume))
-                .attr("fill", "steelblue")
-                .on("mouseover", function(event, d) {
-                    tooltipBar.transition()
-                        .duration(200)
-                        .style("opacity", .9);
-                    tooltipBar.html(`Date: ${d3.timeFormat("%B %d, %Y")(d.Date)}<br>Volume: ${d.Volume}`)
-                        .style("left", (event.pageX + 5) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", function(d) {
-                    tooltipBar.transition()
-                        .duration(500)
-                        .style("opacity", 0);
-                });
+        const hexData = hexbin(data);
 
-            const tooltipBar = d3.select("body").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
+        const color = d3.scaleSequential(d3.interpolateBlues)
+            .domain([0, d3.max(hexData, d => d.length)]);
 
-            // Scatter Plot
-            const svgScatter = d3.select("#scatter-plot")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
+        svgScatter.append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", width)
+            .attr("height", height);
 
-            const xScatter = d3.scaleLinear().domain([0, d3.max(data, d => d.Volume)]).range([0, width]);
-            const yScatter = d3.scaleLinear().domain([0, d3.max(data, d => d.Close)]).range([height, 0]);
+        svgScatter.append("g")
+            .attr("clip-path", "url(#clip)")
+            .selectAll("path")
+            .data(hexData)
+            .enter().append("path")
+            .attr("d", hexbin.hexagon())
+            .attr("transform", d => `translate(${d.x},${d.y})`)
+            .attr("fill", d => color(d.length))
+            .attr("stroke", "white")
+            .on("mouseover", function(event, d) {
+                tooltipScatter.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltipScatter.html(`Count: ${d.length}`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltipScatter.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
 
-            svgScatter.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(xScatter))
-                .selectAll("text")
-                .style("fill", "white")
-                .style("font-size", "12px");
+        const tooltipScatter = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+    });
+</script>
 
-            svgScatter.append("g")
-                .call(d3.axisLeft(yScatter))
-                .selectAll("text")
-                .style("fill", "white")
-                .style("font-size", "12px");
-
-            const tooltipScatter = d3.select("body").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
-
-            svgScatter.selectAll("dot")
-                .data(data)
-                .enter().append("circle")
-                .attr("r", 5)
-                .attr("cx", d => xScatter(d.Volume))
-                .attr("cy", d => yScatter(d.Close))
-                .attr("fill", "steelblue")
-                .attr("stroke", "white")
-                .attr("opacity", 0.6)
-                .on("mouseover", function(event, d) {
-                    tooltipScatter.transition()
-                        .duration(200)
-                        .style("opacity", .9);
-                    tooltipScatter.html(`Date: ${d3.timeFormat("%B %d, %Y")(d.Date)}<br>Close: $${d.Close.toFixed(2)}<br>Volume: ${d.Volume}`)
-                        .style("left", (event.pageX + 5) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", function(d) {
-                    tooltipScatter.transition()
-                        .duration(500)
-                        .style("opacity", 0);
-                });
-        });
-    </script>
 </body>
 
 </html>
