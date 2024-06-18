@@ -3,7 +3,14 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Open Sans', sans-serif;
-    padding-bottom: 60px; /* Adjust the padding as necessary to avoid footer overlap */
+    min-height: 100vh; /* Ensure the body takes the full height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Wrapper for all content */
+.wrapper {
+    flex: 1; /* Allow the wrapper to take up remaining space */
 }
 
 /* Navigation Bar Styling */
@@ -15,9 +22,6 @@ body {
     z-index: 1000;
     padding: 10px 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.wrapper {
     display: flex;
     justify-content: flex-end; /* Align buttons to the right */
     gap: 10px;
@@ -63,10 +67,7 @@ body {
 /* Section styling */
 section {
     background-color: #1b1b1b; /* Dark background for section */
-    height: 100vh; /* Full viewport height */
-    display: flex;
-    justify-content: center; /* Center section content horizontally */
-    align-items: center; /* Center section content vertically */
+    padding: 100px 20px 20px; /* Ensure section content is not hidden behind nav-bar */
     text-align: center; /* Center text in the section */
 }
 
@@ -75,6 +76,8 @@ section {
     display: flex;
     align-items: center;
     gap: 20px; /* Space between image and text */
+    justify-content: center;
+    flex-wrap: wrap; /* Ensure it wraps on smaller screens */
 }
 
 /* Profile picture styling */
@@ -214,6 +217,7 @@ section .title span a::after {
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center; /* Center align the project cards */
+    padding-bottom: 60px; /* Ensure space for footer */
 }
 
 .project-card {
@@ -294,13 +298,11 @@ section .title span a::after {
 
 /* Footer Section Styling */
 footer {
-    position: relative;
-    bottom: 0;
     width: 100%;
     background: rgba(51, 51, 51, 0.8); /* Semi-transparent background */
     padding: 10px 0;
-    z-index: 1000;
     text-align: center; /* Center text */
+    margin-top: auto; /* Push footer to the bottom */
 }
 
 .contact-card {
@@ -334,7 +336,7 @@ footer {
 
 /* Media Queries for Responsive Design */
 @media (max-width: 768px) {
-    .nav-bar .wrapper {
+    .nav-bar {
         flex-direction: column;
         align-items: center;
     }
@@ -345,6 +347,10 @@ footer {
     .contact-card .body {
         flex-direction: column;
         align-items: center;
+    }
+    .title-container {
+        flex-direction: column;
+        text-align: center;
     }
 }
 
