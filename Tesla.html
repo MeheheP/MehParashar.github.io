@@ -18,7 +18,7 @@
     </script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        body {
+         body {
             background-color: #1b1b1b;
             color: #fff;
             font-family: 'Poppins', sans-serif;
@@ -220,6 +220,7 @@
         </div>
     </footer>
     <script src="script.js"></script>
+   <script src="script.js"></script>
     <script>
         // Load the dataset
         d3.csv("data/Tesla_Dataset.csv").then(function(data) {
@@ -237,8 +238,7 @@
                 height = 400 - margin.top - margin.bottom;
 
             // Line Chart
-            const svgLine = d3.select("#```html
-visualization")
+            const svgLine = d3.select("#visualization")
                 .append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -351,7 +351,6 @@ visualization")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
 
-            
             // Scatter Plot
             const svgScatter = d3.select("#scatter-plot")
                 .append("svg")
