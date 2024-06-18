@@ -87,6 +87,19 @@ section {
     object-fit: cover;
 }
 
+/* Tesla Analysis Section */
+#tesla-analysis {
+    color: white;
+}
+
+/* D3.js axis text and lines */
+.axis text,
+.axis line,
+.axis path {
+    stroke: white;
+    fill: white;
+}
+
 /* Title styling for the section */
 section .title {
     display: flex;
