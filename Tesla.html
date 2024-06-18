@@ -168,7 +168,7 @@
             svg.selectAll("dot")
                 .data(data)
                 .enter().append("circle")
-                .attr("r", 1)  // Reduce the radius for better visibility of the line
+                .attr("r", 0.5)  // Reduce the radius for better visibility of the line
                 .attr("cx", d => x(d.Date))
                 .attr("cy", d => y(d.Close))
                 .attr("fill", "steelblue")
