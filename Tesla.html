@@ -17,6 +17,19 @@
         gtag('config', 'G-WRR0BBBR6H', { cookie_flags: 'samesite=none;secure' });
     </script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 6px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0;
+            border-radius: 8px;
+            pointer-events: none;
+            color: black;
+        }
+    </style>
 </head>
 
 <body>
@@ -44,6 +57,23 @@
         </div>
     </div>
 
+    <!-- Recent News Section -->
+    <section id="tesla-news">
+        <div class="container">
+            <div class="header">
+                <h2>Recent News on Tesla Stock</h2>
+            </div>
+            <div class="body">
+                <p>Here are some of the recent news articles and trends affecting Tesla stock prices:</p>
+                <ul>
+                    <li><a href="https://www.cnbc.com/2024/06/10/tesla-stock-hits-record-high-on-strong-delivery-numbers.html" target="_blank">Tesla stock hits record high on strong delivery numbers</a></li>
+                    <li><a href="https://www.reuters.com/business/autos-transportation/tesla-recalls-50000-cars-over-braking-issues-2024-06-15/" target="_blank">Tesla recalls 50,000 cars over braking issues</a></li>
+                    <li><a href="https://www.bloomberg.com/news/articles/2024-06-08/tesla-announces-new-model-x-with-extended-range" target="_blank">Tesla announces new Model X with extended range</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
     <!-- Tesla Stock Analysis Section -->
     <section id="tesla-analysis">
         <div class="container">
@@ -52,6 +82,7 @@
             </div>
             <div class="body">
                 <p>In this project, we analyze and predict Tesla stock prices using various data analysis techniques.</p>
+                <p>This interactive line chart shows the closing prices of Tesla stock over time. Hover over the data points to see the exact closing price for each date.</p>
                 <!-- This is where your D3.js visualizations will go -->
                 <div id="visualization"></div>
             </div>
@@ -127,6 +158,34 @@
 
             svg.selectAll(".tick line")
                 .attr("stroke", "white");
+
+            // Create tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            // Add dots for interactivity
+            svg.selectAll("dot")
+                .data(data)
+                .enter().append("circle")
+                .attr("r", 5)
+                .attr("cx", d => x(d.Date))
+                .attr("cy", d => y(d.Close))
+                .attr("fill", "steelblue")
+                .attr("stroke", "white")
+                .on("mouseover", function(event, d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`Date: ${d3.timeFormat("%B %d, %Y")(d.Date)}<br>Close: $${d.Close.toFixed(2)}`)
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(d) {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
         });
     </script>
 </body>
