@@ -2,7 +2,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
     min-height: 100vh; /* Ensure the body takes the full height */
     display: flex;
     flex-direction: column;
@@ -44,7 +44,7 @@ body {
     font-weight: 400;
     font-size: 17px;
     border: 1px solid;
-    font-family: inherit;
+    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
     text-transform: uppercase;
     color: white; /* White text color */
     z-index: 1;
@@ -104,6 +104,7 @@ section .title span {
     animation: byBottom 1s ease both; /* Animation */
     font-weight: 600;
     letter-spacing: 0.25vw;
+    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
 }
 section .title span:last-child {
     font-size: 1rem;
@@ -172,6 +173,7 @@ section .title span a::after {
     margin-bottom: 10px;
     text-align: center;
     color: #fff;
+    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
 }
 
 .skills-card .body .skill {
@@ -210,6 +212,7 @@ section .title span a::after {
     color: #fff;
     text-align: center;
     margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
 }
 
 .projects-grid {
@@ -252,12 +255,14 @@ section .title span a::after {
     font-size: 20px;
     color: #fff;
     margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
 }
 
 .card__description {
     font-size: 14px;
     color: #ddd;
     margin-bottom: 15px;
+    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
 }
 
 .card__buttons {
@@ -278,6 +283,7 @@ section .title span a::after {
     transition: background 0.3s;
     flex: 1;
     text-align: center;
+    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
 }
 
 .card__button.secondary {
@@ -303,6 +309,7 @@ footer {
     padding: 10px 0;
     text-align: center; /* Center text */
     margin-top: auto; /* Push footer to the bottom */
+    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
 }
 
 .contact-card {
