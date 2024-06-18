@@ -244,7 +244,7 @@ section .title span a::after {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    width: 90%; /*Adjust width */
+    width: 50%; /*Adjust width */
 }
 
 .project-card:hover {
