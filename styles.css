@@ -215,25 +215,26 @@ section .title span a::after {
 }
 
 .projects-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
     justify-content: center; /* Center align the project cards */
-    padding-bottom: 60px; /* Ensure space for footer */
+    padding: 0 20px; /* Ensure space for footer */
 }
 
 .project-card {
-    width: 300px;
-    height: 450px;
     border-radius: 20px;
     transition: all .3s;
     border: 2px solid #39ff14; /* Neon color border */
     box-shadow: 0 0 15px #39ff14; /* Neon shadow */
     background-color: #1a1a1a;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .project-card:hover {
-    transform: scale(1.05);
+    animation: neon 1.5s ease-in-out infinite;
 }
 
 .card__image {
@@ -248,6 +249,10 @@ section .title span a::after {
     padding: 20px;
     text-align: center;
     color: #fff;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .card__title {
@@ -299,6 +304,16 @@ section .title span a::after {
 .card__button.secondary:hover {
     background: #444;
     color: #fff;
+}
+
+/* Neon Breathing Effect */
+@keyframes neon {
+    0%, 100% {
+        box-shadow: 0 0 15px #39ff14, 0 0 20px #39ff14, 0 0 30px #39ff14;
+    }
+    50% {
+        box-shadow: 0 0 25px #39ff14, 0 0 35px #39ff14, 0 0 45px #39ff14;
+    }
 }
 
 /* Footer Section Styling */
