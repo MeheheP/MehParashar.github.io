@@ -18,6 +18,12 @@
     </script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
+        body {
+            background-color: #1b1b1b;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+        }
+
         .tooltip {
             position: absolute;
             text-align: center;
@@ -29,8 +35,112 @@
             pointer-events: none;
             color: black;
         }
+
         .chart {
             margin-bottom: 50px;
+        }
+
+        .header {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+        }
+
+        .header h2 {
+            font-size: 2em;
+        }
+
+        .body {
+            text-align: center;
+        }
+
+        .body p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #1b1b1b;
+            z-index: 1000;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-right: 20px;
+        }
+
+        .option {
+            position: relative;
+        }
+
+        .option .button {
+            --color: #00A97F;
+            padding: 0.8em 1.7em;
+            background-color: transparent;
+            border-radius: .3em;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: .5s;
+            font-weight: 400;
+            font-size: 17px;
+            border: 1px solid;
+            text-transform: uppercase;
+            color: white;
+            z-index: 1;
+            text-decoration: none;
+        }
+
+        .option .button:hover {
+            color: rgb(10, 25, 30);
+        }
+
+        .option .button:active {
+            filter: brightness(.8);
+        }
+
+        footer {
+            width: 100%;
+            background: rgba(51, 51, 51, 0.8);
+            padding: 10px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .contact-card {
+            width: 100%;
+            color: #fff;
+        }
+
+        .contact-card .header {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .contact-card .body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .contact-link {
+            color: #39ff14;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -122,12 +232,13 @@
             });
 
             // Set dimensions and margins for the graphs
-            const margin = { top: 20, right: 30, bottom: 30, left: 40 },
+            const margin = { top: 20, right: 30, bottom: 50, left: 60 },
                 width = 800 - margin.left - margin.right,
                 height = 400 - margin.top - margin.bottom;
 
             // Line Chart
-            const svgLine = d3.select("#visualization")
+            const svgLine = d3.select("#```html
+visualization")
                 .append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -141,18 +252,20 @@
                 .attr("transform", `translate(0,${height})`)
                 .call(d3.axisBottom(xLine))
                 .selectAll("text")
-                .style("fill", "white");
+                .style("fill", "white")
+                .style("font-size", "12px");
 
             svgLine.append("g")
                 .call(d3.axisLeft(yLine))
                 .selectAll("text")
-                .style("fill", "white");
+                .style("fill", "white")
+                .style("font-size", "12px");
 
             svgLine.append("path")
                 .datum(data)
                 .attr("fill", "none")
                 .attr("stroke", "steelblue")
-                .attr("stroke-width", 1.5)
+                .attr("stroke-width", 2)
                 .attr("d", d3.line()
                     .x(d => xLine(d.Date))
                     .y(d => yLine(d.Close))
@@ -165,11 +278,12 @@
             svgLine.selectAll("dot")
                 .data(data)
                 .enter().append("circle")
-                .attr("r", 5)
+                .attr("r", 3)
                 .attr("cx", d => xLine(d.Date))
                 .attr("cy", d => yLine(d.Close))
                 .attr("fill", "steelblue")
                 .attr("stroke", "white")
+                .attr("opacity", 0.6)
                 .on("mouseover", function(event, d) {
                     tooltipLine.transition()
                         .duration(200)
@@ -184,7 +298,7 @@
                         .style("opacity", 0);
                 });
 
-             // Bar Chart
+            // Bar Chart
             const svgBar = d3.select("#volume-chart")
                 .append("svg")
                 .attr("width", width + margin.left + margin.right)
@@ -199,12 +313,16 @@
                 .attr("transform", `translate(0,${height})`)
                 .call(d3.axisBottom(xBar).tickFormat(d3.timeFormat("%b %d")))
                 .selectAll("text")
-                .style("fill", "white");
+                .style("fill", "white")
+                .style("font-size", "12px")
+                .attr("transform", "rotate(-45)")
+                .style("text-anchor", "end");
 
             svgBar.append("g")
                 .call(d3.axisLeft(yBar))
                 .selectAll("text")
-                .style("fill", "white");
+                .style("fill", "white")
+                .style("font-size", "12px");
 
             svgBar.selectAll(".bar")
                 .data(data)
@@ -233,6 +351,7 @@
                 .attr("class", "tooltip")
                 .style("opacity", 0);
 
+            
             // Scatter Plot
             const svgScatter = d3.select("#scatter-plot")
                 .append("svg")
@@ -248,12 +367,18 @@
                 .attr("transform", `translate(0,${height})`)
                 .call(d3.axisBottom(xScatter))
                 .selectAll("text")
-                .style("fill", "white");
+                .style("fill", "white")
+                .style("font-size", "12px");
 
             svgScatter.append("g")
                 .call(d3.axisLeft(yScatter))
                 .selectAll("text")
-                .style("fill", "white");
+                .style("fill", "white")
+                .style("font-size", "12px");
+
+            const tooltipScatter = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
 
             svgScatter.selectAll("dot")
                 .data(data)
@@ -263,6 +388,7 @@
                 .attr("cy", d => yScatter(d.Close))
                 .attr("fill", "steelblue")
                 .attr("stroke", "white")
+                .attr("opacity", 0.6)
                 .on("mouseover", function(event, d) {
                     tooltipScatter.transition()
                         .duration(200)
@@ -276,14 +402,9 @@
                         .duration(500)
                         .style("opacity", 0);
                 });
-
-            const tooltipScatter = d3.select("body").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
         });
     </script>
 </body>
 
 </html>
-
-           
+            
