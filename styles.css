@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Open Sans', sans-serif;
+    padding-bottom: 60px; /* Adjust the padding as necessary to avoid footer overlap */
 }
 
 /* Navigation Bar Styling */
@@ -46,32 +47,9 @@ body {
     text-decoration: none; /* Remove underline */
 }
 
+/* Remove bubble elements from navigation buttons */
 .option .button::before, .option .button::after {
-    content: '';
-    display: block;
-    width: 50px;
-    height: 50px;
-    transform: translate(-50%, -50%);
-    position: absolute;
-    border-radius: 50%;
-    z-index: -1;
-    background-color: var(--color);
-    transition: 1s ease;
-}
-
-.option .button::before {
-    top: -1em;
-    left: -1em;
-}
-
-.option .button::after {
-    left: calc(100% + 1em);
-    top: calc(100% + 1em);
-}
-
-.option .button:hover::before, .option .button:hover::after {
-    height: 410px;
-    width: 410px;
+    content: none;
 }
 
 .option .button:hover {
@@ -81,6 +59,7 @@ body {
 .option .button:active {
     filter: brightness(.8);
 }
+
 /* Section styling */
 section {
     background-color: #1b1b1b; /* Dark background for section */
@@ -101,7 +80,7 @@ section {
 /* Profile picture styling */
 .profile-picture img {
     width: 150px;
-    height:150px;
+    height: 150px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -144,6 +123,7 @@ section .title span a::after {
     width: 0;
     animation: linkAfter 0.5s 1s ease both; /* Animation */
 }
+
 /* Keyframes for animations */
 @keyframes pop {
     0% {
@@ -171,6 +151,7 @@ section .title span a::after {
         width: 30px;
     }
 }
+
 /* Skills Section Styling */
 .skills-card {
     width: 48%;
@@ -218,6 +199,7 @@ section .title span a::after {
     margin-top: 5px;
     color: #fff;
 }
+
 /* Project Cards Styling */
 .projects-header {
     font-size: 2.5em;
@@ -312,18 +294,17 @@ section .title span a::after {
 
 /* Footer Section Styling */
 footer {
+    position: relative;
+    bottom: 0;
     width: 100%;
     background: rgba(51, 51, 51, 0.8); /* Semi-transparent background */
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 1000;
     padding: 10px 0;
+    z-index: 1000;
+    text-align: center; /* Center text */
 }
 
 .contact-card {
     width: 100%;
-    text-align: center; /* Center text */
     color: #fff;
 }
 
@@ -336,7 +317,8 @@ footer {
 
 .contact-card .body {
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: center; /* Center align the contact links */
     gap: 20px;
 }
 
@@ -352,33 +334,6 @@ footer {
 
 /* Media Queries for Responsive Design */
 @media (max-width: 768px) {
-    .about-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    .about-image {
-        margin-right: 0;
-        margin-bottom: 20px;
-    }
-    .skills-card {
-        width: 100%;
-        margin-bottom: 20px;
-    }
-    .projects-grid {
-        flex-direction: column;
-        align-items: center;
-    }
-    .project-card {
-        width: 100%;
-        max-width: 100%;
-    }
-    .contact-card .body {
-        flex-direction: column;
-    }
-}
-
-/* Additional styles for improved responsiveness */
-@media (max-width: 480px) {
     .nav-bar .wrapper {
         flex-direction: column;
         align-items: center;
@@ -387,6 +342,14 @@ footer {
         width: 100%;
         text-align: center;
     }
+    .contact-card .body {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Additional styles for improved responsiveness */
+@media (max-width: 480px) {
     .title span {
         font-size: 8vw;
     }
