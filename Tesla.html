@@ -168,11 +168,12 @@
             svg.selectAll("dot")
                 .data(data)
                 .enter().append("circle")
-                .attr("r", 5)
+                .attr("r", 3)  // Reduce the radius for better visibility of the line
                 .attr("cx", d => x(d.Date))
                 .attr("cy", d => y(d.Close))
                 .attr("fill", "steelblue")
                 .attr("stroke", "white")
+                .attr("opacity", 0.6)  // Add opacity to make the line more visible
                 .on("mouseover", function(event, d) {
                     tooltip.transition()
                         .duration(200)
