@@ -25,6 +25,11 @@ body {
     justify-content: center; /* Center align the nav bar items */
 }
 
+.nav-items {
+    display: flex;
+    justify-content: space-between;
+}
+
 .option {
     position: relative;
     margin: 0 10px; /* Add margin for spacing between options */
@@ -199,11 +204,16 @@ section .title span a::after {
     height: 450px; /* Adjust height */
 }
 
+.project-card:hover {
+    border-color: #555; /* Slightly darker border on hover */
+    box-shadow: 0 0 20px #555; /* Slightly darker shadow on hover */
+}
+
 .card__image {
     width: 100%;
     height: 200px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
     object-fit: cover;
 }
 
@@ -342,5 +352,9 @@ footer {
     .profile-picture img {
         width: 100px;
         height: 100px;
+    }
+    .project-card {
+        width: 100%; /* Full width on smaller screens */
+        height: auto; /* Adjust height for content */
     }
 }
