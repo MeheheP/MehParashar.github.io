@@ -88,8 +88,8 @@ section {
 }
 
 .profile-picture img {
-    width: 150px;
-    height: 150px;
+    width: 200px; /* Increase size */
+    height: 200px; /* Increase size */
     border-radius: 50%;
     object-fit: cover;
 }
@@ -386,7 +386,7 @@ footer {
         font-size: 1.5em;
     }
     .profile-picture img {
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
     }
 }
