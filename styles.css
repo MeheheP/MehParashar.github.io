@@ -6,6 +6,7 @@ body {
     min-height: 100vh; /* Ensure the body takes the full height */
     display: flex;
     flex-direction: column;
+    color: white; /* Make text color white */
 }
 
 /* Wrapper for all content */
@@ -75,106 +76,7 @@ section {
     text-align: center; /* Center text in the section */
 }
 
-/* Title container styling */
-.title-container {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* Space between image and text */
-    justify-content: center;
-    flex-wrap: wrap; /* Ensure it wraps on smaller screens */
-}
-
-/* Profile picture styling */
-.profile-picture img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-/* Tesla Analysis Section */
-#tesla-analysis {
-    color: white;
-}
-
-/* D3.js axis text and lines */
-.axis text,
-.axis line,
-.axis path {
-    stroke: white;
-    fill: white;
-}
-
-/* Title styling for the section */
-section .title {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-}
-section .title span {
-    display: inline-block;
-    font-size: 3vw; /* Reduced font size by 8 points */
-    color: #efefef; /* Light grey color */
-    width: 100%;
-    text-transform: uppercase;
-    animation: byBottom 1s ease both; /* Animation */
-    font-weight: 600;
-    letter-spacing: 0.25vw;
-    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
-}
-section .title span:last-child {
-    font-size: 1rem;
-    animation: byBottom 1s 0.25s ease both;
-}
-section .title span a {
-    position: relative;
-    display: inline-block;
-    margin-left: 0.5rem;
-    text-decoration: none;
-    color: #f7ca18; /* Yellow color for link */
-}
-section .title span a::after {
-    content: "";
-    height: 2px;
-    background-color: #f7ca18; /* Yellow underline */
-    position: absolute;
-    bottom: -10px;
-    left: 0;
-    width: 0;
-    animation: linkAfter 0.5s 1s ease both; /* Animation */
-}
-
-/* Keyframes for animations */
-@keyframes pop {
-    0% {
-        transform: translateY(100%);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-
-@keyframes byBottom {
-    0% {
-        transform: translateY(150%);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-
-@keyframes linkAfter {
-    0% {
-        width: 0;
-    }
-    100% {
-        width: 30px;
-    }
-}
-
-/* Project Cards Styling */
-.projects-header {
+.section-header {
     font-size: 2.5em;
     font-weight: 700;
     color: #fff;
@@ -183,99 +85,88 @@ section .title span a::after {
     font-family: 'Poppins', sans-serif; /* Change to Poppins font */
 }
 
-.projects-grid {
+/* Skills Section Styling */
+.skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjust to auto-fit columns */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust to auto-fit columns */
     gap: 30px;
-    justify-items: center; /* Center align the project cards within each column */
+    justify-items: center; /* Center align the skill cards within each column */
     padding: 0 20px; /* Ensure space for footer */
 }
 
-.project-card {
-    border-radius: 20px;
-    transition: all .3s;
-    border: 2px solid #777; /* Neutral color border */
-    box-shadow: 0 0 15px #777; /* Neutral shadow */
-    background-color: #1a1a1a;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    width: 300px; /* Adjust width */
-    height: 450px; /* Adjust height */
-}
-
-.project-card:hover {
-    border-color: #555; /* Slightly darker border on hover */
-    box-shadow: 0 0 20px #555; /* Slightly darker shadow on hover */
-}
-
-.card__image {
-    width: 100%;
-    height: 200px;
-    border-top-left-radius: 18px;
-    border-top-right-radius: 18px;
-    object-fit: cover;
-}
-
-.card__content {
+.skill-card {
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
     padding: 20px;
     text-align: center;
     color: #fff;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 
-.card__title {
-    font-size: 20px;
-    color: #fff;
+.skill-card h3 {
+    font-size: 1.5em;
     margin-bottom: 10px;
     font-family: 'Poppins', sans-serif; /* Change to Poppins font */
 }
 
-.card__description {
-    font-size: 14px;
-    color: #ddd;
-    margin-bottom: 15px;
+/* Experience Section Styling */
+.experience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjust to auto-fit columns */
+    gap: 30px;
+    justify-items: center; /* Center align the experience cards within each column */
+    padding: 0 20px; /* Ensure space for footer */
+}
+
+.experience-card {
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    padding: 20px;
+    text-align: left;
+    color: #fff;
+}
+
+.experience-card h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
     font-family: 'Poppins', sans-serif; /* Change to Poppins font */
 }
 
-.card__buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
+.experience-card ul {
+    list-style-type: disc;
+    padding-left: 20px;
 }
 
-.card__button {
-    padding: 10px 15px;
-    border-radius: 8px;
-    background: #777;
-    border: none;
-    color: white;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-decoration: none; /* Remove underline */
-    transition: background 0.3s;
-    flex: 1;
+/* Certifications Section Styling */
+.certifications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust to auto-fit columns */
+    gap: 30px;
+    justify-items: center; /* Center align the certification cards within each column */
+    padding: 0 20px; /* Ensure space for footer */
+}
+
+.certification-card {
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    padding: 20px;
     text-align: center;
+    color: #fff;
+}
+
+.certification-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.certification-card h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
     font-family: 'Poppins', sans-serif; /* Change to Poppins font */
-}
-
-.card__button.secondary {
-    background: transparent;
-    color: #777;
-    border: 1px solid #777;
-}
-
-.card__button:hover {
-    background: #555;
-    color: #fff;
-}
-
-.card__button.secondary:hover {
-    background: #444;
-    color: #fff;
 }
 
 /* Footer Section Styling */
