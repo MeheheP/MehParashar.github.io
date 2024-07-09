@@ -2,16 +2,17 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
-    min-height: 100vh; /* Ensure the body takes the full height */
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    color: white; /* Make text color white */
+    color: white;
+    background-color: #1b1b1b;
 }
 
 /* Wrapper for all content */
 .wrapper {
-    flex: 1; /* Allow the wrapper to take up remaining space */
+    flex: 1;
 }
 
 /* Navigation Bar Styling */
@@ -19,11 +20,11 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    background-color: #1b1b1b; /* Dark background for nav bar */
+    background-color: #1b1b1b;
     z-index: 1000;
-    padding: 10px 20px; /* Adjust padding as needed */
+    padding: 10px 20px;
     display: flex;
-    justify-content: center; /* Center align the nav bar items */
+    justify-content: center;
 }
 
 .nav-items {
@@ -33,11 +34,10 @@ body {
 
 .option {
     position: relative;
-    margin: 0 10px; /* Add margin for spacing between options */
+    margin: 0 10px;
 }
 
 .option .button {
-    --color: #00A97F;
     padding: 0.8em 1.7em;
     background-color: transparent;
     border-radius: .3em;
@@ -48,17 +48,12 @@ body {
     font-weight: 400;
     font-size: 17px;
     border: 1px solid;
-    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
+    font-family: 'Poppins', sans-serif;
     text-transform: uppercase;
-    color: white; /* White text color */
+    color: white;
     z-index: 1;
-    text-decoration: none; /* Remove underline */
+    text-decoration: none;
     text-align: center;
-}
-
-/* Remove bubble elements from navigation buttons */
-.option .button::before, .option .button::after {
-    content: none;
 }
 
 .option .button:hover {
@@ -71,9 +66,9 @@ body {
 
 /* Section styling */
 section {
-    background-color: #1b1b1b; /* Dark background for section */
-    padding: 100px 20px 20px; /* Ensure section content is not hidden behind nav-bar */
-    text-align: center; /* Center text in the section */
+    background-color: #1b1b1b;
+    padding: 100px 20px 20px;
+    text-align: center;
 }
 
 .section-header {
@@ -82,52 +77,178 @@ section {
     color: #fff;
     text-align: center;
     margin-bottom: 20px;
-    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
+    font-family: 'Poppins', sans-serif;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.title {
+    margin-top: 20px;
+}
+
+.title span {
+    display: block;
+    font-size: 2em;
+    color: #efefef;
+    width: 100%;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.title span a {
+    color: #f7ca18;
+    text-decoration: none;
+}
+
+.title span a:hover {
+    text-decoration: underline;
+}
+
+/* Projects Section Styling */
+.projects-header {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 0 20px;
+}
+
+.project-card {
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.card__image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card__content {
+    padding: 20px;
+    color: #fff;
+}
+
+.card__title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.card__description {
+    font-size: 1em;
+    margin-bottom: 20px;
+}
+
+.card__buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card__button {
+    padding: 10px 15px;
+    border-radius: 8px;
+    background: #777;
+    border: none;
+    color: white;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s;
+    flex: 1;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.card__button.secondary {
+    background: transparent;
+    color: #777;
+    border: 1px solid #777;
+}
+
+.card__button:hover {
+    background: #555;
+    color: #fff;
+}
+
+.card__button.secondary:hover {
+    background: #444;
+    color: #fff;
 }
 
 /* Skills Section Styling */
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust to auto-fit columns */
-    gap: 20px; /* Adjust gap for better spacing */
-    justify-items: center; /* Center align the skill cards within each column */
-    padding: 0 20px; /* Ensure space for footer */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    padding: 0 20px;
 }
 
 .skill-card {
     background-color: #333;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     padding: 20px;
     text-align: center;
     color: white;
-    transition: transform 0.3s, box-shadow 0.3s; /* Add hover effect */
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .skill-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
 
 .skill-card h3 {
     font-size: 1.5em;
     margin-bottom: 10px;
-    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Experience Section Styling */
 .experience-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjust to auto-fit columns */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
-    justify-items: center; /* Center align the experience cards within each column */
-    padding: 0 20px; /* Ensure space for footer */
+    justify-items: center;
+    padding: 0 20px;
 }
 
 .experience-card {
     background-color: #333;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     padding: 20px;
     text-align: left;
     color: white;
@@ -136,7 +257,7 @@ section {
 .experience-card h3 {
     font-size: 1.5em;
     margin-bottom: 10px;
-    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
+    font-family: 'Poppins', sans-serif;
 }
 
 .experience-card ul {
@@ -147,16 +268,16 @@ section {
 /* Certifications Section Styling */
 .certifications-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust to auto-fit columns */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 30px;
-    justify-items: center; /* Center align the certification cards within each column */
-    padding: 0 20px; /* Ensure space for footer */
+    justify-items: center;
+    padding: 0 20px;
 }
 
 .certification-card {
     background-color: #333;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     padding: 20px;
     text-align: center;
     color: white;
@@ -172,17 +293,17 @@ section {
 .certification-card h3 {
     font-size: 1.2em;
     margin-bottom: 10px;
-    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Footer Section Styling */
 footer {
     width: 100%;
-    background: rgba(51, 51, 51, 0.8); /* Semi-transparent background */
+    background: rgba(51, 51, 51, 0.8);
     padding: 10px 0;
-    text-align: center; /* Center text */
-    margin-top: auto; /* Push footer to the bottom */
-    font-family: 'Poppins', sans-serif; /* Change to Poppins font */
+    text-align: center;
+    margin-top: auto;
+    font-family: 'Poppins', sans-serif;
 }
 
 .contact-card {
@@ -200,12 +321,12 @@ footer {
 .contact-card .body {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Center align the contact links */
+    justify-content: center;
     gap: 20px;
 }
 
 .contact-link {
-    color: #777; /* Neutral color for text */
+    color: #777;
     text-decoration: none;
     font-size: 1.2em;
 }
@@ -217,16 +338,13 @@ footer {
 /* Media Queries for Responsive Design */
 @media (max-width: 768px) {
     .nav-bar {
-        height: auto;
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-direction: column;
         padding: 10px 0;
     }
     .option .button {
-        width: auto;
+        width: 100%;
         text-align: center;
+        margin: 5px 0;
     }
     .contact-card .body {
         flex-direction: column;
@@ -236,19 +354,19 @@ footer {
         flex-direction: column;
         text-align: center;
     }
-    .project-card {
-        width: 100%; /* Full width on smaller screens */
-        height: auto; /* Adjust height for content */
+    .project-card,
+    .skill-card,
+    .experience-card,
+    .certification-card {
+        width: 100%;
+        height: auto;
     }
 }
 
 /* Additional styles for improved responsiveness */
 @media (max-width: 480px) {
     .title span {
-        font-size: 8vw;
-    }
-    .title span:last-child {
-        font-size: 1.2rem;
+        font-size: 1.5em;
     }
     .profile-picture img {
         width: 100px;
