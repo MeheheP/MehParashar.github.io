@@ -118,6 +118,23 @@ section {
     text-decoration: underline;
 }
 
+/* About Me Section Styling */
+.about-me-section {
+    padding: 50px 20px;
+    text-align: left;
+}
+
+.about-me-section .container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-me-section p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
 /* Projects Section Styling */
 .projects-header {
     font-size: 2.5em;
