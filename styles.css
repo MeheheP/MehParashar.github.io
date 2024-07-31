@@ -30,6 +30,7 @@ body {
 .nav-items {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .option {
@@ -190,6 +191,7 @@ section {
 .card__buttons {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
 }
 
 .card__button {
