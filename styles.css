@@ -30,7 +30,15 @@ body {
 .nav-items {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
 }
 
 .option {
@@ -63,6 +71,46 @@ body {
 
 .option .button:active {
     filter: brightness(.8);
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-toggle .bar {
+    height: 2px;
+    width: 25px;
+    background-color: white;
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+.nav-links.active {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .option .button {
+        width: 100%;
+        text-align: center;
+        margin: 5px 0;
+    }
 }
 
 /* Section styling */
