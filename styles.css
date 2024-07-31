@@ -90,6 +90,11 @@ body {
 .nav-links.active {
     display: flex;
     flex-direction: column;
+    align-items: center;
+}
+
+.nav-links.active .option {
+    margin: 10px 0;
 }
 
 @media (max-width: 768px) {
@@ -109,7 +114,7 @@ body {
     .option .button {
         width: 100%;
         text-align: center;
-        margin: 5px 0;
+        margin: 10px 0;
     }
 }
 
@@ -411,7 +416,7 @@ footer {
     .option .button {
         width: 100%;
         text-align: center;
-        margin: 5px 0;
+        margin: 10px 0;
     }
     .contact-card .body {
         flex-direction: column;
