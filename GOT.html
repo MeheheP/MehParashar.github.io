@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #222;
+      background-color: #1b1b1b;
       color: #fff;
       font-family: 'Poppins', sans-serif;
       margin: 0;
@@ -22,7 +22,11 @@
     }
     h1 {
       font-size: 2.5em;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.2);
     }
     .chart-container {
       display: flex;
@@ -31,19 +35,26 @@
       gap: 20px;
     }
     .chart {
-      background: #333;
+      background: #2a2a2a;
       border-radius: 10px;
       padding: 20px;
       width: 45%;
       min-width: 450px;
+      transition: transform 0.3s ease-in-out;
+    }
+    .chart:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
     }
     .tooltip {
       position: absolute;
-      background: #000;
+      background: rgba(0, 0, 0, 0.8);
       color: #fff;
-      padding: 5px;
+      padding: 8px;
       border-radius: 5px;
       display: none;
+      font-size: 14px;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -53,6 +64,8 @@
     <div class="chart-container">
       <div class="chart" id="house-popularity"><h3>House Popularity</h3></div>
       <div class="chart" id="survival-rate"><h3>Survival Rate by Nobility</h3></div>
+      <div class="chart" id="gender-distribution"><h3>Gender Distribution</h3></div>
+      <div class="chart" id="popularity-survival"><h3>Popularity vs Survival</h3></div>
     </div>
   </div>
 
@@ -60,101 +73,52 @@
     const tooltip = d3.select("body").append("div").attr("class", "tooltip");
     
     d3.csv("game_of_thrones_test.csv").then(data => {
-      // House Popularity Chart
-      const houseCounts = d3.rollup(data, v => v.length, d => d.house);
-      const houseData = Array.from(houseCounts, ([house, count]) => ({ house, count })).sort((a, b) => b.count - a.count);
-      const topHouses = houseData.slice(0, 10);
+      // Gender Distribution Chart
+      const genderCounts = d3.rollup(data, v => v.length, d => d.male);
+      const genderData = [
+        { gender: "Male", count: genderCounts.get(1) || 0, color: "#3498db" },
+        { gender: "Female", count: genderCounts.get(0) || 0, color: "#e74c3c" }
+      ];
+      
+      const width = 400, height = 400, radius = Math.min(width, height) / 2;
+      const svgGender = d3.select("#gender-distribution").append("svg")
+                          .attr("width", width)
+                          .attr("height", height)
+                          .append("g")
+                          .attr("transform", `translate(${width / 2},${height / 2})`);
+      
+      const pie = d3.pie().value(d => d.count);
+      const arc = d3.arc().innerRadius(50).outerRadius(radius);
+      
+      svgGender.selectAll("path")
+               .data(pie(genderData))
+               .enter().append("path")
+               .attr("d", arc)
+               .attr("fill", d => d.data.color)
+               .on("mouseover", (event, d) => {
+                 tooltip.style("display", "block").html(`${d.data.gender}: ${d.data.count}`)
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 30) + "px");
+               })
+               .on("mouseout", () => tooltip.style("display", "none"));
 
-      const width = 500, height = 400, margin = {top: 20, right: 30, bottom: 50, left: 180};
-      const svg = d3.select("#house-popularity").append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("transform", `translate(${margin.left},${margin.top})`);
+      // Fun GOT Fact Display
+      const facts = [
+        "House Stark had the highest number of notable deaths.",
+        "The most popular character in terms of survival is Tyrion Lannister.",
+        "Only a small percentage of noble characters survived to the end.",
+        "House Targaryen had the most references in the books.",
+        "Jon Snow and Daenerys Targaryen were among the most-discussed characters."
+      ];
       
-      const x = d3.scaleLinear()
-                  .domain([0, d3.max(topHouses, d => d.count)])
-                  .range([0, width]);
-      
-      const y = d3.scaleBand()
-                  .domain(topHouses.map(d => d.house))
-                  .range([0, height])
-                  .padding(0.1);
-      
-      svg.append("g")
-         .call(d3.axisLeft(y).tickSize(0))
-         .selectAll("text")
-         .style("fill", "#fff");
-      
-      svg.append("g")
-         .attr("transform", `translate(0, ${height})`)
-         .call(d3.axisBottom(x))
-         .selectAll("text")
-         .style("fill", "#fff");
-      
-      svg.selectAll("rect")
-         .data(topHouses)
-         .enter().append("rect")
-         .attr("y", d => y(d.house))
-         .attr("width", d => x(d.count))
-         .attr("height", y.bandwidth())
-         .attr("fill", "#f39c12")
-         .on("mouseover", (event, d) => {
-           tooltip.style("display", "block").html(`${d.house}: ${d.count}`)
-             .style("left", (event.pageX + 5) + "px")
-             .style("top", (event.pageY - 30) + "px");
-         })
-         .on("mouseout", () => tooltip.style("display", "none"));
-      
-      // Survival Rate by Nobility Chart
-      const nobleSurvival = d3.rollup(data, v => v.length, d => d.isNoble, d => d.numDeadRelations === 0);
-      const nobleData = Array.from(nobleSurvival, ([isNoble, survival]) => ({
-        noble: isNoble == 1 ? "Noble" : "Commoner",
-        survived: survival.get(true) || 0,
-        deceased: survival.get(false) || 0
-      }));
-      
-      const svgSurvival = d3.select("#survival-rate").append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("transform", `translate(${margin.left},${margin.top})`);
-      
-      const xSurvival = d3.scaleLinear()
-                  .domain([0, d3.max(nobleData, d => d.survived + d.deceased)])
-                  .range([0, width]);
-      
-      const ySurvival = d3.scaleBand()
-                  .domain(nobleData.map(d => d.noble))
-                  .range([0, height])
-                  .padding(0.1);
-      
-      svgSurvival.append("g")
-         .call(d3.axisLeft(ySurvival).tickSize(0))
-         .selectAll("text")
-         .style("fill", "#fff");
-      
-      svgSurvival.append("g")
-         .attr("transform", `translate(0, ${height})`)
-         .call(d3.axisBottom(xSurvival))
-         .selectAll("text")
-         .style("fill", "#fff");
-      
-      svgSurvival.selectAll("rect")
-         .data(nobleData)
-         .enter().append("rect")
-         .attr("y", d => ySurvival(d.noble))
-         .attr("width", d => xSurvival(d.survived))
-         .attr("height", ySurvival.bandwidth()/2)
-         .attr("fill", "#4CAF50");
-
-      svgSurvival.selectAll(".bar2")
-         .data(nobleData)
-         .enter().append("rect")
-         .attr("y", d => ySurvival(d.noble) + ySurvival.bandwidth()/2)
-         .attr("width", d => xSurvival(d.deceased))
-         .attr("height", ySurvival.bandwidth()/2)
-         .attr("fill", "#e74c3c");
+      setInterval(() => {
+        const randomFact = facts[Math.floor(Math.random() * facts.length)];
+        d3.select(".container").append("p").text(randomFact)
+          .style("opacity", 0)
+          .transition()
+          .duration(1000)
+          .style("opacity", 1);
+      }, 5000);
     });
   </script>
 </body>
