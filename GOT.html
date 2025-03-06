@@ -136,7 +136,7 @@
       let houseData = Array.from(houseCounts, ([house, count]) => ({house, count}))
         .sort((a,b) => d3.descending(a.count, b.count));
       // (Optional) Slice top 10 if needed
-      // houseData = houseData.slice(0, 10);
+      houseData = houseData.slice(0, 10);
 
       const barMargin = {top: 30, right: 20, bottom: 80, left: 60},
             barWidth = 450,
