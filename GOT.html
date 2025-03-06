@@ -149,143 +149,151 @@
         })
         .on("mouseout", () => tooltip.style("display", "none"));
 
-      //-----------------------------
-      // 2) HOUSE POPULARITY (Bar)
-      //-----------------------------
-      // We'll count how many characters belong to each house.
-      const houseCounts = d3.rollup(data, v => v.length, d => d.house);
-      // Convert to array sorted descending
-      const houseData = Array.from(houseCounts, ([house, count]) => ({house, count}))
-                             .sort((a,b) => d3.descending(a.count, b.count));
+      // ----------------------------------
+  // HOUSE POPULARITY (Bar Chart)
+  // ----------------------------------
+  const houseCounts = d3.rollup(data, v => v.length, d => d.house);
+  let houseData = Array.from(houseCounts, ([house, count]) => ({house, count}))
+                       .sort((a,b) => d3.descending(a.count, b.count));
+  // Limit to top 10 to avoid label clutter
+  houseData = houseData.slice(0, 10);
 
-      const barMargin = {top: 30, right: 20, bottom: 80, left: 60},
-            barWidth = 450,
-            barHeight = 400;
+  const barMargin = {top: 30, right: 20, bottom: 80, left: 60},
+        barWidth = 450,
+        barHeight = 400;
 
-      const svgHouse = d3.select("#house-popularity")
-        .append("svg")
-        .attr("width", barWidth + barMargin.left + barMargin.right)
-        .attr("height", barHeight + barMargin.top + barMargin.bottom)
-        .append("g")
-        .attr("transform", `translate(${barMargin.left},${barMargin.top})`);
+  const svgHouse = d3.select("#house-popularity")
+    .append("svg")
+    .attr("width", barWidth + barMargin.left + barMargin.right)
+    .attr("height", barHeight + barMargin.top + barMargin.bottom)
+    .append("g")
+    .attr("transform", `translate(${barMargin.left},${barMargin.top})`);
 
-      const xHouse = d3.scaleBand()
-        .domain(houseData.map(d => d.house))
-        .range([0, barWidth])
-        .padding(0.2);
+  const xHouse = d3.scaleBand()
+    .domain(houseData.map(d => d.house))
+    .range([0, barWidth])
+    .padding(0.2);
 
-      const yHouse = d3.scaleLinear()
-        .domain([0, d3.max(houseData, d => d.count)])
-        .range([barHeight, 0])
-        .nice();
+  const yHouse = d3.scaleLinear()
+    .domain([0, d3.max(houseData, d => d.count)])
+    .nice()
+    .range([barHeight, 0]);
 
-      // Bars
-      svgHouse.selectAll(".bar")
-        .data(houseData)
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", d => xHouse(d.house))
-        .attr("y", d => yHouse(d.count))
-        .attr("width", xHouse.bandwidth())
-        .attr("height", d => barHeight - yHouse(d.count))
-        .attr("fill", "#9b59b6")
-        .on("mouseover", (event, d) => {
-          tooltip
-            .style("display", "block")
-            .html(`House: ${d.house}<br/>Count: ${d.count}`)
-            .style("left", (event.pageX + 5) + "px")
-            .style("top", (event.pageY - 30) + "px");
-        })
-        .on("mouseout", () => tooltip.style("display", "none"));
+  svgHouse.selectAll(".bar")
+    .data(houseData)
+    .enter()
+    .append("rect")
+      .attr("class", "bar")
+      .attr("x", d => xHouse(d.house))
+      .attr("y", d => yHouse(d.count))
+      .attr("width", xHouse.bandwidth())
+      .attr("height", d => barHeight - yHouse(d.count))
+      .attr("fill", "#9b59b6")
+      .on("mouseover", (event, d) => {
+        tooltip.style("display", "block")
+          .html(`House: ${d.house}<br/>Count: ${d.count}`)
+          .style("left", (event.pageX + 5) + "px")
+          .style("top", (event.pageY - 30) + "px");
+      })
+      .on("mouseout", () => tooltip.style("display", "none"));
 
-      // X-axis
-      svgHouse.append("g")
-        .attr("transform", `translate(0,${barHeight})`)
-        .call(d3.axisBottom(xHouse))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end")
-        .style("fill", "#fff");
+  svgHouse.append("g")
+    .attr("transform", `translate(0,${barHeight})`)
+    .call(d3.axisBottom(xHouse))
+    .selectAll("text")
+    .attr("transform", "rotate(-65)")
+    .style("text-anchor", "end")
+    .style("fill", "#fff");
 
-      // Y-axis
-      svgHouse.append("g")
-        .call(d3.axisLeft(yHouse))
-        .selectAll("text")
-        .style("fill", "#fff");
+  svgHouse.append("g")
+    .call(d3.axisLeft(yHouse))
+    .selectAll("text")
+    .style("fill", "#fff");
 
-      //-----------------------------
-      // 3) SURVIVAL RATE by Nobility
-      //-----------------------------
-      // We'll compute the survival rate (or count) for noble=1 vs. noble=0
-      // Then display as a simple bar chart.
-      const survivalNobility = d3.rollups(
-        data,
-        v => {
-          const survived = v.filter(d => d.alive === 1).length;
-          const total = v.length;
-          return survived / total; // fraction who survived
-        },
-        d => d.nobility
-      );
+  // ----------------------------------
+  // SURVIVAL RATE BY NOBILITY (Bar)
+  // ----------------------------------
+  const survivalNobility = d3.rollups(
+    data,
+    v => {
+      const survived = v.filter(d => d.alive === 1).length;
+      const total = v.length;
+      return total === 0 ? 0 : survived / total; // fraction
+    },
+    d => d.nobility
+  );
 
-      // Convert to array with { nobility: 0 or 1, rate: ... }
-      const nobilityData = survivalNobility.map(([nob, rate]) => ({
-        nobility: +nob,
-        rate: rate
-      }));
+  const nobilityData = survivalNobility.map(([nob, rate]) => ({
+    nobility: +nob,
+    rate
+  }));
 
-      const survMargin = {top: 30, right: 20, bottom: 50, left: 60},
-            survWidth = 450,
-            survHeight = 400;
+  console.log("Nobility Data:", nobilityData);
 
-      const svgSurvival = d3.select("#survival-rate")
-        .append("svg")
-        .attr("width", survWidth + survMargin.left + survMargin.right)
-        .attr("height", survHeight + survMargin.top + survMargin.bottom)
-        .append("g")
-        .attr("transform", `translate(${survMargin.left},${survMargin.top})`);
+  const survMargin = {top: 30, right: 20, bottom: 50, left: 60},
+        survWidth = 450,
+        survHeight = 400;
 
-      const xSurv = d3.scaleBand()
-        .domain(nobilityData.map(d => d.nobility))
-        .range([0, survWidth])
-        .padding(0.2);
+  const svgSurvival = d3.select("#survival-rate")
+    .append("svg")
+    .attr("width", survWidth + survMargin.left + survMargin.right)
+    .attr("height", survHeight + survMargin.top + survMargin.bottom)
+    .append("g")
+    .attr("transform", `translate(${survMargin.left},${survMargin.top})`);
 
-      const ySurv = d3.scaleLinear()
-        .domain([0, 1])  // survival rate from 0 to 1
-        .range([survHeight, 0]);
+  const xSurv = d3.scaleBand()
+    .domain(nobilityData.map(d => d.nobility))
+    .range([0, survWidth])
+    .padding(0.2);
 
-      svgSurvival.selectAll(".bar")
-        .data(nobilityData)
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", d => xSurv(d.nobility))
-        .attr("y", d => ySurv(d.rate))
-        .attr("width", xSurv.bandwidth())
-        .attr("height", d => survHeight - ySurv(d.rate))
-        .attr("fill", "#f1c40f")
-        .on("mouseover", (event, d) => {
-          tooltip
-            .style("display", "block")
-            .html(`Nobility: ${d.nobility}<br/>Survival Rate: ${(d.rate*100).toFixed(1)}%`)
-            .style("left", (event.pageX + 5) + "px")
-            .style("top", (event.pageY - 30) + "px");
-        })
-        .on("mouseout", () => tooltip.style("display", "none"));
+  const ySurv = d3.scaleLinear()
+    .domain([0, 1])
+    .range([survHeight, 0]);
 
-      // Axes
-      svgSurvival.append("g")
-        .attr("transform", `translate(0,${survHeight})`)
-        .call(d3.axisBottom(xSurv).tickFormat(d => d === 1 ? "Noble" : "Commoner"))
-        .selectAll("text")
-        .style("fill", "#fff");
+  svgSurvival.selectAll(".bar")
+    .data(nobilityData)
+    .enter()
+    .append("rect")
+      .attr("class", "bar")
+      .attr("x", d => xSurv(d.nobility))
+      .attr("y", d => ySurv(d.rate))
+      .attr("width", xSurv.bandwidth())
+      .attr("height", d => survHeight - ySurv(d.rate))
+      .attr("fill", "#f1c40f")
+      .on("mouseover", (event, d) => {
+        tooltip.style("display", "block")
+          .html(
+            `Nobility: ${d.nobility}<br/>` +
+            `Survival Rate: ${(d.rate * 100).toFixed(1)}%`
+          )
+          .style("left", (event.pageX + 5) + "px")
+          .style("top", (event.pageY - 30) + "px");
+      })
+      .on("mouseout", () => tooltip.style("display", "none"));
 
-      svgSurvival.append("g")
-        .call(d3.axisLeft(ySurv).tickFormat(d3.format(".0%")))
-        .selectAll("text")
-        .style("fill", "#fff");
+  // Add text labels on top of bars
+  svgSurvival.selectAll(".label")
+    .data(nobilityData)
+    .enter()
+    .append("text")
+      .attr("class", "label")
+      .attr("x", d => xSurv(d.nobility) + xSurv.bandwidth() / 2)
+      .attr("y", d => ySurv(d.rate) - 5)
+      .attr("text-anchor", "middle")
+      .style("fill", "#fff")
+      .text(d => (d.rate * 100).toFixed(1) + "%");
 
+  svgSurvival.append("g")
+    .attr("transform", `translate(0,${survHeight})`)
+    .call(d3.axisBottom(xSurv).tickFormat(d => d === 1 ? "Noble" : "Commoner"))
+    .selectAll("text")
+    .style("fill", "#fff");
+
+  svgSurvival.append("g")
+    .call(d3.axisLeft(ySurv).tickFormat(d3.format(".0%")))
+    .selectAll("text")
+    .style("fill", "#fff");
+});
       //-----------------------------
       // 4) POPULARITY vs SURVIVAL
       //-----------------------------
