@@ -1,1210 +1,1226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAFC Project - Mehul Parashar</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <style>
-        img {
-            border-radius: 10px;
-        }
-        .hidden {
-            display: none;
-        }
-        .visualization {
-            margin: 20px 0;
-        }
-        .buttons {
-            margin: 20px 0;
-        }
-        .button {
-            padding: 10px 20px;
-            margin: 10px 10px 10px 0;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .button:hover {
-            background-color: #218838;
-        }
-        .visualization svg {
-            width: 100%;
-            height: auto;
-        }
-        .bar {
-            fill: steelblue;
-        }
-        .bar:hover {
-            fill: orange;
-        }
-        .tooltip {
-            position: absolute;
-            text-align: center;
-            width: auto;
-            height: auto;
-            padding: 8px;
-            font: 12px sans-serif;
-            background: lightsteelblue;
-            border: 0px;
-            border-radius: 8px;
-            pointer-events: none;
-        }
-        .axis-label {
-            font: 14px sans-serif;
-            fill: white;
-        }
-        .legend {
-            font-size: 12px;
-        }
-        .axis path, .axis line {
-            fill: none;
-            stroke: white;
-            shape-rendering: crispEdges;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EAFC Project - Mehul Parashar</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Basic element resets for this page */
+    body {
+      background-color: #333;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #1b1b1b;
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    header .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      padding: 0;
+      margin: 0;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 1em;
+      transition: color 0.3s ease;
+    }
+    nav ul li a:hover {
+      color: #f7ca18;
+    }
+    /* Section container */
+    .container {
+      max-width: 1200px;
+      margin: 80px auto 40px; /* extra top margin to account for sticky header */
+      padding: 0 20px;
+    }
+    /* Headings */
+    h2, h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-size: 2.5em;
+      font-weight: 600;
+    }
+    h3 {
+      font-size: 1.8em;
+      font-weight: 500;
+    }
+    p {
+      line-height: 1.6;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    /* Button styling */
+    .buttons {
+      text-align: center;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+    .button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      text-transform: uppercase;
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #218838;
+    }
+    /* Visualization container */
+    .visualization {
+      margin: 20px 0;
+    }
+    .hidden {
+      display: none;
+    }
+    /* D3 specific styles */
+    img {
+      border-radius: 10px;
+    }
+    .axis-label {
+      font: 14px sans-serif;
+      fill: #fff;
+    }
+    .bar {
+      fill: steelblue;
+    }
+    .bar:hover {
+      fill: orange;
+    }
+    .tooltip {
+      position: absolute;
+      text-align: center;
+      padding: 8px;
+      font: 12px sans-serif;
+      background: lightsteelblue;
+      border: 0;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+    .legend {
+      font-size: 12px;
+    }
+    .axis path, .axis line {
+      fill: none;
+      stroke: #fff;
+      shape-rendering: crispEdges;
+    }
+    /* Footer styling */
+    footer {
+      background: rgba(51,51,51,0.8);
+      padding: 20px;
+      text-align: center;
+      font-size: 0.9em;
+      margin-top: 40px;
+    }
+    footer .social a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    footer .social a:hover {
+      color: #f7ca18;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        gap: 10px;
+      }
+      header .container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .container {
+        margin-top: 120px;
+      }
+    }
+  </style>
 </head>
-<body style="background-color: #333;">
-    <header>
-        <div class="container">
-            <h1 style="color: white;">EAFC Project - Mehul Parashar</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html#about">About</a></li>
-                    <li><a href="index.html#skills">Skills</a></li>
-                    <li><a href="index.html#projects">Projects</a></li>
-                    <li><a href="index.html#experience">Experience</a></li>
-                    <li><a href="index.html#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-    <section id="eafc">
-        <div class="container">
-            <h2 style="color: white;">Exploratory Data Analysis of EAFC Players</h2>
-            <p style="color: white;">In my journey to understand the intricacies of player performance in EA Sports FC (EAFC), I set out to explore how the game's player data mirrors real-world football dynamics. The goal was to provide actionable insights that can help coaches, players, and decision-makers make informed decisions both on and off the pitch.</p>
+<body>
+  <!-- Header with Navigation -->
+  <header>
+    <div class="container">
+      <h1>EAFC Project - Mehul Parashar</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#skills">Skills</a></li>
+          <li><a href="index.html#projects">Projects</a></li>
+          <li><a href="index.html#experience">Experience</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-            <div class="buttons">
-                <button class="button" onclick="showVisualization('positions')">Distribution of Player Positions</button>
-                <button class="button" onclick="showVisualization('ages')">Distribution of Player Ages</button>
-                <button class="button" onclick="showVisualization('overallRatings')">Distribution of Player Overall Ratings</button>
-                <button class="button" onclick="showVisualization('preferredFoot')">Distribution of Player Preferred Foot</button>
-                <button class="button" onclick="showVisualization('gender')">Distribution of Player Gender</button>
-                <button class="button" onclick="showVisualization('positionsByGender')">Distribution of Player Positions by Gender</button>
-                <button class="button" onclick="showVisualization('featureImportance')">Feature Importance</button>
-                <button class="button" onclick="showVisualization('kMeansClustering')">Enhanced K-Means Clustering of Players</button>
-                <button class="button" onclick="showVisualization('positionalHeatmaps')">Positional Heatmaps</button>
-                <button class="button" onclick="showVisualization('ageVsOverallRating')">Age vs. Overall Rating</button>
-            </div>
+  <!-- Main Section -->
+  <section id="eafc">
+    <div class="container">
+      <h2>Exploratory Data Analysis of EAFC Players</h2>
+      <p>
+        In my journey to understand the intricacies of player performance in EA Sports FC (EAFC), I set out to explore how the game's player data mirrors real-world football dynamics. The goal was to provide actionable insights that can help coaches, players, and decision-makers make informed decisions both on and off the pitch.
+      </p>
+      <div class="buttons">
+        <button class="button" onclick="showVisualization('positions')">Player Positions</button>
+        <button class="button" onclick="showVisualization('ages')">Player Ages</button>
+        <button class="button" onclick="showVisualization('overallRatings')">Overall Ratings</button>
+        <button class="button" onclick="showVisualization('preferredFoot')">Preferred Foot</button>
+        <button class="button" onclick="showVisualization('gender')">Player Gender</button>
+        <button class="button" onclick="showVisualization('positionsByGender')">Positions by Gender</button>
+        <button class="button" onclick="showVisualization('featureImportance')">Feature Importance</button>
+        <button class="button" onclick="showVisualization('kMeansClustering')">K-Means Clustering</button>
+        <button class="button" onclick="showVisualization('positionalHeatmaps')">Positional Heatmaps</button>
+        <button class="button" onclick="showVisualization('ageVsOverallRating')">Age vs. Overall</button>
+      </div>
 
-            <div id="positions" class="visualization hidden">
-                <h3 style="color: white;">Distribution of Player Positions</h3>
-                <div id="chart-positions"></div>
-                <!-- D3.js code for Player Positions -->
-                <script>
-                    const marginPositions = {top: 20, right: 30, bottom: 40, left: 40},
-                          widthPositions = 800 - marginPositions.left - marginPositions.right,
-                          heightPositions = 500 - marginPositions.top - marginPositions.bottom;
+      <!-- Visualization Sections -->
+      <div id="positions" class="visualization hidden">
+        <h3>Distribution of Player Positions</h3>
+        <div id="chart-positions"></div>
+        <!-- D3.js code for Player Positions -->
+        <script>
+          const marginPositions = {top: 20, right: 30, bottom: 40, left: 40},
+                widthPositions = 800 - marginPositions.left - marginPositions.right,
+                heightPositions = 500 - marginPositions.top - marginPositions.bottom;
 
-                    const svgPositions = d3.select("#chart-positions")
-                                           .append("svg")
-                                           .attr("width", widthPositions + marginPositions.left + marginPositions.right)
-                                           .attr("height", heightPositions + marginPositions.top + marginPositions.bottom)
-                                           .append("g")
-                                           .attr("transform", `translate(${marginPositions.left},${marginPositions.top})`);
+          const svgPositions = d3.select("#chart-positions")
+                                 .append("svg")
+                                 .attr("width", widthPositions + marginPositions.left + marginPositions.right)
+                                 .attr("height", heightPositions + marginPositions.top + marginPositions.bottom)
+                                 .append("g")
+                                 .attr("transform", `translate(${marginPositions.left},${marginPositions.top})`);
 
-                    const tooltipPositions = d3.select("body").append("div")
-                                               .attr("class", "tooltip")
-                                               .style("opacity", 0);
+          const tooltipPositions = d3.select("body").append("div")
+                                     .attr("class", "tooltip")
+                                     .style("opacity", 0);
 
-                    d3.csv("all_players.csv").then(data => {
-                        const positionCounts = d3.rollup(data, v => v.length, d => d.Position);
-                        const positions = Array.from(positionCounts.keys()).sort();
-                        const counts = positions.map(position => positionCounts.get(position));
+          d3.csv("all_players.csv").then(data => {
+            const positionCounts = d3.rollup(data, v => v.length, d => d.Position);
+            const positions = Array.from(positionCounts.keys()).sort();
+            const counts = positions.map(position => positionCounts.get(position));
 
-                        const xPositions = d3.scaleBand()
-                                             .domain(positions)
-                                             .range([0, widthPositions])
-                                             .padding(0.1);
-                        svgPositions.append("g")
-                                    .attr("transform", `translate(0,${heightPositions})`)
-                                    .call(d3.axisBottom(xPositions))
-                                    .selectAll("text")
-                                    .attr("transform", "rotate(-45)")
-                                    .style("text-anchor", "end")
-                                    .style("fill", "white");
+            const xPositions = d3.scaleBand()
+                                 .domain(positions)
+                                 .range([0, widthPositions])
+                                 .padding(0.1);
+            svgPositions.append("g")
+                        .attr("transform", `translate(0,${heightPositions})`)
+                        .call(d3.axisBottom(xPositions))
+                        .selectAll("text")
+                        .attr("transform", "rotate(-45)")
+                        .style("text-anchor", "end")
+                        .style("fill", "#fff");
 
-                        const yPositions = d3.scaleLinear()
-                                             .domain([0, d3.max(counts)])
-                                             .nice()
-                                             .range([heightPositions, 0]);
-                        svgPositions.append("g")
-                                    .call(d3.axisLeft(yPositions))
-                                    .selectAll("text")
-                                    .style("fill", "white");
+            const yPositions = d3.scaleLinear()
+                                 .domain([0, d3.max(counts)])
+                                 .nice()
+                                 .range([heightPositions, 0]);
+            svgPositions.append("g")
+                        .call(d3.axisLeft(yPositions))
+                        .selectAll("text")
+                        .style("fill", "#fff");
 
-                        svgPositions.selectAll(".bar")
-                                    .data(counts)
-                                    .enter()
-                                    .append("rect")
-                                    .attr("class", "bar")
-                                    .attr("x", (d, i) => xPositions(positions[i]))
-                                    .attr("y", d => yPositions(d))
-                                    .attr("width", xPositions.bandwidth())
-                                    .attr("height", d => heightPositions - yPositions(d))
-                                    .on("mouseover", (event, d) => {
-                                        tooltipPositions.transition()
-                                                        .duration(200)
-                                                        .style("opacity", .9);
-                                        tooltipPositions.html(`Count: ${d}`)
-                                                        .style("left", (event.pageX + 5) + "px")
-                                                        .style("top", (event.pageY - 28) + "px");
-                                    })
-                                    .on("mouseout", (d) => {
-                                        tooltipPositions.transition()
-                                                        .duration(500)
-                                                        .style("opacity", 0);
-                                    });
-
-                        svgPositions.selectAll(".bar")
-                                    .data(counts)
-                                    .transition()
-                                    .duration(1000)
-                                    .attr("y", d => yPositions(d))
-                                    .attr("height", d => heightPositions - yPositions(d));
-
-                        svgPositions.append("text")
-                                    .attr("class", "axis-label")
-                                    .attr("x", widthPositions / 2)
-                                    .attr("y", heightPositions + marginPositions.bottom)
-                                    .attr("text-anchor", "middle")
-                                    .text("Position");
-
-                        svgPositions.append("text")
-                                    .attr("class", "axis-label")
-                                    .attr("x", -heightPositions / 2)
-                                    .attr("y", -marginPositions.left + 10)
-                                    .attr("text-anchor", "middle")
-                                    .attr("transform", "rotate(-90)")
-                                    .text("Count");
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
-
-            <div id="ages" class="visualization hidden">
-                <h3 style="color: white;">Distribution of Player Ages</h3>
-                <div id="chart-ages"></div>
-                <!-- D3.js code for Player Ages -->
-                <script>
-                    const marginAges = {top: 20, right: 30, bottom: 40, left: 40},
-                          widthAges = 800 - marginAges.left - marginAges.right,
-                          heightAges = 500 - marginAges.top - marginAges.bottom;
-
-                    const svgAges = d3.select("#chart-ages")
-                                      .append("svg")
-                                      .attr("width", widthAges + marginAges.left + marginAges.right)
-                                      .attr("height", heightAges + marginAges.top + marginAges.bottom)
-                                      .append("g")
-                                      .attr("transform", `translate(${marginAges.left},${marginAges.top})`);
-
-                    const tooltip = d3.select("body").append("div")
-                                      .attr("class", "tooltip")
-                                      .style("opacity", 0);
-
-                    d3.csv("all_players.csv").then(data => {
-                        const ageCounts = d3.rollup(data, v => v.length, d => d.Age);
-                        const ages = Array.from(ageCounts.keys()).sort((a, b) => a - b);
-                        const counts = ages.map(age => ageCounts.get(age));
-
-                        const xAges = d3.scaleBand()
-                                        .domain(ages)
-                                        .range([0, widthAges])
-                                        .padding(0.1);
-                        svgAges.append("g")
-                               .attr("transform", `translate(0,${heightAges})`)
-                               .call(d3.axisBottom(xAges))
-                               .selectAll("text")
-                               .attr("transform", "rotate(-45)")
-                               .style("text-anchor", "end")
-                               .style("fill", "white");
-
-                        const yAges = d3.scaleLinear()
-                                        .domain([0, d3.max(counts)])
-                                        .nice()
-                                        .range([heightAges, 0]);
-                        svgAges.append("g")
-                               .call(d3.axisLeft(yAges))
-                               .selectAll("text")
-                               .style("fill", "white");
-
-                        svgAges.selectAll(".bar")
-                               .data(counts)
-                               .enter()
-                               .append("rect")
-                               .attr("class", "bar")
-                               .attr("x", (d, i) => xAges(ages[i]))
-                               .attr("y", d => yAges(d))
-                               .attr("width", xAges.bandwidth())
-                               .attr("height", d => heightAges - yAges(d))
-                               .on("mouseover", (event, d) => {
-                                   tooltip.transition()
+            svgPositions.selectAll(".bar")
+                        .data(counts)
+                        .enter()
+                        .append("rect")
+                        .attr("class", "bar")
+                        .attr("x", (d, i) => xPositions(positions[i]))
+                        .attr("y", d => yPositions(d))
+                        .attr("width", xPositions.bandwidth())
+                        .attr("height", d => heightPositions - yPositions(d))
+                        .on("mouseover", (event, d) => {
+                          tooltipPositions.transition()
                                           .duration(200)
                                           .style("opacity", .9);
-                                   tooltip.html(`Count: ${d}`)
+                          tooltipPositions.html(`Count: ${d}`)
                                           .style("left", (event.pageX + 5) + "px")
                                           .style("top", (event.pageY - 28) + "px");
-                               })
-                               .on("mouseout", (d) => {
-                                   tooltip.transition()
+                        })
+                        .on("mouseout", () => {
+                          tooltipPositions.transition()
                                           .duration(500)
                                           .style("opacity", 0);
-                               });
+                        });
 
-                        svgAges.selectAll(".bar")
-                               .data(counts)
-                               .transition()
-                               .duration(1000)
-                               .attr("y", d => yAges(d))
-                               .attr("height", d => heightAges - yAges(d));
+            svgPositions.append("text")
+                        .attr("class", "axis-label")
+                        .attr("x", widthPositions / 2)
+                        .attr("y", heightPositions + marginPositions.bottom)
+                        .attr("text-anchor", "middle")
+                        .text("Position");
 
-                        svgAges.append("text")
-                               .attr("class", "axis-label")
-                               .attr("x", widthAges / 2)
-                               .attr("y", heightAges + marginAges.bottom)
-                               .attr("text-anchor", "middle")
-                               .text("Age");
+            svgPositions.append("text")
+                        .attr("class", "axis-label")
+                        .attr("x", -heightPositions / 2)
+                        .attr("y", -marginPositions.left + 10)
+                        .attr("text-anchor", "middle")
+                        .attr("transform", "rotate(-90)")
+                        .text("Count");
+          }).catch(error => {
+            console.error('Error loading CSV data: ', error);
+          });
+        </script>
+      </div>
 
-                        svgAges.append("text")
-                               .attr("class", "axis-label")
-                               .attr("x", -heightAges / 2)
-                               .attr("y", -marginAges.left + 10)
-                               .attr("text-anchor", "middle")
-                               .attr("transform", "rotate(-90)")
-                               .text("Count");
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
+      <div id="ages" class="visualization hidden">
+        <h3>Distribution of Player Ages</h3>
+        <div id="chart-ages"></div>
+        <!-- D3.js code for Player Ages -->
+        <script>
+          const marginAges = {top: 20, right: 30, bottom: 40, left: 40},
+                widthAges = 800 - marginAges.left - marginAges.right,
+                heightAges = 500 - marginAges.top - marginAges.bottom;
 
-            <div id="overallRatings" class="visualization hidden">
-                <h3 style="color: white;">Distribution of Player Overall Ratings</h3>
-                <div id="chart-overallRatings"></div>
-                <!-- D3.js code for Player Overall Ratings -->
-                <script>
-                    const marginOverallRatings = {top: 20, right: 30, bottom: 40, left: 40},
-                          widthOverallRatings = 800 - marginOverallRatings.left - marginOverallRatings.right,
-                          heightOverallRatings = 500 - marginOverallRatings.top - marginOverallRatings.bottom;
+          const svgAges = d3.select("#chart-ages")
+                            .append("svg")
+                            .attr("width", widthAges + marginAges.left + marginAges.right)
+                            .attr("height", heightAges + marginAges.top + marginAges.bottom)
+                            .append("g")
+                            .attr("transform", `translate(${marginAges.left},${marginAges.top})`);
 
-                    const svgOverallRatings = d3.select("#chart-overallRatings")
-                                                .append("svg")
-                                                .attr("width", widthOverallRatings + marginOverallRatings.left + marginOverallRatings.right)
-                                                .attr("height", heightOverallRatings + marginOverallRatings.top + marginOverallRatings.bottom)
-                                                .append("g")
-                                                .attr("transform", `translate(${marginOverallRatings.left},${marginOverallRatings.top})`);
+          const tooltip = d3.select("body").append("div")
+                            .attr("class", "tooltip")
+                            .style("opacity", 0);
 
-                    const tooltipOverallRatings = d3.select("body").append("div")
-                                                    .attr("class", "tooltip")
+          d3.csv("all_players.csv").then(data => {
+            const ageCounts = d3.rollup(data, v => v.length, d => d.Age);
+            const ages = Array.from(ageCounts.keys()).sort((a, b) => a - b);
+            const counts = ages.map(age => ageCounts.get(age));
+
+            const xAges = d3.scaleBand()
+                            .domain(ages)
+                            .range([0, widthAges])
+                            .padding(0.1);
+            svgAges.append("g")
+                   .attr("transform", `translate(0,${heightAges})`)
+                   .call(d3.axisBottom(xAges))
+                   .selectAll("text")
+                   .attr("transform", "rotate(-45)")
+                   .style("text-anchor", "end")
+                   .style("fill", "#fff");
+
+            const yAges = d3.scaleLinear()
+                            .domain([0, d3.max(counts)])
+                            .nice()
+                            .range([heightAges, 0]);
+            svgAges.append("g")
+                   .call(d3.axisLeft(yAges))
+                   .selectAll("text")
+                   .style("fill", "#fff");
+
+            svgAges.selectAll(".bar")
+                   .data(counts)
+                   .enter()
+                   .append("rect")
+                   .attr("class", "bar")
+                   .attr("x", (d, i) => xAges(ages[i]))
+                   .attr("y", d => yAges(d))
+                   .attr("width", xAges.bandwidth())
+                   .attr("height", d => heightAges - yAges(d))
+                   .on("mouseover", (event, d) => {
+                     tooltip.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                     tooltip.html(`Count: ${d}`)
+                            .style("left", (event.pageX + 5) + "px")
+                            .style("top", (event.pageY - 28) + "px");
+                   })
+                   .on("mouseout", () => {
+                     tooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                   });
+
+            svgAges.append("text")
+                   .attr("class", "axis-label")
+                   .attr("x", widthAges / 2)
+                   .attr("y", heightAges + marginAges.bottom)
+                   .attr("text-anchor", "middle")
+                   .text("Age");
+
+            svgAges.append("text")
+                   .attr("class", "axis-label")
+                   .attr("x", -heightAges / 2)
+                   .attr("y", -marginAges.left + 10)
+                   .attr("text-anchor", "middle")
+                   .attr("transform", "rotate(-90)")
+                   .text("Count");
+          }).catch(error => {
+            console.error('Error loading CSV data: ', error);
+          });
+        </script>
+      </div>
+
+      <div id="overallRatings" class="visualization hidden">
+        <h3>Distribution of Player Overall Ratings</h3>
+        <div id="chart-overallRatings"></div>
+        <!-- D3.js code for Overall Ratings -->
+        <script>
+          const marginOverallRatings = {top: 20, right: 30, bottom: 40, left: 40},
+                widthOverallRatings = 800 - marginOverallRatings.left - marginOverallRatings.right,
+                heightOverallRatings = 500 - marginOverallRatings.top - marginOverallRatings.bottom;
+
+          const svgOverallRatings = d3.select("#chart-overallRatings")
+                                      .append("svg")
+                                      .attr("width", widthOverallRatings + marginOverallRatings.left + marginOverallRatings.right)
+                                      .attr("height", heightOverallRatings + marginOverallRatings.top + marginOverallRatings.bottom)
+                                      .append("g")
+                                      .attr("transform", `translate(${marginOverallRatings.left},${marginOverallRatings.top})`);
+
+          const tooltipOverallRatings = d3.select("body").append("div")
+                                          .attr("class", "tooltip")
+                                          .style("opacity", 0);
+
+          d3.csv("all_players.csv").then(data => {
+            const overallRatingCounts = d3.rollup(data, v => v.length, d => d.Overall);
+            const overallRatings = Array.from(overallRatingCounts.keys()).sort((a, b) => a - b);
+            const counts = overallRatings.map(rating => overallRatingCounts.get(rating));
+
+            const xOverallRatings = d3.scaleBand()
+                                      .domain(overallRatings)
+                                      .range([0, widthOverallRatings])
+                                      .padding(0.1);
+            svgOverallRatings.append("g")
+                             .attr("transform", `translate(0,${heightOverallRatings})`)
+                             .call(d3.axisBottom(xOverallRatings))
+                             .selectAll("text")
+                             .attr("transform", "rotate(-45)")
+                             .style("text-anchor", "end")
+                             .style("fill", "#fff");
+
+            const yOverallRatings = d3.scaleLinear()
+                                      .domain([0, d3.max(counts)])
+                                      .nice()
+                                      .range([heightOverallRatings, 0]);
+            svgOverallRatings.append("g")
+                             .call(d3.axisLeft(yOverallRatings))
+                             .selectAll("text")
+                             .style("fill", "#fff");
+
+            svgOverallRatings.selectAll(".bar")
+                             .data(counts)
+                             .enter()
+                             .append("rect")
+                             .attr("class", "bar")
+                             .attr("x", (d, i) => xOverallRatings(overallRatings[i]))
+                             .attr("y", d => yOverallRatings(d))
+                             .attr("width", xOverallRatings.bandwidth())
+                             .attr("height", d => heightOverallRatings - yOverallRatings(d))
+                             .on("mouseover", (event, d) => {
+                               tooltipOverallRatings.transition()
+                                                    .duration(200)
+                                                    .style("opacity", .9);
+                               tooltipOverallRatings.html(`Count: ${d}`)
+                                                    .style("left", (event.pageX + 5) + "px")
+                                                    .style("top", (event.pageY - 28) + "px");
+                             })
+                             .on("mouseout", () => {
+                               tooltipOverallRatings.transition()
+                                                    .duration(500)
                                                     .style("opacity", 0);
+                             });
 
-                    d3.csv("all_players.csv").then(data => {
-                        const overallRatingCounts = d3.rollup(data, v => v.length, d => d.Overall);
-                        const overallRatings = Array.from(overallRatingCounts.keys()).sort((a, b) => a - b);
-                        const counts = overallRatings.map(rating => overallRatingCounts.get(rating));
+            svgOverallRatings.append("text")
+                             .attr("class", "axis-label")
+                             .attr("x", widthOverallRatings / 2)
+                             .attr("y", heightOverallRatings + marginOverallRatings.bottom)
+                             .attr("text-anchor", "middle")
+                             .text("Overall Rating");
 
-                        const xOverallRatings = d3.scaleBand()
-                                                  .domain(overallRatings)
-                                                  .range([0, widthOverallRatings])
-                                                  .padding(0.1);
-                        svgOverallRatings.append("g")
-                                         .attr("transform", `translate(0,${heightOverallRatings})`)
-                                         .call(d3.axisBottom(xOverallRatings))
-                                         .selectAll("text")
-                                         .attr("transform", "rotate(-45)")
-                                         .style("text-anchor", "end")
-                                         .style("fill", "white");
+            svgOverallRatings.append("text")
+                             .attr("class", "axis-label")
+                             .attr("x", -heightOverallRatings / 2)
+                             .attr("y", -marginOverallRatings.left + 10)
+                             .attr("text-anchor", "middle")
+                             .attr("transform", "rotate(-90)")
+                             .text("Count");
+          }).catch(error => {
+            console.error('Error loading CSV data: ', error);
+          });
+        </script>
+      </div>
 
-                        const yOverallRatings = d3.scaleLinear()
-                                                  .domain([0, d3.max(counts)])
-                                                  .nice()
-                                                  .range([heightOverallRatings, 0]);
-                        svgOverallRatings.append("g")
-                                         .call(d3.axisLeft(yOverallRatings))
-                                         .selectAll("text")
-                                         .style("fill", "white");
+      <div id="preferredFoot" class="visualization hidden">
+        <h3>Distribution of Player Preferred Foot</h3>
+        <div id="chart-preferredFoot"></div>
+        <!-- D3.js code for Preferred Foot -->
+        <script>
+          const marginPreferredFoot = {top: 20, right: 30, bottom: 40, left: 40},
+                widthPreferredFoot = 800 - marginPreferredFoot.left - marginPreferredFoot.right,
+                heightPreferredFoot = 500 - marginPreferredFoot.top - marginPreferredFoot.bottom;
 
-                        svgOverallRatings.selectAll(".bar")
-                                         .data(counts)
-                                         .enter()
-                                         .append("rect")
-                                         .attr("class", "bar")
-                                         .attr("x", (d, i) => xOverallRatings(overallRatings[i]))
-                                         .attr("y", d => yOverallRatings(d))
-                                         .attr("width", xOverallRatings.bandwidth())
-                                         .attr("height", d => heightOverallRatings - yOverallRatings(d))
-                                         .on("mouseover", (event, d) => {
-                                             tooltipOverallRatings.transition()
-                                                                  .duration(200)
-                                                                  .style("opacity", .9);
-                                             tooltipOverallRatings.html(`Count: ${d}`)
-                                                                  .style("left", (event.pageX + 5) + "px")
-                                                                  .style("top", (event.pageY - 28) + "px");
-                                         })
-                                         .on("mouseout", (d) => {
-                                             tooltipOverallRatings.transition()
-                                                                  .duration(500)
-                                                                  .style("opacity", 0);
-                                         });
+          const svgPreferredFoot = d3.select("#chart-preferredFoot")
+                                     .append("svg")
+                                     .attr("width", widthPreferredFoot + marginPreferredFoot.left + marginPreferredFoot.right)
+                                     .attr("height", heightPreferredFoot + marginPreferredFoot.top + marginPreferredFoot.bottom)
+                                     .append("g")
+                                     .attr("transform", `translate(${marginPreferredFoot.left},${marginPreferredFoot.top})`);
 
-                        svgOverallRatings.selectAll(".bar")
-                                         .data(counts)
-                                         .transition()
-                                         .duration(1000)
-                                         .attr("y", d => yOverallRatings(d))
-                                         .attr("height", d => heightOverallRatings - yOverallRatings(d));
+          const tooltipPreferredFoot = d3.select("body").append("div")
+                                         .attr("class", "tooltip")
+                                         .style("opacity", 0);
 
-                        svgOverallRatings.append("text")
-                                         .attr("class", "axis-label")
-                                         .attr("x", widthOverallRatings / 2)
-                                         .attr("y", heightOverallRatings + marginOverallRatings.bottom)
-                                         .attr("text-anchor", "middle")
-                                         .text("Overall Rating");
+          d3.csv("all_players.csv").then(data => {
+            const preferredFootCounts = d3.rollup(data, v => v.length, d => d.PreferredFoot);
+            const preferredFoots = Array.from(preferredFootCounts.keys()).sort();
+            const counts = preferredFoots.map(foot => preferredFootCounts.get(foot));
 
-                        svgOverallRatings.append("text")
-                                         .attr("class", "axis-label")
-                                         .attr("x", -heightOverallRatings / 2)
-                                         .attr("y", -marginOverallRatings.left + 10)
-                                         .attr("text-anchor", "middle")
-                                         .attr("transform", "rotate(-90)")
-                                         .text("Count");
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
+            const xPreferredFoot = d3.scaleBand()
+                                     .domain(preferredFoots)
+                                     .range([0, widthPreferredFoot])
+                                     .padding(0.1);
+            svgPreferredFoot.append("g")
+                            .attr("transform", `translate(0,${heightPreferredFoot})`)
+                            .call(d3.axisBottom(xPreferredFoot))
+                            .selectAll("text")
+                            .style("fill", "#fff");
 
-            <div id="preferredFoot" class="visualization hidden">
-                <h3 style="color: white;">Distribution of Player Preferred Foot</h3>
-                <div id="chart-preferredFoot"></div>
-                <!-- D3.js code for Player Preferred Foot -->
-                <script>
-                    const marginPreferredFoot = {top: 20, right: 30, bottom: 40, left: 40},
-                          widthPreferredFoot = 800 - marginPreferredFoot.left - marginPreferredFoot.right,
-                          heightPreferredFoot = 500 - marginPreferredFoot.top - marginPreferredFoot.bottom;
+            const yPreferredFoot = d3.scaleLinear()
+                                     .domain([0, d3.max(counts)])
+                                     .nice()
+                                     .range([heightPreferredFoot, 0]);
+            svgPreferredFoot.append("g")
+                            .call(d3.axisLeft(yPreferredFoot))
+                            .selectAll("text")
+                            .style("fill", "#fff");
 
-                    const svgPreferredFoot = d3.select("#chart-preferredFoot")
-                                               .append("svg")
-                                               .attr("width", widthPreferredFoot + marginPreferredFoot.left + marginPreferredFoot.right)
-                                               .attr("height", heightPreferredFoot + marginPreferredFoot.top + marginPreferredFoot.bottom)
-                                               .append("g")
-                                               .attr("transform", `translate(${marginPreferredFoot.left},${marginPreferredFoot.top})`);
+            svgPreferredFoot.selectAll(".bar")
+                            .data(counts)
+                            .enter()
+                            .append("rect")
+                            .attr("class", "bar")
+                            .attr("x", (d, i) => xPreferredFoot(preferredFoots[i]))
+                            .attr("y", d => yPreferredFoot(d))
+                            .attr("width", xPreferredFoot.bandwidth())
+                            .attr("height", d => heightPreferredFoot - yPreferredFoot(d))
+                            .on("mouseover", (event, d) => {
+                              tooltipPreferredFoot.transition()
+                                                  .duration(200)
+                                                  .style("opacity", .9);
+                              tooltipPreferredFoot.html(`Count: ${d}`)
+                                                  .style("left", (event.pageX + 5) + "px")
+                                                  .style("top", (event.pageY - 28) + "px");
+                            })
+                            .on("mouseout", () => {
+                              tooltipPreferredFoot.transition()
+                                                  .duration(500)
+                                                  .style("opacity", 0);
+                            });
 
-                    const tooltipPreferredFoot = d3.select("body").append("div")
-                                                   .attr("class", "tooltip")
-                                                   .style("opacity", 0);
+            svgPreferredFoot.append("text")
+                            .attr("class", "axis-label")
+                            .attr("x", widthPreferredFoot / 2)
+                            .attr("y", heightPreferredFoot + marginPreferredFoot.bottom)
+                            .attr("text-anchor", "middle")
+                            .text("Preferred Foot");
 
-                    d3.csv("all_players.csv").then(data => {
-                        const preferredFootCounts = d3.rollup(data, v => v.length, d => d.PreferredFoot);
-                        const preferredFoots = Array.from(preferredFootCounts.keys()).sort();
-                        const counts = preferredFoots.map(foot => preferredFootCounts.get(foot));
+            svgPreferredFoot.append("text")
+                            .attr("class", "axis-label")
+                            .attr("x", -heightPreferredFoot / 2)
+                            .attr("y", -marginPreferredFoot.left + 10)
+                            .attr("text-anchor", "middle")
+                            .attr("transform", "rotate(-90)")
+                            .text("Count");
+          }).catch(error => {
+            console.error('Error loading CSV data: ', error);
+          });
+        </script>
+      </div>
 
-                        const xPreferredFoot = d3.scaleBand()
-                                                 .domain(preferredFoots)
-                                                 .range([0, widthPreferredFoot])
-                                                 .padding(0.1);
-                        svgPreferredFoot.append("g")
-                                        .attr("transform", `translate(0,${heightPreferredFoot})`)
-                                        .call(d3.axisBottom(xPreferredFoot))
-                                        .selectAll("text")
-                                        .style("fill", "white");
+      <div id="gender" class="visualization hidden">
+        <h3>Distribution of Player Gender</h3>
+        <div id="chart-gender"></div>
+        <!-- D3.js code for Gender -->
+        <script>
+          const marginGender = {top: 20, right: 30, bottom: 40, left: 40},
+                widthGender = 800 - marginGender.left - marginGender.right,
+                heightGender = 500 - marginGender.top - marginGender.bottom;
 
-                        const yPreferredFoot = d3.scaleLinear()
-                                                 .domain([0, d3.max(counts)])
-                                                 .nice()
-                                                 .range([heightPreferredFoot, 0]);
-                        svgPreferredFoot.append("g")
-                                        .call(d3.axisLeft(yPreferredFoot))
-                                        .selectAll("text")
-                                        .style("fill", "white");
+          const svgGender = d3.select("#chart-gender")
+                              .append("svg")
+                              .attr("width", widthGender + marginGender.left + marginGender.right)
+                              .attr("height", heightGender + marginGender.top + marginGender.bottom)
+                              .append("g")
+                              .attr("transform", `translate(${marginGender.left},${marginGender.top})`);
 
-                        svgPreferredFoot.selectAll(".bar")
-                                        .data(counts)
-                                        .enter()
-                                        .append("rect")
-                                        .attr("class", "bar")
-                                        .attr("x", (d, i) => xPreferredFoot(preferredFoots[i]))
-                                        .attr("y", d => yPreferredFoot(d))
-                                        .attr("width", xPreferredFoot.bandwidth())
-                                        .attr("height", d => heightPreferredFoot - yPreferredFoot(d))
-                                        .on("mouseover", (event, d) => {
-                                            tooltipPreferredFoot.transition()
-                                                                .duration(200)
-                                                                .style("opacity", .9);
-                                            tooltipPreferredFoot.html(`Count: ${d}`)
-                                                                .style("left", (event.pageX + 5) + "px")
-                                                                .style("top", (event.pageY - 28) + "px");
-                                        })
-                                        .on("mouseout", (d) => {
-                                            tooltipPreferredFoot.transition()
-                                                                .duration(500)
-                                                                .style("opacity", 0);
-                                        });
+          const tooltipGender = d3.select("body").append("div")
+                                  .attr("class", "tooltip")
+                                  .style("opacity", 0);
 
-                        svgPreferredFoot.selectAll(".bar")
-                                        .data(counts)
-                                        .transition()
-                                        .duration(1000)
-                                        .attr("y", d => yPreferredFoot(d))
-                                        .attr("height", d => heightPreferredFoot - yPreferredFoot(d));
+          d3.csv("all_players.csv").then(data => {
+            const genderCounts = d3.rollup(data, v => v.length, d => d.Gender);
+            const genders = Array.from(genderCounts.keys()).sort();
+            const counts = genders.map(gender => genderCounts.get(gender));
 
-                        svgPreferredFoot.append("text")
-                                        .attr("class", "axis-label")
-                                        .attr("x", widthPreferredFoot / 2)
-                                        .attr("y", heightPreferredFoot + marginPreferredFoot.bottom)
-                                        .attr("text-anchor", "middle")
-                                        .text("Preferred Foot");
+            const xGender = d3.scaleBand()
+                              .domain(genders)
+                              .range([0, widthGender])
+                              .padding(0.1);
+            svgGender.append("g")
+                     .attr("transform", `translate(0,${heightGender})`)
+                     .call(d3.axisBottom(xGender))
+                     .selectAll("text")
+                     .style("fill", "#fff");
 
-                        svgPreferredFoot.append("text")
-                                        .attr("class", "axis-label")
-                                        .attr("x", -heightPreferredFoot / 2)
-                                        .attr("y", -marginPreferredFoot.left + 10)
-                                        .attr("text-anchor", "middle")
-                                        .attr("transform", "rotate(-90)")
-                                        .text("Count");
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
+            const yGender = d3.scaleLinear()
+                              .domain([0, d3.max(counts)])
+                              .nice()
+                              .range([heightGender, 0]);
+            svgGender.append("g")
+                     .call(d3.axisLeft(yGender))
+                     .selectAll("text")
+                     .style("fill", "#fff");
 
-            <div id="gender" class="visualization hidden">
-                <h3 style="color: white;">Distribution of Player Gender</h3>
-                <div id="chart-gender"></div>
-                <!-- D3.js code for Player Gender -->
-                <script>
-                    const marginGender = {top: 20, right: 30, bottom: 40, left: 40},
-                          widthGender = 800 - marginGender.left - marginGender.right,
-                          heightGender = 500 - marginGender.top - marginGender.bottom;
+            svgGender.selectAll(".bar")
+                     .data(counts)
+                     .enter()
+                     .append("rect")
+                     .attr("class", "bar")
+                     .attr("x", (d, i) => xGender(genders[i]))
+                     .attr("y", d => yGender(d))
+                     .attr("width", xGender.bandwidth())
+                     .attr("height", d => heightGender - yGender(d))
+                     .on("mouseover", (event, d) => {
+                       tooltipGender.transition()
+                                  .duration(200)
+                                  .style("opacity", .9);
+                       tooltipGender.html(`Count: ${d}`)
+                                  .style("left", (event.pageX + 5) + "px")
+                                  .style("top", (event.pageY - 28) + "px");
+                     })
+                     .on("mouseout", () => {
+                       tooltipGender.transition()
+                                  .duration(500)
+                                  .style("opacity", 0);
+                     });
 
-                    const svgGender = d3.select("#chart-gender")
+            svgGender.append("text")
+                     .attr("class", "axis-label")
+                     .attr("x", widthGender / 2)
+                     .attr("y", heightGender + marginGender.bottom)
+                     .attr("text-anchor", "middle")
+                     .text("Gender");
+
+            svgGender.append("text")
+                     .attr("class", "axis-label")
+                     .attr("x", -heightGender / 2)
+                     .attr("y", -marginGender.left + 10)
+                     .attr("text-anchor", "middle")
+                     .attr("transform", "rotate(-90)")
+                     .text("Count");
+          }).catch(error => {
+            console.error('Error loading CSV data: ', error);
+          });
+        </script>
+      </div>
+
+      <div id="positionsByGender" class="visualization hidden">
+        <h3>Distribution of Player Positions by Gender</h3>
+        <div id="chart-positionsByGender"></div>
+        <!-- D3.js code for Positions by Gender -->
+        <script>
+          const marginPositionsByGender = {top: 20, right: 30, bottom: 100, left: 40},
+                widthPositionsByGender = 800 - marginPositionsByGender.left - marginPositionsByGender.right,
+                heightPositionsByGender = 500 - marginPositionsByGender.top - marginPositionsByGender.bottom;
+
+          const svgPositionsByGender = d3.select("#chart-positionsByGender")
+                                         .append("svg")
+                                         .attr("width", widthPositionsByGender + marginPositionsByGender.left + marginPositionsByGender.right)
+                                         .attr("height", heightPositionsByGender + marginPositionsByGender.top + marginPositionsByGender.bottom)
+                                         .append("g")
+                                         .attr("transform", `translate(${marginPositionsByGender.left},${marginPositionsByGender.top})`);
+
+          const tooltipPositionsByGender = d3.select("body").append("div")
+                                             .attr("class", "tooltip")
+                                             .style("opacity", 0);
+
+          d3.csv("all_players.csv").then(data => {
+            const nestedData = d3.groups(data, d => d.Position, d => d.Gender).map(group => {
+              return {
+                position: group[0],
+                genders: group[1].map(g => ({
+                  gender: g[0],
+                  count: g[1].length
+                }))
+              };
+            });
+
+            const genders = Array.from(new Set(data.map(d => d.Gender)));
+            const positions = Array.from(new Set(data.map(d => d.Position)));
+
+            const x0 = d3.scaleBand()
+                         .domain(positions)
+                         .rangeRound([0, widthPositionsByGender])
+                         .paddingInner(0.1);
+            const x1 = d3.scaleBand()
+                         .domain(genders)
+                         .rangeRound([0, x0.bandwidth()])
+                         .padding(0.05);
+
+            svgPositionsByGender.append("g")
+                                .attr("transform", `translate(0,${heightPositionsByGender})`)
+                                .call(d3.axisBottom(x0).tickSize(0))
+                                .selectAll("text")
+                                .attr("transform", "rotate(-45)")
+                                .style("text-anchor", "end")
+                                .style("fill", "#fff");
+
+            const yPositionsByGender = d3.scaleLinear()
+                                         .domain([0, d3.max(nestedData, d => d3.max(d.genders, g => g.count))])
+                                         .nice()
+                                         .range([heightPositionsByGender, 0]);
+            svgPositionsByGender.append("g")
+                                .call(d3.axisLeft(yPositionsByGender))
+                                .selectAll("text")
+                                .style("fill", "#fff");
+
+            svgPositionsByGender.selectAll("g")
+                                .data(nestedData)
+                                .enter()
+                                .append("g")
+                                .attr("transform", d => `translate(${x0(d.position)},0)`)
+                                .selectAll("rect")
+                                .data(d => d.genders)
+                                .enter()
+                                .append("rect")
+                                .attr("x", d => x1(d.gender))
+                                .attr("y", d => yPositionsByGender(d.count))
+                                .attr("width", x1.bandwidth())
+                                .attr("height", d => heightPositionsByGender - yPositionsByGender(d.count))
+                                .attr("fill", d => d.gender === "Male" ? "steelblue" : "pink")
+                                .on("mouseover", (event, d) => {
+                                  tooltipPositionsByGender.transition()
+                                                          .duration(200)
+                                                          .style("opacity", .9);
+                                  tooltipPositionsByGender.html(`Count: ${d.count}`)
+                                                          .style("left", (event.pageX + 5) + "px")
+                                                          .style("top", (event.pageY - 28) + "px");
+                                })
+                                .on("mouseout", () => {
+                                  tooltipPositionsByGender.transition()
+                                                          .duration(500)
+                                                          .style("opacity", 0);
+                                });
+
+            svgPositionsByGender.append("text")
+                                .attr("class", "axis-label")
+                                .attr("x", widthPositionsByGender / 2)
+                                .attr("y", heightPositionsByGender + marginPositionsByGender.bottom - 10)
+                                .attr("text-anchor", "middle")
+                                .text("Position")
+                                .style("fill", "#fff");
+
+            svgPositionsByGender.append("text")
+                                .attr("class", "axis-label")
+                                .attr("x", -heightPositionsByGender / 2)
+                                .attr("y", -marginPositionsByGender.left + 10)
+                                .attr("text-anchor", "middle")
+                                .attr("transform", "rotate(-90)")
+                                .text("Count")
+                                .style("fill", "#fff");
+
+            const legend = svgPositionsByGender.append("g")
+                                               .attr("transform", `translate(${widthPositionsByGender - 60}, 10)`);
+
+            legend.append("rect")
+                  .attr("x", 0)
+                  .attr("y", 0)
+                  .attr("width", 20)
+                  .attr("height", 20)
+                  .attr("fill", "steelblue");
+
+            legend.append("text")
+                  .attr("x", 25)
+                  .attr("y", 15)
+                  .text("Male")
+                  .style("fill", "#fff");
+
+            legend.append("rect")
+                  .attr("x", 0)
+                  .attr("y", 30)
+                  .attr("width", 20)
+                  .attr("height", 20)
+                  .attr("fill", "pink");
+
+            legend.append("text")
+                  .attr("x", 25)
+                  .attr("y", 45)
+                  .text("Female")
+                  .style("fill", "#fff");
+          }).catch(error => {
+            console.error('Error loading CSV data: ', error);
+          });
+        </script>
+      </div>
+
+      <div id="featureImportance" class="visualization hidden">
+        <h3>Feature Importance in Predicting Overall Ratings</h3>
+        <div id="chart-featureImportance"></div>
+        <!-- D3.js code for Feature Importance -->
+        <script>
+          const marginFeatureImportance = {top: 20, right: 30, bottom: 100, left: 40},
+                widthFeatureImportance = 800 - marginFeatureImportance.left - marginFeatureImportance.right,
+                heightFeatureImportance = 500 - marginFeatureImportance.top - marginFeatureImportance.bottom;
+
+          const svgFeatureImportance = d3.select("#chart-featureImportance")
+                                         .append("svg")
+                                         .attr("width", widthFeatureImportance + marginFeatureImportance.left + marginFeatureImportance.right)
+                                         .attr("height", heightFeatureImportance + marginFeatureImportance.top + marginFeatureImportance.bottom)
+                                         .append("g")
+                                         .attr("transform", `translate(${marginFeatureImportance.left},${marginFeatureImportance.top})`);
+
+          const tooltipFeatureImportance = d3.select("body").append("div")
+                                             .attr("class", "tooltip")
+                                             .style("opacity", 0);
+
+          d3.csv("all_players.csv").then(data => {
+            const features = ['Pace', 'Shooting', 'Passing', 'Dribbling', 'Defending', 'Physicality'];
+            const importance = features.map(feature => ({
+              Feature: feature,
+              Importance: d3.mean(data, d => +d[feature])
+            }));
+
+            const filteredImportance = importance.filter(d => !isNaN(d.Importance));
+
+            const xFeatureImportance = d3.scaleBand()
+                                         .domain(filteredImportance.map(d => d.Feature))
+                                         .range([0, widthFeatureImportance])
+                                         .padding(0.1);
+            svgFeatureImportance.append("g")
+                                .attr("transform", `translate(0,${heightFeatureImportance})`)
+                                .call(d3.axisBottom(xFeatureImportance))
+                                .selectAll("text")
+                                .attr("transform", "rotate(-45)")
+                                .style("text-anchor", "end")
+                                .style("fill", "#fff");
+
+            const yFeatureImportance = d3.scaleLinear()
+                                         .domain([0, d3.max(filteredImportance, d => d.Importance)])
+                                         .nice()
+                                         .range([heightFeatureImportance, 0]);
+            svgFeatureImportance.append("g")
+                                .call(d3.axisLeft(yFeatureImportance))
+                                .selectAll("text")
+                                .style("fill", "#fff");
+
+            svgFeatureImportance.selectAll(".bar")
+                                .data(filteredImportance)
+                                .enter()
+                                .append("rect")
+                                .attr("class", "bar")
+                                .attr("x", d => xFeatureImportance(d.Feature))
+                                .attr("y", d => yFeatureImportance(d.Importance))
+                                .attr("width", xFeatureImportance.bandwidth())
+                                .attr("height", d => heightFeatureImportance - yFeatureImportance(d.Importance))
+                                .attr("fill", "steelblue")
+                                .on("mouseover", (event, d) => {
+                                  tooltipFeatureImportance.transition()
+                                                          .duration(200)
+                                                          .style("opacity", .9);
+                                  tooltipFeatureImportance.html(`Importance: ${d.Importance.toFixed(2)}`)
+                                                          .style("left", (event.pageX + 5) + "px")
+                                                          .style("top", (event.pageY - 28) + "px");
+                                })
+                                .on("mouseout", () => {
+                                  tooltipFeatureImportance.transition()
+                                                          .duration(500)
+                                                          .style("opacity", 0);
+                                });
+
+            svgFeatureImportance.append("text")
+                                .attr("class", "axis-label")
+                                .attr("x", widthFeatureImportance / 2)
+                                .attr("y", heightFeatureImportance + marginFeatureImportance.bottom - 10)
+                                .attr("text-anchor", "middle")
+                                .style("fill", "#fff")
+                                .text("Feature");
+
+            svgFeatureImportance.append("text")
+                                .attr("class", "axis-label")
+                                .attr("x", -heightFeatureImportance / 2)
+                                .attr("y", -marginFeatureImportance.left + 10)
+                                .attr("text-anchor", "middle")
+                                .attr("transform", "rotate(-90)")
+                                .style("fill", "#fff")
+                                .text("Importance");
+          }).catch(error => {
+            console.error('Error loading CSV data: ', error);
+          });
+        </script>
+      </div>
+
+      <div id="kMeansClustering" class="visualization hidden">
+        <h3>Enhanced K-Means Clustering of Players</h3>
+        <div id="chart-kMeansClustering"></div>
+        <!-- D3.js code for K-Means Clustering -->
+        <script>
+          const marginKMeansClustering = {top: 20, right: 30, bottom: 100, left: 40},
+                widthKMeansClustering = 800 - marginKMeansClustering.left - marginKMeansClustering.right,
+                heightKMeansClustering = 500 - marginKMeansClustering.top - marginKMeansClustering.bottom;
+
+          const svgKMeansClustering = d3.select("#chart-kMeansClustering")
                                         .append("svg")
-                                        .attr("width", widthGender + marginGender.left + marginGender.right)
-                                        .attr("height", heightGender + marginGender.top + marginGender.bottom)
+                                        .attr("width", widthKMeansClustering + marginKMeansClustering.left + marginKMeansClustering.right)
+                                        .attr("height", heightKMeansClustering + marginKMeansClustering.top + marginKMeansClustering.bottom)
                                         .append("g")
-                                        .attr("transform", `translate(${marginGender.left},${marginGender.top})`);
+                                        .attr("transform", `translate(${marginKMeansClustering.left},${marginKMeansClustering.top})`);
 
-                    const tooltipGender = d3.select("body").append("div")
+          const tooltipKMeansClustering = d3.select("body").append("div")
                                             .attr("class", "tooltip")
                                             .style("opacity", 0);
 
-                    d3.csv("all_players.csv").then(data => {
-                        const genderCounts = d3.rollup(data, v => v.length, d => d.Gender);
-                        const genders = Array.from(genderCounts.keys()).sort();
-                        const counts = genders.map(gender => genderCounts.get(gender));
+          d3.csv("all_players.csv").then(data => {
+            const clusterData = data.map(d => ({
+              Pace: +d.Pace,
+              Shooting: +d.Shooting,
+              cluster: null
+            }));
 
-                        const xGender = d3.scaleBand()
-                                          .domain(genders)
-                                          .range([0, widthGender])
-                                          .padding(0.1);
-                        svgGender.append("g")
-                                 .attr("transform", `translate(0,${heightGender})`)
-                                 .call(d3.axisBottom(xGender))
+            const k = 3;
+            const centroids = initializeCentroids(clusterData, k);
+            let clusters = assignClusters(clusterData, centroids);
+
+            let iterations = 10;
+            for (let i = 0; i < iterations; i++) {
+              recalculateCentroids(clusters, centroids);
+              clusters = assignClusters(clusterData, centroids);
+            }
+
+            const color = d3.scaleOrdinal(d3.schemeSet2);
+
+            const xKMeansClustering = d3.scaleLinear()
+                                        .domain([d3.min(clusterData, d => d.Pace), d3.max(clusterData, d => d.Pace)])
+                                        .nice()
+                                        .range([0, widthKMeansClustering]);
+            svgKMeansClustering.append("g")
+                               .attr("transform", `translate(0,${heightKMeansClustering})`)
+                               .call(d3.axisBottom(xKMeansClustering))
+                               .selectAll("text")
+                               .style("fill", "#fff");
+
+            const yKMeansClustering = d3.scaleLinear()
+                                        .domain([d3.min(clusterData, d => d.Shooting), d3.max(clusterData, d => d.Shooting)])
+                                        .nice()
+                                        .range([heightKMeansClustering, 0]);
+            svgKMeansClustering.append("g")
+                               .call(d3.axisLeft(yKMeansClustering))
+                               .selectAll("text")
+                               .style("fill", "#fff");
+
+            svgKMeansClustering.selectAll("circle")
+                               .data(clusters)
+                               .enter()
+                               .append("circle")
+                               .attr("cx", d => xKMeansClustering(d.Pace))
+                               .attr("cy", d => yKMeansClustering(d.Shooting))
+                               .attr("r", 5)
+                               .style("fill", d => color(d.cluster))
+                               .on("mouseover", (event, d) => {
+                                 tooltipKMeansClustering.transition()
+                                                         .duration(200)
+                                                         .style("opacity", .9);
+                                 tooltipKMeansClustering.html(`Cluster: ${d.cluster}<br>Pace: ${d.Pace}<br>Shooting: ${d.Shooting}`)
+                                                         .style("left", (event.pageX + 5) + "px")
+                                                         .style("top", (event.pageY - 28) + "px");
+                               })
+                               .on("mouseout", () => {
+                                 tooltipKMeansClustering.transition()
+                                                         .duration(500)
+                                                         .style("opacity", 0);
+                               });
+
+            svgKMeansClustering.append("text")
+                               .attr("class", "axis-label")
+                               .attr("x", widthKMeansClustering / 2)
+                               .attr("y", heightKMeansClustering + marginKMeansClustering.bottom - 10)
+                               .attr("text-anchor", "middle")
+                               .style("fill", "#fff")
+                               .text("Pace");
+
+            svgKMeansClustering.append("text")
+                               .attr("class", "axis-label")
+                               .attr("x", -heightKMeansClustering / 2)
+                               .attr("y", -marginKMeansClustering.left + 10)
+                               .attr("text-anchor", "middle")
+                               .attr("transform", "rotate(-90)")
+                               .style("fill", "#fff")
+                               .text("Shooting");
+
+            function initializeCentroids(data, k) {
+              const centroids = [];
+              for (let i = 0; i < k; i++) {
+                const randomIndex = Math.floor(Math.random() * data.length);
+                centroids.push({ ...data[randomIndex], cluster: i });
+              }
+              return centroids;
+            }
+
+            function assignClusters(data, centroids) {
+              return data.map(d => {
+                const distances = centroids.map(c => Math.sqrt(Math.pow(d.Pace - c.Pace, 2) + Math.pow(d.Shooting - c.Shooting, 2)));
+                const cluster = distances.indexOf(Math.min(...distances));
+                return { ...d, cluster: cluster };
+              });
+            }
+
+            function recalculateCentroids(clusters, centroids) {
+              centroids.forEach((centroid, i) => {
+                const clusterPoints = clusters.filter(d => d.cluster === i);
+                if (clusterPoints.length > 0) {
+                  centroid.Pace = d3.mean(clusterPoints, d => d.Pace);
+                  centroid.Shooting = d3.mean(clusterPoints, d => d.Shooting);
+                }
+              });
+            }
+          }).catch(error => {
+            console.error('Error loading CSV data: ', error);
+          });
+        </script>
+      </div>
+
+      <div id="positionalHeatmaps" class="visualization hidden">
+        <h3>Positional Heatmaps</h3>
+        <div id="chart-positionalHeatmaps"></div>
+        <!-- D3.js code for Positional Heatmaps -->
+        <script>
+          const marginPositionalHeatmaps = {top: 20, right: 30, bottom: 100, left: 40},
+                widthPositionalHeatmaps = 800 - marginPositionalHeatmaps.left - marginPositionalHeatmaps.right,
+                heightPositionalHeatmaps = 500 - marginPositionalHeatmaps.top - marginPositionalHeatmaps.bottom;
+
+          const svgPositionalHeatmaps = d3.select("#chart-positionalHeatmaps")
+                                          .append("svg")
+                                          .attr("width", widthPositionalHeatmaps + marginPositionalHeatmaps.left + marginPositionalHeatmaps.right)
+                                          .attr("height", heightPositionalHeatmaps + marginPositionalHeatmaps.top + marginPositionalHeatmaps.bottom)
+                                          .append("g")
+                                          .attr("transform", `translate(${marginPositionalHeatmaps.left},${marginPositionalHeatmaps.top})`);
+
+          const tooltipPositionalHeatmaps = d3.select("body").append("div")
+                                              .attr("class", "tooltip")
+                                              .style("opacity", 0);
+
+          d3.csv("all_players.csv").then(data => {
+            const positions = Array.from(new Set(data.map(d => d.Position)));
+            const metrics = ['Pace', 'Shooting', 'Passing', 'Dribbling', 'Defending', 'Physicality'];
+
+            const heatmapData = [];
+            positions.forEach(pos => {
+              metrics.forEach(metric => {
+                const meanValue = d3.mean(data.filter(d => d.Position === pos), d => +d[metric]);
+                if (!isNaN(meanValue)) {
+                  heatmapData.push({ Position: pos, Metric: metric, Value: meanValue });
+                }
+              });
+            });
+
+            const xPositionalHeatmaps = d3.scaleBand()
+                                          .domain(metrics)
+                                          .range([0, widthPositionalHeatmaps])
+                                          .padding(0.05);
+            svgPositionalHeatmaps.append("g")
+                                 .attr("transform", `translate(0,${heightPositionalHeatmaps})`)
+                                 .call(d3.axisBottom(xPositionalHeatmaps))
                                  .selectAll("text")
-                                 .style("fill", "white");
+                                 .style("fill", "#fff");
 
-                        const yGender = d3.scaleLinear()
-                                          .domain([0, d3.max(counts)])
-                                          .nice()
-                                          .range([heightGender, 0]);
-                        svgGender.append("g")
-                                 .call(d3.axisLeft(yGender))
+            const yPositionalHeatmaps = d3.scaleBand()
+                                          .domain(positions)
+                                          .range([heightPositionalHeatmaps, 0])
+                                          .padding(0.05);
+            svgPositionalHeatmaps.append("g")
+                                 .call(d3.axisLeft(yPositionalHeatmaps))
                                  .selectAll("text")
-                                 .style("fill", "white");
+                                 .style("fill", "#fff");
 
-                        svgGender.selectAll(".bar")
-                                 .data(counts)
+            const colorScale = d3.scaleSequential()
+                                 .interpolator(d3.interpolateInferno)
+                                 .domain([0, d3.max(heatmapData, d => d.Value)]);
+
+            svgPositionalHeatmaps.selectAll("rect")
+                                 .data(heatmapData, d => d.Position + ':' + d.Metric)
                                  .enter()
                                  .append("rect")
-                                 .attr("class", "bar")
-                                 .attr("x", (d, i) => xGender(genders[i]))
-                                 .attr("y", d => yGender(d))
-                                 .attr("width", xGender.bandwidth())
-                                 .attr("height", d => heightGender - yGender(d))
+                                 .attr("x", d => xPositionalHeatmaps(d.Metric))
+                                 .attr("y", d => yPositionalHeatmaps(d.Position))
+                                 .attr("width", xPositionalHeatmaps.bandwidth())
+                                 .attr("height", yPositionalHeatmaps.bandwidth())
+                                 .style("fill", d => colorScale(d.Value))
                                  .on("mouseover", (event, d) => {
-                                     tooltipGender.transition()
-                                                  .duration(200)
-                                                  .style("opacity", .9);
-                                     tooltipGender.html(`Count: ${d}`)
-                                                  .style("left", (event.pageX + 5) + "px")
-                                                  .style("top", (event.pageY - 28) + "px");
+                                   tooltipPositionalHeatmaps.transition()
+                                                            .duration(200)
+                                                            .style("opacity", .9);
+                                   tooltipPositionalHeatmaps.html(`Position: ${d.Position}<br>Metric: ${d.Metric}<br>Value: ${d.Value.toFixed(2)}`)
+                                                            .style("left", (event.pageX + 5) + "px")
+                                                            .style("top", (event.pageY - 28) + "px");
                                  })
-                                 .on("mouseout", (d) => {
-                                     tooltipGender.transition()
-                                                  .duration(500)
-                                                  .style("opacity", 0);
+                                 .on("mouseout", () => {
+                                   tooltipPositionalHeatmaps.transition()
+                                                            .duration(500)
+                                                            .style("opacity", 0);
                                  });
 
-                        svgGender.selectAll(".bar")
-                                 .data(counts)
-                                 .transition()
-                                 .duration(1000)
-                                 .attr("y", d => yGender(d))
-                                 .attr("height", d => heightGender - yGender(d));
-
-                        svgGender.append("text")
+            svgPositionalHeatmaps.append("text")
                                  .attr("class", "axis-label")
-                                 .attr("x", widthGender / 2)
-                                 .attr("y", heightGender + marginGender.bottom)
+                                 .attr("x", widthPositionalHeatmaps / 2)
+                                 .attr("y", heightPositionalHeatmaps + marginPositionalHeatmaps.bottom - 10)
                                  .attr("text-anchor", "middle")
-                                 .text("Gender");
+                                 .style("fill", "#fff")
+                                 .text("Metric");
 
-                        svgGender.append("text")
+            svgPositionalHeatmaps.append("text")
                                  .attr("class", "axis-label")
-                                 .attr("x", -heightGender / 2)
-                                 .attr("y", -marginGender.left + 10)
+                                 .attr("x", -heightPositionalHeatmaps / 2)
+                                 .attr("y", -marginPositionalHeatmaps.left + 10)
                                  .attr("text-anchor", "middle")
                                  .attr("transform", "rotate(-90)")
-                                 .text("Count");
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
-
-            <div id="positionsByGender" class="visualization hidden">
-                <h3 style="color: white;">Distribution of Player Positions by Gender</h3>
-                <div id="chart-positionsByGender"></div>
-                <!-- D3.js code for Player Positions by Gender -->
-                <script>
-                    const marginPositionsByGender = {top: 20, right: 30, bottom: 100, left: 40},
-                          widthPositionsByGender = 800 - marginPositionsByGender.left - marginPositionsByGender.right,
-                          heightPositionsByGender = 500 - marginPositionsByGender.top - marginPositionsByGender.bottom;
-
-                    const svgPositionsByGender = d3.select("#chart-positionsByGender")
-                                                   .append("svg")
-                                                   .attr("width", widthPositionsByGender + marginPositionsByGender.left + marginPositionsByGender.right)
-                                                   .attr("height", heightPositionsByGender + marginPositionsByGender.top + marginPositionsByGender.bottom)
-                                                   .append("g")
-                                                   .attr("transform", `translate(${marginPositionsByGender.left},${marginPositionsByGender.top})`);
-
-                    const tooltipPositionsByGender = d3.select("body").append("div")
-                                                       .attr("class", "tooltip")
-                                                       .style("opacity", 0);
-
-                    d3.csv("all_players.csv").then(data => {
-                        const nestedData = d3.groups(data, d => d.Position, d => d.Gender).map(group => {
-                            return {
-                                position: group[0],
-                                genders: group[1].map(genderGroup => {
-                                    return {
-                                        gender: genderGroup[0],
-                                        count: genderGroup[1].length
-                                    };
-                                })
-                            };
-                        });
-
-                        const genders = Array.from(new Set(data.map(d => d.Gender)));
-                        const positions = Array.from(new Set(data.map(d => d.Position)));
-
-                        const x0 = d3.scaleBand()
-                                     .domain(positions)
-                                     .rangeRound([0, widthPositionsByGender])
-                                     .paddingInner(0.1);
-                        const x1 = d3.scaleBand()
-                                     .domain(genders)
-                                     .rangeRound([0, x0.bandwidth()])
-                                     .padding(0.05);
-
-                        svgPositionsByGender.append("g")
-                                            .attr("transform", `translate(0,${heightPositionsByGender})`)
-                                            .call(d3.axisBottom(x0).tickSize(0))
-                                            .selectAll("text")
-                                            .attr("transform", "rotate(-45)")
-                                            .style("text-anchor", "end")
-                                            .style("fill", "white");
-
-                        const yPositionsByGender = d3.scaleLinear()
-                                                     .domain([0, d3.max(nestedData, d => d3.max(d.genders, g => g.count))])
-                                                     .nice()
-                                                     .range([heightPositionsByGender, 0]);
-                        svgPositionsByGender.append("g")
-                                            .call(d3.axisLeft(yPositionsByGender))
-                                            .selectAll("text")
-                                            .style("fill", "white");
-
-                        svgPositionsByGender.append("g")
-                                            .selectAll("g")
-                                            .data(nestedData)
-                                            .enter()
-                                            .append("g")
-                                            .attr("transform", d => `translate(${x0(d.position)},0)`)
-                                            .selectAll("rect")
-                                            .data(d => d.genders)
-                                            .enter()
-                                            .append("rect")
-                                            .attr("x", d => x1(d.gender))
-                                            .attr("y", d => yPositionsByGender(d.count))
-                                            .attr("width", x1.bandwidth())
-                                            .attr("height", d => heightPositionsByGender - yPositionsByGender(d.count))
-                                            .attr("fill", d => d.gender === "Male" ? "steelblue" : "pink")
-                                            .on("mouseover", (event, d) => {
-                                                tooltipPositionsByGender.transition()
-                                                                        .duration(200)
-                                                                        .style("opacity", .9);
-                                                tooltipPositionsByGender.html(`Count: ${d.count}`)
-                                                                        .style("left", (event.pageX + 5) + "px")
-                                                                        .style("top", (event.pageY - 28) + "px");
-                                            })
-                                            .on("mouseout", (d) => {
-                                                tooltipPositionsByGender.transition()
-                                                                        .duration(500)
-                                                                        .style("opacity", 0);
-                                            });
-
-                        svgPositionsByGender.selectAll("rect")
-                                            .transition()
-                                            .duration(1000)
-                                            .attr("y", d => yPositionsByGender(d.count))
-                                            .attr("height", d => heightPositionsByGender - yPositionsByGender(d.count));
-
-                        svgPositionsByGender.append("text")
-                                            .attr("class", "axis-label")
-                                            .attr("x", widthPositionsByGender / 2)
-                                            .attr("y", heightPositionsByGender + marginPositionsByGender.bottom - 10)
-                                            .attr("text-anchor", "middle")
-                                            .text("Position")
-                                            .style("fill", "white");
-
-                        svgPositionsByGender.append("text")
-                                            .attr("class", "axis-label")
-                                            .attr("x", -heightPositionsByGender / 2)
-                                            .attr("y", -marginPositionsByGender.left + 10)
-                                            .attr("text-anchor", "middle")
-                                            .attr("transform", "rotate(-90)")
-                                            .text("Count")
-                                            .style("fill", "white");
-
-                        const legend = svgPositionsByGender.append("g")
-                                                           .attr("transform", `translate(${widthPositionsByGender - 60}, 10)`);
-
-                        legend.append("rect")
-                              .attr("x", 0)
-                              .attr("y", 0)
-                              .attr("width", 20)
-                              .attr("height", 20)
-                              .attr("fill", "steelblue");
-
-                        legend.append("text")
-                              .attr("x", 25)
-                              .attr("y", 15)
-                              .text("Male")
-                              .style("fill", "white");
-
-                        legend.append("rect")
-                              .attr("x", 0)
-                              .attr("y", 30)
-                              .attr("width", 20)
-                              .attr("height", 20)
-                              .attr("fill", "pink");
-
-                        legend.append("text")
-                              .attr("x", 25)
-                              .attr("y", 45)
-                              .text("Female")
-                              .style("fill", "white");
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
-
-            <div id="featureImportance" class="visualization hidden">
-                <h3 style="color: white;">Feature Importance in Predicting Overall Ratings</h3>
-                <div id="chart-featureImportance"></div>
-                <!-- D3.js code for Feature Importance -->
-                <script>
-                    const marginFeatureImportance = {top: 20, right: 30, bottom: 100, left: 40},
-                          widthFeatureImportance = 800 - marginFeatureImportance.left - marginFeatureImportance.right,
-                          heightFeatureImportance = 500 - marginFeatureImportance.top - marginFeatureImportance.bottom;
-
-                    const svgFeatureImportance = d3.select("#chart-featureImportance")
-                                                   .append("svg")
-                                                   .attr("width", widthFeatureImportance + marginFeatureImportance.left + marginFeatureImportance.right)
-                                                   .attr("height", heightFeatureImportance + marginFeatureImportance.top + marginFeatureImportance.bottom)
-                                                   .append("g")
-                                                   .attr("transform", `translate(${marginFeatureImportance.left},${marginFeatureImportance.top})`);
-
-                    const tooltipFeatureImportance = d3.select("body").append("div")
-                                                       .attr("class", "tooltip")
-                                                       .style("opacity", 0)
-                                                       .style("background", "lightsteelblue")
-                                                       .style("border-radius", "5px")
-                                                       .style("padding", "5px")
-                                                       .style("position", "absolute")
-                                                       .style("text-align", "center");
-
-                    d3.csv("all_players.csv").then(data => {
-                        const features = ['Pace', 'Shooting', 'Passing', 'Dribbling', 'Defending', 'Physicality'];
-                        const importance = features.map(feature => ({
-                            Feature: feature,
-                            Importance: d3.mean(data, d => +d[feature])
-                        }));
-
-                        const filteredImportance = importance.filter(d => !isNaN(d.Importance));
-
-                        const xFeatureImportance = d3.scaleBand()
-                                                     .domain(filteredImportance.map(d => d.Feature))
-                                                     .range([0, widthFeatureImportance])
-                                                     .padding(0.1);
-                        svgFeatureImportance.append("g")
-                                            .attr("transform", `translate(0,${heightFeatureImportance})`)
-                                            .call(d3.axisBottom(xFeatureImportance))
-                                            .selectAll("text")
-                                            .attr("transform", "rotate(-45)")
-                                            .style("text-anchor", "end")
-                                            .style("fill", "white");
-
-                        const yFeatureImportance = d3.scaleLinear()
-                                                     .domain([0, d3.max(filteredImportance, d => d.Importance)])
-                                                     .nice()
-                                                     .range([heightFeatureImportance, 0]);
-                        svgFeatureImportance.append("g")
-                                            .call(d3.axisLeft(yFeatureImportance))
-                                            .selectAll("text")
-                                            .style("fill", "white");
-
-                        svgFeatureImportance.selectAll(".bar")
-                                            .data(filteredImportance)
-                                            .enter()
-                                            .append("rect")
-                                            .attr("class", "bar")
-                                            .attr("x", d => xFeatureImportance(d.Feature))
-                                            .attr("y", d => yFeatureImportance(d.Importance))
-                                            .attr("width", xFeatureImportance.bandwidth())
-                                            .attr("height", d => heightFeatureImportance - yFeatureImportance(d.Importance))
-                                            .attr("fill", "steelblue")
-                                            .on("mouseover", (event, d) => {
-                                                tooltipFeatureImportance.transition()
-                                                                        .duration(200)
-                                                                        .style("opacity", .9);
-                                                tooltipFeatureImportance.html(`Importance: ${d.Importance.toFixed(2)}`)
-                                                                        .style("left", (event.pageX + 5) + "px")
-                                                                        .style("top", (event.pageY - 28) + "px");
-                                            })
-                                            .on("mouseout", () => {
-                                                tooltipFeatureImportance.transition()
-                                                                        .duration(500)
-                                                                        .style("opacity", 0);
-                                            });
-
-                        svgFeatureImportance.selectAll(".bar")
-                                            .data(filteredImportance)
-                                            .transition()
-                                            .duration(1000)
-                                            .attr("y", d => yFeatureImportance(d.Importance))
-                                            .attr("height", d => heightFeatureImportance - yFeatureImportance(d.Importance));
-
-                        svgFeatureImportance.append("text")
-                                            .attr("class", "axis-label")
-                                            .attr("x", widthFeatureImportance / 2)
-                                            .attr("y", heightFeatureImportance + marginFeatureImportance.bottom - 10)
-                                            .attr("text-anchor", "middle")
-                                            .style("fill", "white")
-                                            .text("Feature");
-
-                        svgFeatureImportance.append("text")
-                                            .attr("class", "axis-label")
-                                            .attr("x", -heightFeatureImportance / 2)
-                                            .attr("y", -marginFeatureImportance.left + 10)
-                                            .attr("text-anchor", "middle")
-                                            .attr("transform", "rotate(-90)")
-                                            .style("fill", "white")
-                                            .text("Importance");
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
-
-            <div id="kMeansClustering" class="visualization hidden">
-                <h3 style="color: white;">Enhanced K-Means Clustering of Players</h3>
-                <div id="chart-kMeansClustering"></div>
-                <!-- D3.js code for K-Means Clustering -->
-                <script>
-                    const marginKMeansClustering = {top: 20, right: 30, bottom: 100, left: 40},
-                          widthKMeansClustering = 800 - marginKMeansClustering.left - marginKMeansClustering.right,
-                          heightKMeansClustering = 500 - marginKMeansClustering.top - marginKMeansClustering.bottom;
-
-                    const svgKMeansClustering = d3.select("#chart-kMeansClustering")
-                                                  .append("svg")
-                                                  .attr("width", widthKMeansClustering + marginKMeansClustering.left + marginKMeansClustering.right)
-                                                  .attr("height", heightKMeansClustering + marginKMeansClustering.top + marginKMeansClustering.bottom)
-                                                  .append("g")
-                                                  .attr("transform", `translate(${marginKMeansClustering.left},${marginKMeansClustering.top})`);
-
-                    const tooltipKMeansClustering = d3.select("body").append("div")
-                                                      .attr("class", "tooltip")
-                                                      .style("opacity", 0)
-                                                      .style("background", "lightsteelblue")
-                                                      .style("border-radius", "5px")
-                                                      .style("padding", "5px")
-                                                      .style("position", "absolute")
-                                                      .style("text-align", "center");
-
-                    d3.csv("all_players.csv").then(data => {
-                        const clusterData = data.map(d => ({
-                            Pace: +d.Pace,
-                            Shooting: +d.Shooting,
-                            cluster: null
-                        }));
-
-                        const k = 3;
-                        const centroids = initializeCentroids(clusterData, k);
-                        let clusters = assignClusters(clusterData, centroids);
-
-                        let iterations = 10;
-                        for (let i = 0; i < iterations; i++) {
-                            recalculateCentroids(clusters, centroids);
-                            clusters = assignClusters(clusterData, centroids);
-                        }
-
-                        const color = d3.scaleOrdinal(d3.schemeSet2);
-
-                        const xKMeansClustering = d3.scaleLinear()
-                                                    .domain([d3.min(clusterData, d => d.Pace), d3.max(clusterData, d => d.Pace)])
-                                                    .nice()
-                                                    .range([0, widthKMeansClustering]);
-                        svgKMeansClustering.append("g")
-                                           .attr("transform", `translate(0,${heightKMeansClustering})`)
-                                           .call(d3.axisBottom(xKMeansClustering))
-                                           .selectAll("text")
-                                           .style("fill", "white");
-
-                        const yKMeansClustering = d3.scaleLinear()
-                                                    .domain([d3.min(clusterData, d => d.Shooting), d3.max(clusterData, d => d.Shooting)])
-                                                    .nice()
-                                                    .range([heightKMeansClustering, 0]);
-                        svgKMeansClustering.append("g")
-                                           .call(d3.axisLeft(yKMeansClustering))
-                                           .selectAll("text")
-                                           .style("fill", "white");
-
-                        svgKMeansClustering.selectAll("circle")
-                                           .data(clusters)
-                                           .enter()
-                                           .append("circle")
-                                           .attr("cx", d => xKMeansClustering(d.Pace))
-                                           .attr("cy", d => yKMeansClustering(d.Shooting))
-                                           .attr("r", 5)
-                                           .style("fill", d => color(d.cluster))
-                                           .on("mouseover", (event, d) => {
-                                               tooltipKMeansClustering.transition()
-                                                                      .duration(200)
-                                                                      .style("opacity", .9);
-                                               tooltipKMeansClustering.html(`Cluster: ${d.cluster}<br>Pace: ${d.Pace}<br>Shooting: ${d.Shooting}`)
-                                                                      .style("left", (event.pageX + 5) + "px")
-                                                                      .style("top", (event.pageY - 28) + "px");
-                                           })
-                                           .on("mouseout", () => {
-                                               tooltipKMeansClustering.transition()
-                                                                      .duration(500)
-                                                                      .style("opacity", 0);
-                                           });
-
-                        svgKMeansClustering.selectAll("circle")
-                                           .transition()
-                                           .duration(1000)
-                                           .attr("cx", d => xKMeansClustering(d.Pace))
-                                           .attr("cy", d => yKMeansClustering(d.Shooting))
-                                           .attr("r", 5);
-
-                        svgKMeansClustering.append("text")
-                                           .attr("class", "axis-label")
-                                           .attr("x", widthKMeansClustering / 2)
-                                           .attr("y", heightKMeansClustering + marginKMeansClustering.bottom - 10)
-                                           .attr("text-anchor", "middle")
-                                           .style("fill", "white")
-                                           .text("Pace");
-
-                        svgKMeansClustering.append("text")
-                                           .attr("class", "axis-label")
-                                           .attr("x", -heightKMeansClustering / 2)
-                                           .attr("y", -marginKMeansClustering.left + 10)
-                                           .attr("text-anchor", "middle")
-                                           .attr("transform", "rotate(-90)")
-                                           .style("fill", "white")
-                                           .text("Shooting");
-
-                        function initializeCentroids(data, k) {
-                            const centroids = [];
-                            for (let i = 0; i < k; i++) {
-                                const randomIndex = Math.floor(Math.random() * data.length);
-                                centroids.push({ ...data[randomIndex], cluster: i });
-                            }
-                            return centroids;
-                        }
-
-                        function assignClusters(data, centroids) {
-                            return data.map(d => {
-                                const distances = centroids.map(c => Math.sqrt(Math.pow(d.Pace - c.Pace, 2) + Math.pow(d.Shooting - c.Shooting, 2)));
-                                const cluster = distances.indexOf(Math.min(...distances));
-                                return { ...d, cluster: cluster };
-                            });
-                        }
-
-                        function recalculateCentroids(clusters, centroids) {
-                            centroids.forEach((centroid, i) => {
-                                const clusterPoints = clusters.filter(d => d.cluster === i);
-                                if (clusterPoints.length > 0) {
-                                    centroid.Pace = d3.mean(clusterPoints, d => d.Pace);
-                                    centroid.Shooting = d3.mean(clusterPoints, d => d.Shooting);
-                                }
-                            });
-                        }
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
-
-            <div id="positionalHeatmaps" class="visualization hidden">
-                <h3 style="color: white;">Positional Heatmaps</h3>
-                <div id="chart-positionalHeatmaps"></div>
-                <!-- D3.js code for Positional Heatmaps -->
-                <script>
-                    const marginPositionalHeatmaps = {top: 20, right: 30, bottom: 100, left: 40},
-                          widthPositionalHeatmaps = 800 - marginPositionalHeatmaps.left - marginPositionalHeatmaps.right,
-                          heightPositionalHeatmaps = 500 - marginPositionalHeatmaps.top - marginPositionalHeatmaps.bottom;
-
-                    const svgPositionalHeatmaps = d3.select("#chart-positionalHeatmaps")
-                                                    .append("svg")
-                                                    .attr("width", widthPositionalHeatmaps + marginPositionalHeatmaps.left + marginPositionalHeatmaps.right)
-                                                    .attr("height", heightPositionalHeatmaps + marginPositionalHeatmaps.top + marginPositionalHeatmaps.bottom)
-                                                    .append("g")
-                                                    .attr("transform", `translate(${marginPositionalHeatmaps.left},${marginPositionalHeatmaps.top})`);
-
-                    const tooltipPositionalHeatmaps = d3.select("body").append("div")
-                                                        .attr("class", "tooltip")
-                                                        .style("opacity", 0)
-                                                        .style("background", "lightsteelblue")
-                                                        .style("border-radius", "5px")
-                                                        .style("padding", "5px")
-                                                        .style("position", "absolute")
-                                                        .style("text-align", "center");
-
-                    d3.csv("all_players.csv").then(data => {
-                        const positions = Array.from(new Set(data.map(d => d.Position)));
-                        const metrics = ['Pace', 'Shooting', 'Passing', 'Dribbling', 'Defending', 'Physicality'];
-
-                        const heatmapData = [];
-                        positions.forEach(pos => {
-                            metrics.forEach(metric => {
-                                const meanValue = d3.mean(data.filter(d => d.Position === pos), d => +d[metric]);
-                                if (!isNaN(meanValue)) {
-                                    heatmapData.push({ Position: pos, Metric: metric, Value: meanValue });
-                                }
-                            });
-                        });
-
-                        const xPositionalHeatmaps = d3.scaleBand()
-                                                      .domain(metrics)
-                                                      .range([0, widthPositionalHeatmaps])
-                                                      .padding(0.05);
-                        svgPositionalHeatmaps.append("g")
-                                             .attr("transform", `translate(0,${heightPositionalHeatmaps})`)
-                                             .call(d3.axisBottom(xPositionalHeatmaps))
-                                             .selectAll("text")
-                                             .style("fill", "white");
-
-                        const yPositionalHeatmaps = d3.scaleBand()
-                                                      .domain(positions)
-                                                      .range([heightPositionalHeatmaps, 0])
-                                                      .padding(0.05);
-                        svgPositionalHeatmaps.append("g")
-                                             .call(d3.axisLeft(yPositionalHeatmaps))
-                                             .selectAll("text")
-                                             .style("fill", "white");
-
-                        const colorScale = d3.scaleSequential()
-                                             .interpolator(d3.interpolateInferno)
-                                             .domain([0, d3.max(heatmapData, d => d.Value)]);
-
-                        svgPositionalHeatmaps.selectAll()
-                                             .data(heatmapData, d => d.Position + ':' + d.Metric)
-                                             .enter()
-                                             .append("rect")
-                                             .attr("x", d => xPositionalHeatmaps(d.Metric))
-                                             .attr("y", d => yPositionalHeatmaps(d.Position))
-                                             .attr("width", xPositionalHeatmaps.bandwidth())
-                                             .attr("height", yPositionalHeatmaps.bandwidth())
-                                             .style("fill", d => colorScale(d.Value))
-                                             .on("mouseover", (event, d) => {
-                                                 tooltipPositionalHeatmaps.transition()
-                                                                          .duration(200)
-                                                                          .style("opacity", .9);
-                                                 tooltipPositionalHeatmaps.html(`Position: ${d.Position}<br>Metric: ${d.Metric}<br>Value: ${d.Value.toFixed(2)}`)
-                                                                          .style("left", (event.pageX + 5) + "px")
-                                                                          .style("top", (event.pageY - 28) + "px");
-                                             })
-                                             .on("mouseout", () => {
-                                                 tooltipPositionalHeatmaps.transition()
-                                                                          .duration(500)
-                                                                          .style("opacity", 0);
-                                             });
-
-                        svgPositionalHeatmaps.selectAll("rect")
-                                             .transition()
-                                             .duration(1000)
-                                             .style("fill", d => colorScale(d.Value));
-
-                        svgPositionalHeatmaps.append("text")
-                                             .attr("class", "axis-label")
-                                             .attr("x", widthPositionalHeatmaps / 2)
-                                             .attr("y", heightPositionalHeatmaps + marginPositionalHeatmaps.bottom - 10)
-                                             .attr("text-anchor", "middle")
-                                             .style("fill", "white")
-                                             .text("Metric");
-
-                        svgPositionalHeatmaps.append("text")
-                                             .attr("class", "axis-label")
-                                             .attr("x", -heightPositionalHeatmaps / 2)
-                                             .attr("y", -marginPositionalHeatmaps.left + 10)
-                                             .attr("text-anchor", "middle")
-                                             .attr("transform", "rotate(-90)")
-                                             .style("fill", "white")
-                                             .text("Position");
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
-
-            <div id="ageVsOverallRating" class="visualization hidden">
-                <h3 style="color: white;">Age vs. Overall Rating</h3>
-                <div id="chart-ageVsOverallRating"></div>
-                <!-- D3.js code for Age vs. Overall Rating -->
-                <script>
-                    const marginAgeVsOverallRating = {top: 20, right: 30, bottom: 100, left: 40},
-                          widthAgeVsOverallRating = 800 - marginAgeVsOverallRating.left - marginAgeVsOverallRating.right,
-                          heightAgeVsOverallRating = 500 - marginAgeVsOverallRating.top - marginAgeVsOverallRating.bottom;
-
-                    const svgAgeVsOverallRating = d3.select("#chart-ageVsOverallRating")
-                                                    .append("svg")
-                                                    .attr("width", widthAgeVsOverallRating + marginAgeVsOverallRating.left + marginAgeVsOverallRating.right)
-                                                    .attr("height", heightAgeVsOverallRating + marginAgeVsOverallRating.top + marginAgeVsOverallRating.bottom)
-                                                    .append("g")
-                                                    .attr("transform", `translate(${marginAgeVsOverallRating.left},${marginAgeVsOverallRating.top})`);
-
-                    const tooltipAgeVsOverallRating = d3.select("body").append("div")
-                                                        .attr("class", "tooltip")
-                                                        .style("opacity", 0)
-                                                        .style("background", "lightsteelblue")
-                                                        .style("border-radius", "5px")
-                                                        .style("padding", "5px")
-                                                        .style("position", "absolute")
-                                                        .style("text-align", "center");
-
-                    d3.csv("all_players.csv").then(data => {
-                        const ageOverallData = data.map(d => ({
-                            Age: +d.Age,
-                            Overall: +d.Overall
-                        })).filter(d => !isNaN(d.Age) && !isNaN(d.Overall));
-
-                        const xAgeVsOverallRating = d3.scaleLinear()
-                                                      .domain([d3.min(ageOverallData, d => d.Age), d3.max(ageOverallData, d => d.Age)])
-                                                      .nice()
-                                                      .range([0, widthAgeVsOverallRating]);
-                        svgAgeVsOverallRating.append("g")
-                                             .attr("transform", `translate(0,${heightAgeVsOverallRating})`)
-                                             .call(d3.axisBottom(xAgeVsOverallRating))
-                                             .selectAll("text")
-                                             .style("fill", "white");
-
-                        const yAgeVsOverallRating = d3.scaleLinear()
-                                                      .domain([d3.min(ageOverallData, d => d.Overall), d3.max(ageOverallData, d => d.Overall)])
-                                                      .nice()
-                                                      .range([heightAgeVsOverallRating, 0]);
-                        svgAgeVsOverallRating.append("g")
-                                             .call(d3.axisLeft(yAgeVsOverallRating))
-                                             .selectAll("text")
-                                             .style("fill", "white");
-
-                        svgAgeVsOverallRating.selectAll("circle")
-                                             .data(ageOverallData)
-                                             .enter()
-                                             .append("circle")
-                                             .attr("cx", d => xAgeVsOverallRating(d.Age))
-                                             .attr("cy", d => yAgeVsOverallRating(d.Overall))
-                                             .attr("r", 5)
-                                             .style("fill", "steelblue")
-                                             .on("mouseover", (event, d) => {
-                                                 tooltipAgeVsOverallRating.transition()
-                                                                          .duration(200)
-                                                                          .style("opacity", .9);
-                                                 tooltipAgeVsOverallRating.html(`Age: ${d.Age}<br>Overall Rating: ${d.Overall}`)
-                                                                          .style("left", (event.pageX + 5) + "px")
-                                                                          .style("top", (event.pageY - 28) + "px");
-                                             })
-                                             .on("mouseout", () => {
-                                                 tooltipAgeVsOverallRating.transition()
-                                                                          .duration(500)
-                                                                          .style("opacity", 0);
-                                             });
-
-                        svgAgeVsOverallRating.selectAll("circle")
-                                             .transition()
-                                             .duration(1000)
-                                             .attr("cx", d => xAgeVsOverallRating(d.Age))
-                                             .attr("cy", d => yAgeVsOverallRating(d.Overall))
-                                             .attr("r", 5);
-
-                        svgAgeVsOverallRating.append("text")
-                                             .attr("class", "axis-label")
-                                             .attr("x", widthAgeVsOverallRating / 2)
-                                             .attr("y", heightAgeVsOverallRating + marginAgeVsOverallRating.bottom - 10)
-                                             .attr("text-anchor", "middle")
-                                             .style("fill", "white")
-                                             .text("Age");
-
-                        svgAgeVsOverallRating.append("text")
-                                             .attr("class", "axis-label")
-                                             .attr("x", -heightAgeVsOverallRating / 2)
-                                             .attr("y", -marginAgeVsOverallRating.left + 10)
-                                             .attr("text-anchor", "middle")
-                                             .attr("transform", "rotate(-90)")
-                                             .style("fill", "white")
-                                             .text("Overall Rating");
-                    }).catch(error => {
-                        console.error('Error loading the CSV data: ', error);
-                    });
-                </script>
-            </div>
-        </div>
-    </section>
-    <footer>
-        <div class="container">
-            <p style="color: white;">&copy; 2024 Mehul Parashar</p>
-            <div class="social">
-                <a href="https://www.linkedin.com/in/mehul-parashar/" target="_blank" style="color: white;">LinkedIn</a>
-                <a href="https://github.com/MehParashar" target="_blank" style="color: white;">GitHub</a>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        function showVisualization(id) {
-            const visualizations = document.querySelectorAll('.visualization');
-            visualizations.forEach(visualization => {
-                visualization.classList.add('hidden');
-            });
-            document.getElementById(id).classList.remove('hidden');
-        }
-    </script>
+                                 .style("fill", "#fff")
+                                 .text("Position");
+          }).catch(error => {
+            console.error('Error loading CSV data: ', error);
+          });
+        </script>
+      </div>
+
+      <div id="ageVsOverallRating" class="visualization hidden">
+        <h3>Age vs. Overall Rating</h3>
+        <div id="chart-ageVsOverallRating"></div>
+        <!-- D3.js code for Age vs. Overall Rating -->
+        <script>
+          const marginAgeVsOverallRating = {top: 20, right: 30, bottom: 100, left: 40},
+                widthAgeVsOverallRating = 800 - marginAgeVsOverallRating.left - marginAgeVsOverallRating.right,
+                heightAgeVsOverallRating = 500 - marginAgeVsOverallRating.top - marginAgeVsOverallRating.bottom;
+
+          const svgAgeVsOverallRating = d3.select("#chart-ageVsOverallRating")
+                                          .append("svg")
+                                          .attr("width", widthAgeVsOverallRating + marginAgeVsOverallRating.left + marginAgeVsOverallRating.right)
+                                          .attr("height", heightAgeVsOverallRating + marginAgeVsOverallRating.top + marginAgeVsOverallRating.bottom)
+                                          .append("g")
+                                          .attr("transform", `translate(${marginAgeVsOverallRating.left},${marginAgeVsOverallRating.top})`);
+
+          const tooltipAgeVsOverallRating = d3.select("body").append("div")
+                                              .attr("class", "tooltip")
+                                              .style("opacity", 0);
+
+          d3.csv("all_players.csv").then(data => {
+            const ageOverallData = data.map(d => ({
+              Age: +d.Age,
+              Overall: +d.Overall
+            })).filter(d => !isNaN(d.Age) && !isNaN(d.Overall));
+
+            const xAgeVsOverallRating = d3.scaleLinear()
+                                          .domain([d3.min(ageOverallData, d => d.Age), d3.max(ageOverallData, d => d.Age)])
+                                          .nice()
+                                          .range([0, widthAgeVsOverallRating]);
+            svgAgeVsOverallRating.append("g")
+                                 .attr("transform", `translate(0,${heightAgeVsOverallRating})`)
+                                 .call(d3.axisBottom(xAgeVsOverallRating))
+                                 .selectAll("text")
+                                 .style("fill", "#fff");
+
+            const yAgeVsOverallRating = d3.scaleLinear()
+                                          .domain([d3.min(ageOverallData, d => d.Overall), d3.max(ageOverallData, d => d.Overall)])
+                                          .nice()
+                                          .range([heightAgeVsOverallRating, 0]);
+            svgAgeVsOverallRating.append("g")
+                                 .call(d3.axisLeft(yAgeVsOverallRating))
+                                 .selectAll("text")
+                                 .style("fill", "#fff");
+
+            svgAgeVsOverallRating.selectAll("circle")
+                                 .data(ageOverallData)
+                                 .enter()
+                                 .append("circle")
+                                 .attr("cx", d => xAgeVsOverallRating(d.Age))
+                                 .attr("cy", d => yAgeVsOverallRating(d.Overall))
+                                 .attr("r", 5)
+                                 .style("fill", "steelblue")
+                                 .on("mouseover", (event, d) => {
+                                   tooltipAgeVsOverallRating.transition()
+                                                             .duration(200)
+                                                             .style("opacity", .9);
+                                   tooltipAgeVsOverallRating.html(`Age: ${d.Age}<br>Overall Rating: ${d.Overall}`)
+                                                             .style("left", (event.pageX + 5) + "px")
+                                                             .style("top", (event.pageY - 28) + "px");
+                                 })
+                                 .on("mouseout", () => {
+                                   tooltipAgeVsOverallRating.transition()
+                                                             .duration(500)
+                                                             .style("opacity", 0);
+                                 });
+
+            svgAgeVsOverallRating.append("text")
+                                 .attr("class", "axis-label")
+                                 .attr("x", widthAgeVsOverallRating / 2)
+                                 .attr("y", heightAgeVsOverallRating + marginAgeVsOverallRating.bottom - 10)
+                                 .attr("text-anchor", "middle")
+                                 .style("fill", "#fff")
+                                 .text("Age");
+
+            svgAgeVsOverallRating.append("text")
+                                 .attr("class", "axis-label")
+                                 .attr("x", -heightAgeVsOverallRating / 2)
+                                 .attr("y", -marginAgeVsOverallRating.left + 10)
+                                 .attr("text-anchor", "middle")
+                                 .attr("transform", "rotate(-90)")
+                                 .style("fill", "#fff")
+                                 .text("Overall Rating");
+          }).catch(error => {
+            console.error('Error loading CSV data: ', error);
+          });
+        </script>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Mehul Parashar</p>
+      <div class="social">
+        <a href="https://www.linkedin.com/in/mehul-parashar/" target="_blank">LinkedIn</a>
+        <a href="https://github.com/MehParashar" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function showVisualization(id) {
+      const visualizations = document.querySelectorAll('.visualization');
+      visualizations.forEach(viz => viz.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+    }
+  </script>
 </body>
 </html>
