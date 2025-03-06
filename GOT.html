@@ -72,7 +72,7 @@
   <script>
     const tooltip = d3.select("body").append("div").attr("class", "tooltip");
     
-    d3.csv("game_of_thrones_test.csv").then(data => {
+    d3.csv("https://mehparashar.github.io/game_of_thrones_test.csv").then(data => {
       // Gender Distribution Chart
       const genderCounts = d3.rollup(data, v => v.length, d => d.male);
       const genderData = [
