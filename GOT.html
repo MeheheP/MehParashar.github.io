@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game of Thrones Data Analysis</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #222;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    .chart-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .chart {
+      background: #333;
+      border-radius: 10px;
+      padding: 20px;
+      width: 45%;
+      min-width: 300px;
+    }
+    .tooltip {
+      position: absolute;
+      background: #000;
+      color: #fff;
+      padding: 5px;
+      border-radius: 5px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Game of Thrones Character Analysis</h1>
+    <div class="chart-container">
+      <div class="chart" id="house-popularity"><h3>House Popularity</h3></div>
+      <div class="chart" id="survival-rate"><h3>Survival Rate by Nobility</h3></div>
+    </div>
+  </div>
+
+  <script>
+    const tooltip = d3.select("body").append("div").attr("class", "tooltip");
+    
+    d3.csv("game_of_thrones_test.csv").then(data => {
+      const houseCounts = d3.rollup(data, v => v.length, d => d.house);
+      const houseData = Array.from(houseCounts, ([house, count]) => ({ house, count })).sort((a, b) => b.count - a.count);
+
+      const width = 400, height = 300;
+      const svg = d3.select("#house-popularity").append("svg").attr("width", width).attr("height", height);
+      const x = d3.scaleBand().domain(houseData.map(d => d.house)).range([0, width]).padding(0.2);
+      const y = d3.scaleLinear().domain([0, d3.max(houseData, d => d.count)]).range([height - 50, 0]);
+      
+      svg.selectAll("rect")
+        .data(houseData.slice(0, 10))
+        .enter().append("rect")
+        .attr("x", d => x(d.house))
+        .attr("y", d => y(d.count))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - 50 - y(d.count))
+        .attr("fill", "#f39c12")
+        .on("mouseover", (event, d) => {
+          tooltip.style("display", "block").html(`${d.house}: ${d.count}`)
+            .style("left", (event.pageX + 5) + "px")
+            .style("top", (event.pageY - 30) + "px");
+        })
+        .on("mouseout", () => tooltip.style("display", "none"));
+      
+      svg.append("g").attr("transform", `translate(0, ${height - 50})`).call(d3.axisBottom(x)).selectAll("text").attr("transform", "rotate(-45)").style("text-anchor", "end").style("fill", "#fff");
+      svg.append("g").call(d3.axisLeft(y)).selectAll("text").style("fill", "#fff");
+    });
+  </script>
+</body>
+</html>
